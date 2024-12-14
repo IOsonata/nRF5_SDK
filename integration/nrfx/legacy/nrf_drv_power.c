@@ -39,7 +39,7 @@
  */
 
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(POWER)
+//#if NRF_MODULE_ENABLED(POWER)
 #include "nrf_drv_power.h"
 #include <nrf_drv_clock.h>
 #ifdef SOFTDEVICE_PRESENT
@@ -47,7 +47,10 @@
 #include "nrf_sdh_soc.h"
 #endif
 
-#include <app_util.h>
+//#include "app_util_platform.h"
+//#include <app_util.h>
+
+#include "interrupt.h"
 
 // The structure with default configuration data.
 static const nrfx_power_config_t m_drv_power_config_default =
@@ -122,7 +125,7 @@ ret_code_t nrf_drv_power_pof_init(nrf_drv_power_pofwarn_config_t const * p_confi
             return NRF_ERROR_INVALID_STATE;
         }
 #endif
-        if (p_config->thr != nrf_power_pofcon_get(NULL))
+        if (p_config->thr != nrf_power_pofcon_get(NRF_POWER, NULL))
         {
             /* Only limited number of THR values are supported and
              * the values taken by SD is different than the one in hardware
@@ -284,7 +287,9 @@ ret_code_t nrf_drv_power_usbevt_init(nrf_drv_power_usbevt_config_t const * p_con
 void nrf_drv_power_usbevt_uninit(void)
 {
 #ifdef SOFTDEVICE_PRESENT
-    CRITICAL_REGION_ENTER();
+    //CRITICAL_REGION_ENTER();
+    uint32_t state = DisableInterrupt();
+
     if (nrf_sdh_is_enabled())
     {
         ret_code_t err_code = nrf_drv_power_sd_usbevt_enable(false);
@@ -297,7 +302,8 @@ void nrf_drv_power_usbevt_uninit(void)
         nrfx_power_usbevt_disable();
     }
 #ifdef SOFTDEVICE_PRESENT
-    CRITICAL_REGION_EXIT();
+    //CRITICAL_REGION_EXIT();
+    EnableInterrupt(state);
 #endif
     nrfx_power_usbevt_uninit();
 }
@@ -355,14 +361,17 @@ static void nrf_drv_power_sdh_soc_evt_handler(uint32_t evt_id, void * p_context)
 static void nrf_drv_power_on_sd_enable(void)
 {
     ASSERT(m_initialized); /* This module has to be enabled first */
-    CRITICAL_REGION_ENTER();
+    //CRITICAL_REGION_ENTER();
+    uint32_t state = DisableInterrupt();
+
     if (nrfx_power_pof_handler_get() != NULL)
     {
         ret_code_t err_code = sd_power_pof_enable(true);
         ASSERT(err_code == NRF_SUCCESS);
         UNUSED_VARIABLE(err_code); //handle no-debug case
     }
-    CRITICAL_REGION_EXIT();
+    //CRITICAL_REGION_EXIT();
+    EnableInterrupt(state);
 
 #if NRF_POWER_HAS_USBREG
     if (nrfx_power_usb_handler_get() != NULL)
@@ -382,13 +391,13 @@ static void nrf_drv_power_on_sd_disable(void)
     NRFX_IRQ_ENABLE(POWER_CLOCK_IRQn);
     if (nrfx_power_pof_handler_get() != NULL)
     {
-        nrf_power_int_enable(NRF_POWER_INT_POFWARN_MASK);
+        nrf_power_int_enable(NRF_POWER, NRF_POWER_INT_POFWARN_MASK);
     }
 
 #if NRF_POWER_HAS_USBREG
     if (nrfx_power_usb_handler_get() != NULL)
     {
-       nrf_power_int_enable(
+       nrf_power_int_enable(NRF_POWER,
            NRF_POWER_INT_USBDETECTED_MASK |
            NRF_POWER_INT_USBREMOVED_MASK  |
            NRF_POWER_INT_USBPWRRDY_MASK);
@@ -414,4 +423,4 @@ static void nrf_drv_power_sdh_state_evt_handler(nrf_sdh_state_evt_t state, void 
 }
 
 #endif // SOFTDEVICE_PRESENT
-#endif //POWER_ENABLED
+//#endif //POWER_ENABLED

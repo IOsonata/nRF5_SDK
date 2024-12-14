@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2009-2021 ARM Limited. All rights reserved.
+Copyright (c) 2009-2024 ARM Limited. All rights reserved.
 
     SPDX-License-Identifier: Apache-2.0
 
@@ -26,26 +26,24 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
 #include <stdint.h>
 #include <stdbool.h>
 #include "nrf.h"
-#include "nrf_erratas.h"
-#include "system_nrf5340_network.h"
+#include "nrf53_erratas.h"
+#include "system_nrf53.h"
 #include "system_nrf53_approtect.h"
 
 /*lint ++flb "Enter library region" */
 
 
-#define __SYSTEM_CLOCK      (64000000UL)     /*!< NRF5340 network core uses a fixed System Clock Frequency of 64MHz */
+#define __SYSTEM_CLOCK_DEFAULT      (64000000UL)     /*!< NRF5340 network core uses a fixed System Clock Frequency of 64MHz */
 
-#if defined ( __CC_ARM )
-    uint32_t SystemCoreClock __attribute__((used)) = __SYSTEM_CLOCK;  
+#if defined ( __CC_ARM ) || defined ( __GNUC__ )
+    uint32_t SystemCoreClock __attribute__((used)) = __SYSTEM_CLOCK_DEFAULT;
 #elif defined ( __ICCARM__ )
-    __root uint32_t SystemCoreClock = __SYSTEM_CLOCK;
-#elif defined   ( __GNUC__ )
-    uint32_t SystemCoreClock __attribute__((used)) = __SYSTEM_CLOCK;
+    __root uint32_t SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
 #endif
 
 void SystemCoreClockUpdate(void)
 {
-    SystemCoreClock = __SYSTEM_CLOCK;
+    SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
 }
 
 void SystemInit(void)
@@ -53,7 +51,7 @@ void SystemInit(void)
     /* Trimming of the device. Copy all the trimming values from FICR into the target addresses. Trim
      until one ADDR is not initialized. */
     uint32_t index = 0;
-    for (index = 0; index < 32ul && NRF_FICR_NS->TRIMCNF[index].ADDR != (uint32_t *)0xFFFFFFFFul; index++){
+    for (index = 0; index < 32ul && NRF_FICR_NS->TRIMCNF[index].ADDR != 0xFFFFFFFFul; index++){
         #if defined ( __ICCARM__ )
             /* IAR will complain about the order of volatile pointer accesses. */
             #pragma diag_suppress=Pa082
@@ -64,30 +62,44 @@ void SystemInit(void)
         #endif
     }
 
-    /* Workaround for Errata 49 "SLEEPENTER and SLEEPEXIT events asserted after pin reset" found at the Errata document
+    #if NRF53_ERRATA_49_ENABLE_WORKAROUND
+        /* Workaround for Errata 49 "SLEEPENTER and SLEEPEXIT events asserted after pin reset" found at the Errata document
        for your device located at https://infocenter.nordicsemi.com/index.jsp  */
-    if (nrf53_errata_49())
-    {
-        if (NRF_RESET_NS->RESETREAS & RESET_RESETREAS_RESETPIN_Msk)
+        if (nrf53_errata_49())
         {
-            NRF_POWER_NS->EVENTS_SLEEPENTER = 0;
-            NRF_POWER_NS->EVENTS_SLEEPEXIT = 0;
+            if (NRF_RESET_NS->RESETREAS & RESET_RESETREAS_RESETPIN_Msk)
+            {
+                NRF_POWER_NS->EVENTS_SLEEPENTER = 0ul;
+                NRF_POWER_NS->EVENTS_SLEEPEXIT = 0ul;
+            }
         }
-    }
+    #endif
 
-    /* Workaround for Errata 55 "Bits in RESETREAS are set when they should not be" found at the Errata document
+    #if NRF53_ERRATA_55_ENABLE_WORKAROUND
+        /* Workaround for Errata 55 "Bits in RESETREAS are set when they should not be" found at the Errata document
        for your device located at https://infocenter.nordicsemi.com/index.jsp  */
-    if (nrf53_errata_55())
-    {
-        if (NRF_RESET_NS->RESETREAS & RESET_RESETREAS_RESETPIN_Msk){
-            NRF_RESET_NS->RESETREAS = ~RESET_RESETREAS_RESETPIN_Msk;
+        if (nrf53_errata_55())
+        {
+            if (NRF_RESET_NS->RESETREAS & RESET_RESETREAS_RESETPIN_Msk){
+                NRF_RESET_NS->RESETREAS = ~RESET_RESETREAS_RESETPIN_Msk;
+            }
         }
-    }
+    #endif
+
+    #if NRF53_ERRATA_160_ENABLE_WORKAROUND
+        if (nrf53_errata_160())
+        {
+            *((volatile uint32_t *)0x41002118ul) = 0x7Ful;
+            *((volatile uint32_t *)0x41080E04ul) = 0x0ul;
+            *((volatile uint32_t *)0x41080E08ul) = 0x0ul;
+            *((volatile uint32_t *)0x41002124ul) = 0x0ul;
+            *((volatile uint32_t *)0x4100212Cul) = 0x0ul;
+            *((volatile uint32_t *)0x41101110ul) = 0x0ul;
+        }
+    #endif
 
     /* Handle fw-branch APPROTECT setup. */
     nrf53_handle_approtect();
-
-    SystemCoreClockUpdate();
 }
 
 /*lint --flb "Leave library region" */

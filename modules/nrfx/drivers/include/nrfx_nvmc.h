@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2019 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2019 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #ifndef NRFX_NVMC_H__
@@ -44,6 +37,7 @@
 #include <nrfx.h>
 #include <hal/nrf_nvmc.h>
 #include <hal/nrf_ficr.h>
+#include <nrf_erratas.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -91,7 +85,7 @@ nrfx_err_t nrfx_nvmc_uicr_erase(void);
  */
 void nrfx_nvmc_all_erase(void);
 
-#if defined(NRF_NVMC_PARTIAL_ERASE_PRESENT)
+#if NRF_NVMC_HAS_PARTIAL_ERASE || defined(__NRFX_DOXYGEN__)
 /**
  * @brief Function for initiating a complete page erase split into parts (also known as partial erase).
  *
@@ -130,7 +124,7 @@ nrfx_err_t nrfx_nvmc_page_partial_erase_init(uint32_t address, uint32_t duration
  */
 bool nrfx_nvmc_page_partial_erase_continue(void);
 
-#endif // defined(NRF_NVMC_PARTIAL_ERASE_PRESENT)
+#endif // NRF_NVMC_HAS_PARTIAL_ERASE || defined(__NRFX_DOXYGEN__)
 
 /**
  * @brief Function for checking whether a byte is writable at the specified address.
@@ -162,6 +156,37 @@ bool nrfx_nvmc_byte_writable_check(uint32_t address, uint8_t value);
  * @param value   Value to write.
  */
 void nrfx_nvmc_byte_write(uint32_t address, uint8_t value);
+
+/**
+ * @brief Function for checking whether a halfword is writable at the specified address.
+ *
+ * The NVMC is only able to write '0' to bits in the Flash that are erased (set to '1').
+ * It cannot rewrite a bit back to '1'. This function checks if the value currently
+ * residing at the specified address can be transformed to the desired value
+ * without any '0' to '1' transitions.
+ *
+ * @param address Address to be checked. Must be halfword-aligned.
+ * @param value   Value to be checked.
+ *
+ * @retval true  Halfword can be written at the specified address.
+ * @retval false Halfword cannot be written at the specified address.
+ *               Erase page or change address.
+ */
+bool nrfx_nvmc_halfword_writable_check(uint32_t address, uint16_t value);
+
+/**
+ * @brief Function for writing a 16-bit halfword to flash.
+ *
+ * To determine if the flash write has been completed, use @ref nrfx_nvmc_write_done_check().
+ *
+ * @note Depending on the source of the code being executed,
+ *       the CPU may be halted during the operation.
+ *       Refer to the Product Specification for more information.
+ *
+ * @param address Address to write to. Must be halfword-aligned.
+ * @param value   Value to write.
+ */
+void nrfx_nvmc_halfword_write(uint32_t address, uint16_t value);
 
 /**
  * @brief Function for checking whether a word is writable at the specified address.
@@ -225,6 +250,34 @@ void nrfx_nvmc_bytes_write(uint32_t address, void const * src, uint32_t num_byte
 void nrfx_nvmc_words_write(uint32_t address, void const * src, uint32_t num_words);
 
 /**
+ * @brief Function for reading a 16-bit aligned halfword from the OTP (UICR)
+ *
+ * OTP is a region of the UICR present in some chips. This function must be used
+ * to read halfword data from this region since unaligned accesses are not
+ * available on the OTP flash area.
+ *
+ * @param address Address to read from. Must be halfword-aligned.
+ *
+ * @retval The contents at @p address.
+ */
+uint16_t nrfx_nvmc_otp_halfword_read(uint32_t address);
+
+/**
+ * @brief Function for reading a 32-bit aligned word from the UICR
+ *
+ * This function should be used to read from the UICR since reading
+ * the flash main memory area straight after reading the UICR results
+ * in undefined behaviour for nRF9160.
+ *
+ * @note See anomaly 7 in the errata document.
+ *
+ * @param address Address to read from. Must be word-aligned.
+ *
+ * @retval The contents at @p address.
+ */
+NRFX_STATIC_INLINE uint32_t nrfx_nvmc_uicr_word_read(uint32_t const volatile *address);
+
+/**
  * @brief Function for getting the total flash size in bytes.
  *
  * @return Flash total size in bytes.
@@ -251,40 +304,63 @@ uint32_t nrfx_nvmc_flash_page_count_get(void);
  * @retval true  Last write completed successfully.
  * @retval false Last write is still in progress.
  */
-__STATIC_INLINE bool nrfx_nvmc_write_done_check(void);
+NRFX_STATIC_INLINE bool nrfx_nvmc_write_done_check(void);
 
-#if defined(NRF_NVMC_ICACHE_PRESENT)
+#if defined(NVMC_FEATURE_CACHE_PRESENT) || defined(__NRFX_DOXYGEN__)
 /**
  * @brief Function for enabling the Instruction Cache (ICache).
  *
  * Enabling ICache reduces the amount of accesses to flash memory,
  * which can boost performance and lower power consumption.
  */
-__STATIC_INLINE void nrfx_nvmc_icache_enable(void);
+NRFX_STATIC_INLINE void nrfx_nvmc_icache_enable(void);
 
 /** @brief Function for disabling ICache. */
-__STATIC_INLINE void nrfx_nvmc_icache_disable(void);
+NRFX_STATIC_INLINE void nrfx_nvmc_icache_disable(void);
 
-#endif // defined(NRF_NVMC_ICACHE_PRESENT)
+#endif
 
-#ifndef SUPPRESS_INLINE_IMPLEMENTATION
-__STATIC_INLINE bool nrfx_nvmc_write_done_check(void)
+#ifndef NRFX_DECLARE_ONLY
+NRFX_STATIC_INLINE bool nrfx_nvmc_write_done_check(void)
 {
     return nrf_nvmc_ready_check(NRF_NVMC);
 }
 
-#if defined(NRF_NVMC_ICACHE_PRESENT)
-__STATIC_INLINE void nrfx_nvmc_icache_enable(void)
+NRFX_STATIC_INLINE uint32_t nrfx_nvmc_uicr_word_read(uint32_t const volatile *address)
+{
+#if NRF91_ERRATA_7_ENABLE_WORKAROUND
+    bool irq_disabled = __get_PRIMASK() == 1;
+    if (!irq_disabled)
+    {
+        __disable_irq();
+    }
+#endif
+
+    uint32_t value = nrf_nvmc_word_read((uint32_t)address);
+
+#if NRF91_ERRATA_7_ENABLE_WORKAROUND
+    __DSB();
+    if (!irq_disabled)
+    {
+        __enable_irq();
+    }
+#endif
+
+    return value;
+}
+
+#if defined(NVMC_FEATURE_CACHE_PRESENT)
+NRFX_STATIC_INLINE void nrfx_nvmc_icache_enable(void)
 {
     nrf_nvmc_icache_config_set(NRF_NVMC, NRF_NVMC_ICACHE_ENABLE_WITH_PROFILING);
 }
 
-__STATIC_INLINE void nrfx_nvmc_icache_disable(void)
+NRFX_STATIC_INLINE void nrfx_nvmc_icache_disable(void)
 {
     nrf_nvmc_icache_config_set(NRF_NVMC, NRF_NVMC_ICACHE_DISABLE);
 }
-#endif // defined(NRF_NVMC_ICACHE_PRESENT)
-#endif // SUPPRESS_INLINE_IMPLEMENTATION
+#endif // defined(NVMC_FEATURE_CACHE_PRESENT)
+#endif // NRFX_DECLARE_ONLY
 
 /** @} */
 

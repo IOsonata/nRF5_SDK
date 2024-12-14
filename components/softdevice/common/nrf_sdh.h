@@ -53,6 +53,7 @@
 #include "sdk_config.h"
 #include "sdk_errors.h"
 #include "nrf_section_iter.h"
+#include "nrf_sdm.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -228,7 +229,7 @@ NRF_SECTION_SET_ITEM_REGISTER(sdh_stack_observers, _prio, static nrf_sdh_stack_o
  * @retval  NRF_SUCCESS                 The process is started.
  * @retval  NRF_ERROR_INVALID_STATE     The SoftDevice is already enabled.
  */
-ret_code_t nrf_sdh_enable_request(void);
+ret_code_t nrf_sdh_enable_request(void);//nrf_clock_lf_cfg_t *clock_lf_cfg);
 
 
 /**@brief   Function for requesting to disable the SoftDevice.

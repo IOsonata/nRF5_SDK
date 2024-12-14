@@ -242,15 +242,15 @@ static bool crc_on_valid_app_required(void)
 {
     bool ret = true;
     if (NRF_BL_APP_CRC_CHECK_SKIPPED_ON_SYSTEMOFF_RESET &&
-        (nrf_power_resetreas_get() & NRF_POWER_RESETREAS_OFF_MASK))
+        (nrf_power_resetreas_get(NRF_POWER) & NRF_POWER_RESETREAS_OFF_MASK))
     {
-        nrf_power_resetreas_clear(NRF_POWER_RESETREAS_OFF_MASK);
+        nrf_power_resetreas_clear(NRF_POWER, NRF_POWER_RESETREAS_OFF_MASK);
         ret = false;
     }
     else if (NRF_BL_APP_CRC_CHECK_SKIPPED_ON_GPREGRET2 &&
-            ((nrf_power_gpregret2_get() & BOOTLOADER_DFU_SKIP_CRC_MASK) == BOOTLOADER_DFU_SKIP_CRC))
+            ((nrf_power_gpregret_get(NRF_POWER, 1) & BOOTLOADER_DFU_SKIP_CRC_MASK) == BOOTLOADER_DFU_SKIP_CRC))
     {
-        nrf_power_gpregret2_set(nrf_power_gpregret2_get() & ~BOOTLOADER_DFU_SKIP_CRC);
+    	nrf_power_gpregret_set(NRF_POWER, 1, nrf_power_gpregret_get(NRF_POWER, 1) & ~BOOTLOADER_DFU_SKIP_CRC);
         ret = false;
     }
     else
@@ -332,10 +332,10 @@ static void dfu_enter_flags_clear(void)
     }
 
     if (NRF_BL_DFU_ENTER_METHOD_GPREGRET &&
-       ((nrf_power_gpregret_get() & BOOTLOADER_DFU_START_MASK) == BOOTLOADER_DFU_START))
+       ((nrf_power_gpregret_get(NRF_POWER, 0) & BOOTLOADER_DFU_START_MASK) == BOOTLOADER_DFU_START))
     {
         // Clear DFU mark in GPREGRET register.
-        nrf_power_gpregret_set(nrf_power_gpregret_get() & ~BOOTLOADER_DFU_START);
+        nrf_power_gpregret_set(NRF_POWER, 0, nrf_power_gpregret_get(NRF_POWER, 0) & ~BOOTLOADER_DFU_START);
     }
 
     if (NRF_BL_DFU_ENTER_METHOD_BUTTONLESS &&
@@ -373,7 +373,7 @@ static bool dfu_enter_check(void)
     }
 
     if (NRF_BL_DFU_ENTER_METHOD_GPREGRET &&
-       ((nrf_power_gpregret_get() & BOOTLOADER_DFU_START_MASK) == BOOTLOADER_DFU_START))
+       ((nrf_power_gpregret_get(NRF_POWER, 0) & BOOTLOADER_DFU_START_MASK) == BOOTLOADER_DFU_START))
     {
         NRF_LOG_DEBUG("DFU mode requested via GPREGRET.");
         return true;

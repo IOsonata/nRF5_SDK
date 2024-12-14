@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2016 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2016 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #ifndef NRFX_USBD_H__
@@ -69,7 +62,7 @@ extern "C" {
  * @sa nrf_usbd_isosplit_set
  * @sa nrf_usbd_isosplit_get
  */
-#define NRFX_USBD_ISOSIZE 1024
+#define NRFX_USBD_ISOSIZE 1023
 
 /**
  * @brief The size of internal feeder buffer.
@@ -83,6 +76,9 @@ extern "C" {
  *
  * Auxiliary macros for creating endpoint identifiers compatible with the USB specification.
  * @{
+ */
+
+/**
  * @brief Create identifier for IN endpoint.
  *
  * Simple macro to create IN endpoint identifier for given endpoint number.
@@ -196,11 +192,11 @@ typedef struct
         } sof;                            /**< Data available for @ref NRFX_USBD_EVT_SOF. */
         struct {
             nrfx_usbd_ep_t        ep;     /**< Endpoint number. */
-        } isocrc;
+        } isocrc;                         /**< Isochronouns channel endpoint number. */
         struct {
             nrfx_usbd_ep_t        ep;     /**< Endpoint number. */
             nrfx_usbd_ep_status_t status; /**< Status for the endpoint. */
-        } eptransfer;
+        } eptransfer;                     /**< Endpoint transfer status. */
     } data;                               /**< Union to store event data. */
 } nrfx_usbd_evt_t;
 
@@ -392,7 +388,9 @@ typedef struct
  * @param[in] event_handler Event handler provided by the user. Cannot be null.
  *
  * @retval NRFX_SUCCESS             Initialization successful.
- * @retval NRFX_ERROR_INVALID_STATE Driver was already initialized.
+ * @retval NRFX_ERROR_ALREADY       The driver is already initialized.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is already initialized.
+ *                                  Deprecated - use @ref NRFX_ERROR_ALREADY instead.
  */
 nrfx_err_t nrfx_usbd_init(nrfx_usbd_event_handler_t event_handler);
 
@@ -400,6 +398,14 @@ nrfx_err_t nrfx_usbd_init(nrfx_usbd_event_handler_t event_handler);
  * @brief Driver deinitialization.
  */
 void nrfx_usbd_uninit(void);
+
+/**
+ * @brief Function for checking if the USBD driver is initialized.
+ *
+ * @retval true  Driver is already initialized.
+ * @retval false Driver is not initialized.
+ */
+bool nrfx_usbd_init_check(void);
 
 /**
  * @brief Enable the USBD port.

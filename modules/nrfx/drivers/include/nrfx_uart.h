@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2015 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #ifndef NRFX_UART_H__
@@ -64,9 +57,8 @@ typedef struct
 
 #ifndef __NRFX_DOXYGEN__
 enum {
-#if NRFX_CHECK(NRFX_UART0_ENABLED)
-    NRFX_UART0_INST_IDX,
-#endif
+    /* List all enabled driver instances (in the format NRFX_\<instance_name\>_INST_IDX). */
+    NRFX_INSTANCE_ENUM_LIST(UART)
     NRFX_UART_ENABLED_COUNT
 };
 #endif
@@ -74,8 +66,8 @@ enum {
 /** @brief Macro for creating a UART driver instance. */
 #define NRFX_UART_INSTANCE(id)                               \
 {                                                            \
-    .p_reg        = NRFX_CONCAT_2(NRF_UART, id),             \
-    .drv_inst_idx = NRFX_CONCAT_3(NRFX_UART, id, _INST_IDX), \
+    .p_reg        = NRFX_CONCAT(NRF_, UART, id),             \
+    .drv_inst_idx = NRFX_CONCAT(NRFX_UART, id, _INST_IDX),   \
 }
 
 /** @brief Types of UART driver events. */
@@ -94,24 +86,68 @@ typedef struct
     uint32_t            pselcts;            ///< CTS pin number.
     uint32_t            pselrts;            ///< RTS pin number.
     void *              p_context;          ///< Context passed to interrupt handler.
-    nrf_uart_hwfc_t     hwfc;               ///< Flow control configuration.
-    nrf_uart_parity_t   parity;             ///< Parity configuration.
     nrf_uart_baudrate_t baudrate;           ///< Baud rate.
     uint8_t             interrupt_priority; ///< Interrupt priority.
+    nrf_uart_config_t   hal_cfg;            ///< Parity, flow control and stop bits settings.
+    bool                skip_gpio_cfg;      ///< Skip GPIO configuration of pins.
+                                            /**< When set to true, the driver does not modify
+                                             *   any GPIO parameters of the used pins. Those
+                                             *   parameters are supposed to be configured
+                                             *   externally before the driver is initialized. */
+    bool                skip_psel_cfg;      ///< Skip pin selection configuration.
+                                            /**< When set to true, the driver does not modify
+                                             *   pin select registers in the peripheral.
+                                             *   Those registers are supposed to be set up
+                                             *   externally before the driver is initialized.
+                                             *   @note When both GPIO configuration and pin
+                                             *   selection are to be skipped, the structure
+                                             *   fields that specify pins can be omitted,
+                                             *   as they are ignored anyway. */
 } nrfx_uart_config_t;
 
-/** @brief UART default configuration. */
-#define NRFX_UART_DEFAULT_CONFIG                                                  \
+#if NRF_UART_HAS_STOP_BITS || defined(__NRFX_DOXYGEN__)
+    /** @brief UART additional stop bits configuration. */
+    #define NRFX_UART_DEFAULT_EXTENDED_STOP_CONFIG   \
+        .stop = NRF_UART_STOP_ONE,
+#else
+    #define NRFX_UART_DEFAULT_EXTENDED_STOP_CONFIG
+#endif
+
+#if NRF_UART_HAS_PARITY_BIT || defined(__NRFX_DOXYGEN__)
+    /**  @brief UART additional parity type configuration. */
+    #define NRFX_UART_DEFAULT_EXTENDED_PARITYTYPE_CONFIG   \
+        .paritytype = NRF_UART_PARITYTYPE_EVEN,
+#else
+    #define NRFX_UART_DEFAULT_EXTENDED_PARITYTYPE_CONFIG
+#endif
+
+/**
+ * @brief UART driver default configuration.
+ *
+ * This configuration sets up UART with the following options:
+ * - hardware flow control disabled
+ * - no parity bit
+ * - one stop bit
+ * - baudrate: 115200
+ *
+ * @param[in] _pin_tx TX pin.
+ * @param[in] _pin_rx RX pin.
+ */
+#define NRFX_UART_DEFAULT_CONFIG(_pin_tx, _pin_rx)                                \
 {                                                                                 \
-    .pseltxd            = NRF_UART_PSEL_DISCONNECTED,                             \
-    .pselrxd            = NRF_UART_PSEL_DISCONNECTED,                             \
+    .pseltxd            = _pin_tx,                                                \
+    .pselrxd            = _pin_rx,                                                \
     .pselcts            = NRF_UART_PSEL_DISCONNECTED,                             \
     .pselrts            = NRF_UART_PSEL_DISCONNECTED,                             \
     .p_context          = NULL,                                                   \
-    .hwfc               = (nrf_uart_hwfc_t)NRFX_UART_DEFAULT_CONFIG_HWFC,         \
-    .parity             = (nrf_uart_parity_t)NRFX_UART_DEFAULT_CONFIG_PARITY,     \
-    .baudrate           = (nrf_uart_baudrate_t)NRFX_UART_DEFAULT_CONFIG_BAUDRATE, \
+    .baudrate           = NRF_UART_BAUDRATE_115200,                               \
     .interrupt_priority = NRFX_UART_DEFAULT_CONFIG_IRQ_PRIORITY,                  \
+    .hal_cfg            = {                                                       \
+        .hwfc           = NRF_UART_HWFC_DISABLED,                                 \
+        .parity         = NRF_UART_PARITY_EXCLUDED,                               \
+        NRFX_UART_DEFAULT_EXTENDED_STOP_CONFIG                                    \
+        NRFX_UART_DEFAULT_EXTENDED_PARITYTYPE_CONFIG                              \
+    }                                                                             \
 }
 
 /** @brief Structure for the UART transfer completion event. */
@@ -160,7 +196,9 @@ typedef void (*nrfx_uart_event_handler_t)(nrfx_uart_event_t const * p_event,
  *                          blocking mode.
  *
  * @retval NRFX_SUCCESS             Initialization is successful.
+ * @retval NRFX_ERROR_ALREADY       The driver is already initialized.
  * @retval NRFX_ERROR_INVALID_STATE The driver is already initialized.
+ *                                  Deprecated - use @ref NRFX_ERROR_ALREADY instead.
  * @retval NRFX_ERROR_BUSY          Some other peripheral with the same
  *                                  instance ID is already in use. This is
  *                                  possible only if @ref nrfx_prs module
@@ -171,11 +209,34 @@ nrfx_err_t nrfx_uart_init(nrfx_uart_t const *        p_instance,
                           nrfx_uart_event_handler_t  event_handler);
 
 /**
+ * @brief Function for reconfiguring the UART driver.
+ *
+ * @param[in] p_instance Pointer to the driver instance structure.
+ * @param[in] p_config   Pointer to the structure with the configuration.
+ *
+ * @retval NRFX_SUCCESS             Reconfiguration was successful.
+ * @retval NRFX_ERROR_BUSY          The driver is during transfer.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is uninitialized.
+ */
+nrfx_err_t nrfx_uart_reconfigure(nrfx_uart_t const *        p_instance,
+                                 nrfx_uart_config_t const * p_config);
+
+/**
  * @brief Function for uninitializing the UART driver.
  *
  * @param[in] p_instance Pointer to the driver instance structure.
  */
 void nrfx_uart_uninit(nrfx_uart_t const * p_instance);
+
+/**
+ * @brief Function for checking if the UART driver instance is initialized.
+ *
+ * @param[in] p_instance Pointer to the driver instance structure.
+ *
+ * @retval true  Instance is already initialized.
+ * @retval false Instance is not initialized.
+ */
+bool nrfx_uart_init_check(nrfx_uart_t const * p_instance);
 
 /**
  * @brief Function for getting the address of the specified UART task.
@@ -185,8 +246,8 @@ void nrfx_uart_uninit(nrfx_uart_t const * p_instance);
  *
  * @return Task address.
  */
-__STATIC_INLINE uint32_t nrfx_uart_task_address_get(nrfx_uart_t const * p_instance,
-                                                    nrf_uart_task_t     task);
+NRFX_STATIC_INLINE uint32_t nrfx_uart_task_address_get(nrfx_uart_t const * p_instance,
+                                                       nrf_uart_task_t     task);
 
 /**
  * @brief Function for getting the address of the specified UART event.
@@ -196,8 +257,8 @@ __STATIC_INLINE uint32_t nrfx_uart_task_address_get(nrfx_uart_t const * p_instan
  *
  * @return Event address.
  */
-__STATIC_INLINE uint32_t nrfx_uart_event_address_get(nrfx_uart_t const * p_instance,
-                                                     nrf_uart_event_t    event);
+NRFX_STATIC_INLINE uint32_t nrfx_uart_event_address_get(nrfx_uart_t const * p_instance,
+                                                        nrf_uart_event_t    event);
 
 /**
  * @brief Function for sending data over UART.
@@ -333,25 +394,45 @@ void nrfx_uart_rx_abort(nrfx_uart_t const * p_instance);
 uint32_t nrfx_uart_errorsrc_get(nrfx_uart_t const * p_instance);
 
 
-#ifndef SUPPRESS_INLINE_IMPLEMENTATION
-__STATIC_INLINE uint32_t nrfx_uart_task_address_get(nrfx_uart_t const * p_instance,
-                                                    nrf_uart_task_t     task)
+#ifndef NRFX_DECLARE_ONLY
+NRFX_STATIC_INLINE uint32_t nrfx_uart_task_address_get(nrfx_uart_t const * p_instance,
+                                                       nrf_uart_task_t     task)
 {
     return nrf_uart_task_address_get(p_instance->p_reg, task);
 }
 
-__STATIC_INLINE uint32_t nrfx_uart_event_address_get(nrfx_uart_t const * p_instance,
-                                                     nrf_uart_event_t    event)
+NRFX_STATIC_INLINE uint32_t nrfx_uart_event_address_get(nrfx_uart_t const * p_instance,
+                                                        nrf_uart_event_t    event)
 {
     return nrf_uart_event_address_get(p_instance->p_reg, event);
 }
-#endif // SUPPRESS_INLINE_IMPLEMENTATION
+#endif // NRFX_DECLARE_ONLY
+
+/**
+ * @brief Macro returning UART interrupt handler.
+ *
+ * param[in] idx UART index.
+ *
+ * @return Interrupt handler.
+ */
+#define NRFX_UART_INST_HANDLER_GET(idx) NRFX_CONCAT_3(nrfx_uart_, idx, _irq_handler)
 
 /** @} */
 
-
-void nrfx_uart_0_irq_handler(void);
-
+/*
+ * Declare interrupt handlers for all enabled driver instances in the following format:
+ * nrfx_\<periph_name\>_\<idx\>_irq_handler (for example, nrfx_uart_0_irq_handler).
+ *
+ * A specific interrupt handler for the driver instance can be retrieved by using
+ * the NRFX_UART_INST_HANDLER_GET macro.
+ *
+ * Here is a sample of using the NRFX_UART_INST_HANDLER_GET macro to map an interrupt handler
+ * in a Zephyr application:
+ *
+ * IRQ_CONNECT(NRFX_IRQ_NUMBER_GET(NRF_UART_INST_GET(\<instance_index\>)), \<priority\>,
+ *             NRFX_UART_INST_HANDLER_GET(\<instance_index\>), 0, 0);
+ */
+NRFX_INSTANCE_IRQ_HANDLERS_DECLARE(UART, uart)
 
 #ifdef __cplusplus
 }

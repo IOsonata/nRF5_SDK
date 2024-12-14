@@ -1,48 +1,41 @@
-/**
- * Copyright (c) 2018 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2018 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #ifndef NRFX_NFCT_H__
 #define NRFX_NFCT_H__
 
 #include <nrfx.h>
-#include <hal/nrf_nfct.h>
+#include <haly/nrfy_nfct.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -108,6 +101,7 @@ typedef enum
 typedef enum
 {
     NRFX_NFCT_PARAM_ID_FDT,     ///< NFC-A Frame Delay Time parameter.
+    NRFX_NFCT_PARAM_ID_FDT_MIN, ///< NFC-A Frame Delay Time Min parameter.
     NRFX_NFCT_PARAM_ID_SEL_RES, ///< Value of the 'Protocol' field in the NFC-A SEL_RES frame.
     NRFX_NFCT_PARAM_ID_NFCID1,  ///< NFC-A NFCID1 setting (NFC tag identifier).
 } nrfx_nfct_param_id_t;
@@ -125,9 +119,10 @@ typedef struct
     nrfx_nfct_param_id_t   id;               ///< Type of parameter.
     union
     {
-        uint32_t           fdt;              ///< NFC-A Frame Delay Time. Filled when nrfx_nfct_param_t::id is @ref NRFX_NFCT_PARAM_ID_FDT.
-        uint8_t            sel_res_protocol; ///< NFC-A value of the 'Protocol' field in the SEL_RES frame. Filled when nrfx_nfct_param_t::id is @ref NRFX_NFCT_PARAM_ID_SEL_RES.
-        nrfx_nfct_nfcid1_t nfcid1;           ///< NFC-A NFCID1 value (tag identifier). Filled when nrfx_nfct_param_t::id is @ref NRFX_NFCT_PARAM_ID_NFCID1.
+        uint32_t           fdt;              ///< NFC-A Frame Delay Time. Filled when nrfx_nfct_param_t.id is @ref NRFX_NFCT_PARAM_ID_FDT.
+        uint32_t           fdt_min;          ///< NFC-A Frame Delay Time Min. Filled when nrfx_nfct_param_t.id is @ref NRFX_NFCT_PARAM_ID_FDT_MIN.
+        uint8_t            sel_res_protocol; ///< NFC-A value of the 'Protocol' field in the SEL_RES frame. Filled when nrfx_nfct_param_t.id is @ref NRFX_NFCT_PARAM_ID_SEL_RES.
+        nrfx_nfct_nfcid1_t nfcid1;           ///< NFC-A NFCID1 value (tag identifier). Filled when nrfx_nfct_param_t.id is @ref NRFX_NFCT_PARAM_ID_NFCID1.
     } data;                                  ///< Union to store parameter data.
 } nrfx_nfct_param_t;
 
@@ -163,9 +158,9 @@ typedef struct
     nrfx_nfct_evt_id_t evt_id;                       ///< Type of event.
     union
     {
-        nrfx_nfct_evt_rx_frameend_t   rx_frameend;   ///< End of the RX frame data. Filled when nrfx_nfct_evt_t::evt_id is @ref NRFX_NFCT_EVT_RX_FRAMEEND.
-        nrfx_nfct_evt_tx_framestart_t tx_framestart; ///< Start of the TX frame data. Filled when nrfx_nfct_evt_t::evt_id is @ref NRFX_NFCT_EVT_TX_FRAMESTART.
-        nrfx_nfct_evt_error_t         error;         ///< Error data. Filled when nrfx_nfct_evt_t::evt_id is @ref NRFX_NFCT_EVT_ERROR.
+        nrfx_nfct_evt_rx_frameend_t   rx_frameend;   ///< End of the RX frame data. Filled when nrfx_nfct_evt_t.evt_id is @ref NRFX_NFCT_EVT_RX_FRAMEEND.
+        nrfx_nfct_evt_tx_framestart_t tx_framestart; ///< Start of the TX frame data. Filled when nrfx_nfct_evt_t.evt_id is @ref NRFX_NFCT_EVT_TX_FRAMESTART.
+        nrfx_nfct_evt_error_t         error;         ///< Error data. Filled when nrfx_nfct_evt_t.evt_id is @ref NRFX_NFCT_EVT_ERROR.
     } params;                                        ///< Union to store event data.
 } nrfx_nfct_evt_t;
 
@@ -184,6 +179,7 @@ typedef struct
 {
     uint32_t            rxtx_int_mask; ///< Mask for enabling RX/TX events. Indicate which events must be forwarded to the upper layer by using @ref nrfx_nfct_evt_id_t. By default, no events are enabled. */
     nrfx_nfct_handler_t cb;            ///< Callback.
+    uint8_t             irq_priority;  ///< Interrupt priority.
 } nrfx_nfct_config_t;
 
 /**
@@ -192,7 +188,10 @@ typedef struct
  * @param[in] p_config  Pointer to the NFCT driver configuration structure.
  *
  * @retval NRFX_SUCCESS             The NFCT driver was initialized successfully.
- * @retval NRFX_ERROR_INVALID_STATE The NFCT driver is already initialized.
+ * @retval NRFX_ERROR_ALREADY       The driver is already initialized.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is already initialized.
+ *                                  Deprecated - use @ref NRFX_ERROR_ALREADY instead.
+ * @retval NRFX_ERROR_FORBIDDEN     The NFCT antenna pads are not configured as antenna pins.
  */
 nrfx_err_t nrfx_nfct_init(nrfx_nfct_config_t const * p_config);
 
@@ -202,6 +201,14 @@ nrfx_err_t nrfx_nfct_init(nrfx_nfct_config_t const * p_config);
  * After uninitialization, the instance is in disabled state.
  */
 void nrfx_nfct_uninit(void);
+
+/**
+ * @brief Function for checking if the NFCT driver is initialized.
+ *
+ * @retval true  Driver is already initialized.
+ * @retval false Driver is not initialized.
+ */
+bool nrfx_nfct_init_check(void);
 
 /**
  * @brief Function for starting the NFC subsystem.
@@ -230,8 +237,11 @@ bool nrfx_nfct_field_check(void);
  * @brief Function for preparing the NFCT driver for receiving an NFC frame.
  *
  * @param[in] p_rx_data  Pointer to the RX buffer.
+ *
+ * @retval NRFX_SUCCESS            The operation was successful.
+ * @retval NRFX_ERROR_INVALID_ADDR Data buffer does not point to memory region reachable by EasyDMA.
  */
-void nrfx_nfct_rx(nrfx_nfct_data_desc_t const * p_rx_data);
+nrfx_err_t nrfx_nfct_rx(nrfx_nfct_data_desc_t const * p_rx_data);
 
 /**
  * @brief Function for transmitting an NFC frame.
@@ -242,9 +252,27 @@ void nrfx_nfct_rx(nrfx_nfct_data_desc_t const * p_rx_data);
  * @retval NRFX_SUCCESS              The operation was successful.
  * @retval NRFX_ERROR_INVALID_LENGTH The TX buffer size is invalid.
  * @retval NRFX_ERROR_BUSY           Driver is already transferring.
+ * @retval NRFX_ERROR_INVALID_ADDR   Data buffer does not point to memory region reachable by
+ *                                   EasyDMA.
  */
 nrfx_err_t nrfx_nfct_tx(nrfx_nfct_data_desc_t const * p_tx_data,
                         nrf_nfct_frame_delay_mode_t   delay_mode);
+
+/**
+ * @brief Function for transmitting an NFC frame with a specified number of bits.
+ *
+ * @param[in] p_tx_data   Pointer to the TX buffer. Unlike in @ref nrfx_nfct_tx, @p data_size is
+ *                        used as the number of bits to transmit, rather than bytes.
+ * @param[in] delay_mode  Delay mode of the NFCT frame timer.
+ *
+ * @retval NRFX_SUCCESS              The operation was successful.
+ * @retval NRFX_ERROR_INVALID_LENGTH The TX buffer size is invalid.
+ * @retval NRFX_ERROR_BUSY           Driver is already transferring.
+ * @retval NRFX_ERROR_INVALID_ADDR   Data buffer does not point to memory region reachable by
+ *                                   EasyDMA.
+ */
+nrfx_err_t nrfx_nfct_bits_tx(nrfx_nfct_data_desc_t const * p_tx_data,
+                             nrf_nfct_frame_delay_mode_t   delay_mode);
 
 /**
  * @brief Function for moving the NFCT to a new state.
@@ -277,6 +305,9 @@ nrfx_err_t nrfx_nfct_parameter_set(nrfx_nfct_param_t const * p_param);
 
 /**
  * @brief Function for getting default bytes for NFCID1.
+ *
+ * @note This function cannot be used from the non-secure code because it requires access
+ *       to FICR registers.
  *
  * @param[in,out] p_nfcid1_buff    In:  empty buffer for data;
  *                                 Out: buffer with the NFCID1 default data. These values
@@ -333,21 +364,12 @@ void nrfx_nfct_irq_handler(void);
  * To implement the second workaround, power reset is used to release the clock acquired by NFCT
  * after the field is turned off. Note that the NFCT register configuration is restored to defaults.
  *
- * If you are using the nRF52840 chip, rev. Engineering A, the workarounds for the following anomalies
- * are applied:
- * - 98. NFCT: The NFCT is not able to communicate with the peer.
- * - 116. NFCT does not release HFCLK when switching from ACTIVATED to SENSE mode.
- * - 144. NFCT: Not optimal NFC performance
- *
- * If you are using the nRF52840 chip, rev. 1, or rev. Engineering B or C, the workarounds for the following
+ * If you are using the nRF52833, nRF52840 or nRF5340 chips, the workarounds for the following
  * anomalies are applied:
  * - 190. NFCT: Event FIELDDETECTED can be generated too early.
  * To implement this workaround, an instance of NRF_TIMER is used. After the NFC field is detected,
  * the timing module measures the necessary waiting period after which NFCT can be activated.
  * This debouncing technique is used to filter possible field instabilities.
- *
- * The application of the implemented workarounds for the nRF52840 chip is determined at runtime and depends
- * on the chip variant.
  *
  * The current code contains a patch for the anomaly 25 (NFCT: Reset value of
  * SENSRES register is incorrect), so that the module now works on Windows Phone.

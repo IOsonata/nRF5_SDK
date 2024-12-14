@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2019 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2019 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <nrfx.h>
@@ -54,10 +47,10 @@
 #define NRFX_TEMP_TIME_US 4
 
 /** @brief Maximum attempts to check whether conversion passed.*/
-#define NRFX_TEMP_ATTEMPTS 10
+#define NRFX_TEMP_ATTEMPTS 100
 
 /** @brief Internal state of TEMP driver. */
-static nrfx_drv_state_t m_temp_state;
+static nrfx_drv_state_t m_temp_state = NRFX_DRV_STATE_UNINITIALIZED;
 
 /** @brief Pointer to handler to be called from interrupt routine. */
 static nrfx_temp_data_handler_t m_data_handler;
@@ -68,20 +61,22 @@ nrfx_err_t nrfx_temp_init(nrfx_temp_config_t const * p_config, nrfx_temp_data_ha
 
     if (m_temp_state != NRFX_DRV_STATE_UNINITIALIZED)
     {
-        return NRFX_ERROR_ALREADY_INITIALIZED;
+        return NRFX_ERROR_ALREADY;
     }
 
 #if NRFX_CHECK(USE_WORKAROUND_FOR_TEMP_OFFSET_ANOMALY)
     *(uint32_t volatile *)0x4000C504 = 0;
 #endif
 
+#if NRFY_TEMP_HAS_CALIBRATION && defined(FICR_TRIM_GLOBAL_TEMP_CALIB_VALUE_Msk)
+    nrfy_temp_calibration_coeff_set(NRF_TEMP, NRF_FICR->TRIM.GLOBAL.TEMP.CALIB);
+#endif
+
     m_data_handler = handler;
 
     if (m_data_handler)
     {
-        nrf_temp_int_enable(NRF_TEMP, NRF_TEMP_INT_DATARDY_MASK);
-        NRFX_IRQ_PRIORITY_SET(TEMP_IRQn, p_config->interrupt_priority);
-        NRFX_IRQ_ENABLE(TEMP_IRQn);
+        nrfy_temp_int_init(NRF_TEMP, 0, p_config->interrupt_priority, true);
     }
 
     m_temp_state = NRFX_DRV_STATE_INITIALIZED;
@@ -91,15 +86,20 @@ nrfx_err_t nrfx_temp_init(nrfx_temp_config_t const * p_config, nrfx_temp_data_ha
 void nrfx_temp_uninit(void)
 {
     NRFX_ASSERT(m_temp_state == NRFX_DRV_STATE_INITIALIZED);
-    nrf_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_STOP);
 
+    nrfy_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_STOP);
     if (m_data_handler)
     {
-        nrf_temp_int_disable(NRF_TEMP, NRF_TEMP_INT_DATARDY_MASK);
-        NRFX_IRQ_DISABLE(TEMP_IRQn);
+        nrfy_temp_int_disable(NRF_TEMP, NRF_TEMP_INT_DATARDY_MASK);
+        nrfy_temp_int_uninit(NRF_TEMP);
     }
 
     m_temp_state = NRFX_DRV_STATE_UNINITIALIZED;
+}
+
+bool nrfx_temp_init_check(void)
+{
+    return (m_temp_state != NRFX_DRV_STATE_UNINITIALIZED);
 }
 
 int32_t nrfx_temp_calculate(int32_t raw_measurement)
@@ -116,13 +116,14 @@ nrfx_err_t nrfx_temp_measure(void)
     NRFX_ASSERT(m_temp_state == NRFX_DRV_STATE_INITIALIZED);
 
     nrfx_err_t result = NRFX_SUCCESS;
-    nrf_temp_event_clear(NRF_TEMP, NRF_TEMP_EVENT_DATARDY);
-    nrf_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_START);
+
+    nrfy_temp_event_clear(NRF_TEMP, NRF_TEMP_EVENT_DATARDY);
+    nrfy_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_START);
 
     if (!m_data_handler)
     {
         bool ev_result;
-        NRFX_WAIT_FOR(nrf_temp_event_check(NRF_TEMP, NRF_TEMP_EVENT_DATARDY),
+        NRFX_WAIT_FOR(nrfy_temp_event_check(NRF_TEMP, NRF_TEMP_EVENT_DATARDY),
                       NRFX_TEMP_ATTEMPTS,
                       NRFX_TEMP_TIME_US,
                       ev_result);
@@ -132,9 +133,9 @@ nrfx_err_t nrfx_temp_measure(void)
         }
         else
         {
-            nrf_temp_event_clear(NRF_TEMP, NRF_TEMP_EVENT_DATARDY);
+            nrfy_temp_event_clear(NRF_TEMP, NRF_TEMP_EVENT_DATARDY);
         }
-        nrf_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_STOP);
+        nrfy_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_STOP);
     }
 
     return result;
@@ -147,8 +148,7 @@ void nrfx_temp_irq_handler(void)
     nrf_temp_task_trigger(NRF_TEMP, NRF_TEMP_TASK_STOP);
     nrf_temp_event_clear(NRF_TEMP, NRF_TEMP_EVENT_DATARDY);
 
-    uint32_t raw_temp = nrfx_temp_result_get();
-
+    int32_t raw_temp = nrfx_temp_result_get();
     m_data_handler(raw_temp);
 }
 

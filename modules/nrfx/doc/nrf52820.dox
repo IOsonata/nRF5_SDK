@@ -1,5 +1,9 @@
 /**
-@page nrf52820_drivers nRF52820 Drivers
+@page nrf52820_drivers nRF52820 drivers
+
+This page lists nrfx driver components supported by the nRF52820 SoC.
+For a complete overview, see @ref nrfx_drv_supp_matrix.
+
 @{
 
 @ref nrf_aar
@@ -12,9 +16,13 @@
 
 @ref nrf_comp
 
+@ref nrf_systick
+
 @ref nrf_ecb
 
-@ref nrf_ficr
+@ref nrf_egu
+
+@ref nrf_icr
 
 @ref nrf_gpio
 
@@ -39,10 +47,6 @@
 @ref nrf_spim
 
 @ref nrf_spis
-
-@ref nrf_systick
-
-@ref nrf_swi_egu
 
 @ref nrf_temp
 

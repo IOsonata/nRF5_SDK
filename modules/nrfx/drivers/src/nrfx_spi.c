@@ -1,49 +1,41 @@
-/**
- * Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2015 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <nrfx.h>
 
 #if NRFX_CHECK(NRFX_SPI_ENABLED)
 
-#if !(NRFX_CHECK(NRFX_SPI0_ENABLED) || NRFX_CHECK(NRFX_SPI1_ENABLED) || \
-      NRFX_CHECK(NRFX_SPI2_ENABLED))
+#if !NRFX_FEATURE_PRESENT(NRFX_SPI, _ENABLED)
 #error "No enabled SPI instances. Check <nrfx_config.h>."
 #endif
 
@@ -63,30 +55,102 @@ typedef struct
     nrfx_drv_state_t        state;
     volatile bool           transfer_in_progress;
 
-    // [no need for 'volatile' attribute for the following members, as they
-    //  are not concurrently used in IRQ handlers and main line code]
-    uint8_t     ss_pin;
-    uint8_t     miso_pin;
-    uint8_t     orc;
-    size_t      bytes_transferred;
-
-    bool        abort;
+    uint8_t ss_pin;
+    uint8_t orc;
+    size_t  bytes_transferred;
+    bool    abort;
+    bool    skip_gpio_cfg;
 } spi_control_block_t;
 static spi_control_block_t m_cb[NRFX_SPI_ENABLED_COUNT];
 
+static void pins_configure(nrfx_spi_config_t const * p_config)
+{
+    if (!p_config->skip_gpio_cfg)
+    {
+        // Configure pins used by the peripheral:
+        // - SCK - output with initial value corresponding with the SPI mode used:
+        //   0 - for modes 0 and 1 (CPOL = 0), 1 - for modes 2 and 3 (CPOL = 1);
+        //   according to the reference manual guidelines this pin and its input
+        //   buffer must always be connected for the SPI to work.
+        if (p_config->mode <= NRF_SPI_MODE_1)
+        {
+            nrf_gpio_pin_clear(p_config->sck_pin);
+        }
+        else
+        {
+            nrf_gpio_pin_set(p_config->sck_pin);
+        }
+        nrf_gpio_cfg(p_config->sck_pin,
+                     NRF_GPIO_PIN_DIR_OUTPUT,
+                     NRF_GPIO_PIN_INPUT_CONNECT,
+                     NRF_GPIO_PIN_NOPULL,
+                     NRF_GPIO_PIN_S0S1,
+                     NRF_GPIO_PIN_NOSENSE);
+        // - MOSI (optional) - output with initial value 0,
+        if (p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+            nrf_gpio_pin_clear(p_config->mosi_pin);
+            nrf_gpio_cfg_output(p_config->mosi_pin);
+        }
+        // - MISO (optional) - input,
+        if (p_config->miso_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+            nrf_gpio_cfg_input(p_config->miso_pin, p_config->miso_pull);
+        }
+        // - Slave Select (optional) - output with initial value 1 (inactive).
+        if (p_config->ss_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+            nrf_gpio_pin_set(p_config->ss_pin);
+            nrf_gpio_cfg_output(p_config->ss_pin);
+        }
+    }
+}
 
-nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
+static void spi_configure(nrfx_spi_t const *        p_instance,
+                          nrfx_spi_config_t const * p_config)
+{
+    pins_configure(p_config);
+    m_cb[p_instance->drv_inst_idx].ss_pin = p_config->ss_pin;
+
+    if (!p_config->skip_psel_cfg)
+    {
+        uint32_t mosi_pin = p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED ?
+                            p_config->mosi_pin : NRF_SPI_PIN_NOT_CONNECTED;
+        uint32_t miso_pin = p_config->miso_pin != NRFX_SPI_PIN_NOT_USED ?
+                            p_config->miso_pin : NRF_SPI_PIN_NOT_CONNECTED;
+
+        nrf_spi_pins_set(p_instance->p_reg, p_config->sck_pin, mosi_pin, miso_pin);
+    }
+    nrf_spi_frequency_set(p_instance->p_reg, p_config->frequency);
+    nrf_spi_configure(p_instance->p_reg, p_config->mode, p_config->bit_order);
+
+    m_cb[p_instance->drv_inst_idx].orc = p_config->orc;
+
+    if (m_cb[p_instance->drv_inst_idx].handler)
+    {
+        NRFX_IRQ_PRIORITY_SET(nrfx_get_irq_number(p_instance->p_reg),
+            p_config->irq_priority);
+        NRFX_IRQ_ENABLE(nrfx_get_irq_number(p_instance->p_reg));
+    }
+}
+
+nrfx_err_t nrfx_spi_init(nrfx_spi_t const *        p_instance,
                          nrfx_spi_config_t const * p_config,
                          nrfx_spi_evt_handler_t    handler,
                          void *                    p_context)
 {
     NRFX_ASSERT(p_config);
+
     spi_control_block_t * p_cb  = &m_cb[p_instance->drv_inst_idx];
     nrfx_err_t err_code;
 
     if (p_cb->state != NRFX_DRV_STATE_UNINITIALIZED)
     {
+#if NRFX_API_VER_AT_LEAST(3, 2, 0)
+        err_code = NRFX_ERROR_ALREADY;
+#else
         err_code = NRFX_ERROR_INVALID_STATE;
+#endif
         NRFX_LOG_WARNING("Function: %s, error code: %s.",
                          __func__,
                          NRFX_LOG_ERROR_STRING_GET(err_code));
@@ -95,15 +159,7 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
 
 #if NRFX_CHECK(NRFX_PRS_ENABLED)
     static nrfx_irq_handler_t const irq_handlers[NRFX_SPI_ENABLED_COUNT] = {
-        #if NRFX_CHECK(NRFX_SPI0_ENABLED)
-        nrfx_spi_0_irq_handler,
-        #endif
-        #if NRFX_CHECK(NRFX_SPI1_ENABLED)
-        nrfx_spi_1_irq_handler,
-        #endif
-        #if NRFX_CHECK(NRFX_SPI2_ENABLED)
-        nrfx_spi_2_irq_handler,
-        #endif
+        NRFX_INSTANCE_IRQ_HANDLERS_LIST(SPI, spi)
     };
     if (nrfx_prs_acquire(p_instance->p_reg,
             irq_handlers[p_instance->drv_inst_idx]) != NRFX_SUCCESS)
@@ -119,72 +175,15 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     p_cb->handler = handler;
     p_cb->p_context = p_context;
 
-    uint32_t mosi_pin;
-    uint32_t miso_pin;
-    // Configure pins used by the peripheral:
-    // - SCK - output with initial value corresponding with the SPI mode used:
-    //   0 - for modes 0 and 1 (CPOL = 0), 1 - for modes 2 and 3 (CPOL = 1);
-    //   according to the reference manual guidelines this pin and its input
-    //   buffer must always be connected for the SPI to work.
-    if (p_config->mode <= NRF_SPI_MODE_1)
+    if (p_config)
     {
-        nrf_gpio_pin_clear(p_config->sck_pin);
-    }
-    else
-    {
-        nrf_gpio_pin_set(p_config->sck_pin);
-    }
-    nrf_gpio_cfg(p_config->sck_pin,
-                 NRF_GPIO_PIN_DIR_OUTPUT,
-                 NRF_GPIO_PIN_INPUT_CONNECT,
-                 NRF_GPIO_PIN_NOPULL,
-                 NRF_GPIO_PIN_S0S1,
-                 NRF_GPIO_PIN_NOSENSE);
-    // - MOSI (optional) - output with initial value 0,
-    if (p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        mosi_pin = p_config->mosi_pin;
-        nrf_gpio_pin_clear(mosi_pin);
-        nrf_gpio_cfg_output(mosi_pin);
-    }
-    else
-    {
-        mosi_pin = NRF_SPI_PIN_NOT_CONNECTED;
-    }
-    // - MISO (optional) - input,
-    if (p_config->miso_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        miso_pin = p_config->miso_pin;
-        nrf_gpio_cfg_input(miso_pin, (nrf_gpio_pin_pull_t)NRFX_SPI_MISO_PULL_CFG);
-    }
-    else
-    {
-        miso_pin = NRF_SPI_PIN_NOT_CONNECTED;
-    }
-    m_cb[p_instance->drv_inst_idx].miso_pin = p_config->miso_pin;
-    // - Slave Select (optional) - output with initial value 1 (inactive).
-    if (p_config->ss_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        nrf_gpio_pin_set(p_config->ss_pin);
-        nrf_gpio_cfg_output(p_config->ss_pin);
-    }
-    m_cb[p_instance->drv_inst_idx].ss_pin = p_config->ss_pin;
+        p_cb->skip_gpio_cfg = p_config->skip_gpio_cfg;
+        p_cb->ss_pin = p_config->ss_pin;
+        p_cb->orc = p_config->orc;
 
-    NRF_SPI_Type * p_spi = p_instance->p_reg;
-    nrf_spi_pins_set(p_spi, p_config->sck_pin, mosi_pin, miso_pin);
-    nrf_spi_frequency_set(p_spi, p_config->frequency);
-    nrf_spi_configure(p_spi, p_config->mode, p_config->bit_order);
-
-    m_cb[p_instance->drv_inst_idx].orc = p_config->orc;
-
-    nrf_spi_enable(p_spi);
-
-    if (p_cb->handler)
-    {
-        NRFX_IRQ_PRIORITY_SET(nrfx_get_irq_number(p_instance->p_reg),
-            p_config->irq_priority);
-        NRFX_IRQ_ENABLE(nrfx_get_irq_number(p_instance->p_reg));
+        spi_configure(p_instance, p_config);
     }
+    nrf_spi_enable(p_instance->p_reg);
 
     p_cb->transfer_in_progress = false;
     p_cb->state = NRFX_DRV_STATE_INITIALIZED;
@@ -194,33 +193,77 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     return err_code;
 }
 
-void nrfx_spi_uninit(nrfx_spi_t const * const p_instance)
+nrfx_err_t nrfx_spi_reconfigure(nrfx_spi_t const *        p_instance,
+                                nrfx_spi_config_t const * p_config)
+{
+    NRFX_ASSERT(p_config);
+
+    spi_control_block_t * p_cb = &m_cb[p_instance->drv_inst_idx];
+
+    if (p_cb->state == NRFX_DRV_STATE_UNINITIALIZED)
+    {
+        return NRFX_ERROR_INVALID_STATE;
+    }
+    if (p_cb->transfer_in_progress)
+    {
+        return NRFX_ERROR_BUSY;
+    }
+    nrf_spi_disable(p_instance->p_reg);
+    spi_configure(p_instance, p_config);
+    nrf_spi_enable(p_instance->p_reg);
+    return NRFX_SUCCESS;
+}
+
+void nrfx_spi_uninit(nrfx_spi_t const * p_instance)
 {
     spi_control_block_t * p_cb = &m_cb[p_instance->drv_inst_idx];
+    NRF_SPI_Type * p_spi = p_instance->p_reg;
+
     NRFX_ASSERT(p_cb->state != NRFX_DRV_STATE_UNINITIALIZED);
 
     if (p_cb->handler)
     {
         NRFX_IRQ_DISABLE(nrfx_get_irq_number(p_instance->p_reg));
-    }
-
-    NRF_SPI_Type * p_spi = p_instance->p_reg;
-    if (p_cb->handler)
-    {
         nrf_spi_int_disable(p_spi, NRF_SPI_ALL_INTS_MASK);
     }
 
-    if (p_cb->miso_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        nrf_gpio_cfg_default(p_cb->miso_pin);
-    }
     nrf_spi_disable(p_spi);
+
+    if (!p_cb->skip_gpio_cfg)
+    {
+        nrf_gpio_cfg_default(nrf_spi_sck_pin_get(p_spi));
+
+        uint32_t miso_pin = nrf_spi_miso_pin_get(p_spi);
+        if (miso_pin != NRF_SPI_PIN_NOT_CONNECTED)
+        {
+            nrf_gpio_cfg_default(miso_pin);
+        }
+
+        uint32_t mosi_pin = nrf_spi_mosi_pin_get(p_spi);
+        if (mosi_pin != NRF_SPI_PIN_NOT_CONNECTED)
+        {
+            nrf_gpio_cfg_default(mosi_pin);
+        }
+
+        if (p_cb->ss_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+            nrf_gpio_cfg_default(p_cb->ss_pin);
+        }
+    }
 
 #if NRFX_CHECK(NRFX_PRS_ENABLED)
     nrfx_prs_release(p_instance->p_reg);
 #endif
 
     p_cb->state = NRFX_DRV_STATE_UNINITIALIZED;
+    NRFX_LOG_INFO("Uninitialized.");
+}
+
+bool nrfx_spi_init_check(nrfx_spi_t const * p_instance)
+{
+    spi_control_block_t * p_cb = &m_cb[p_instance->drv_inst_idx];
+
+    return (p_cb->state != NRFX_DRV_STATE_UNINITIALIZED);
 }
 
 static void finish_transfer(spi_control_block_t * p_cb)
@@ -228,7 +271,7 @@ static void finish_transfer(spi_control_block_t * p_cb)
     // If Slave Select signal is used, this is the time to deactivate it.
     if (p_cb->ss_pin != NRFX_SPI_PIN_NOT_USED)
     {
-        nrf_gpio_pin_set(p_cb->ss_pin);
+        nrf_gpio_pin_write(p_cb->ss_pin, 1);
     }
 
     // By clearing this flag before calling the handler we allow subsequent
@@ -338,16 +381,17 @@ static void spi_xfer(NRF_SPI_Type               * p_spi,
         } while (transfer_byte(p_spi, p_cb));
         if (p_cb->ss_pin != NRFX_SPI_PIN_NOT_USED)
         {
-            nrf_gpio_pin_set(p_cb->ss_pin);
+            nrf_gpio_pin_write(p_cb->ss_pin, 1);
         }
     }
 }
 
-nrfx_err_t nrfx_spi_xfer(nrfx_spi_t     const * const p_instance,
+nrfx_err_t nrfx_spi_xfer(nrfx_spi_t const *           p_instance,
                          nrfx_spi_xfer_desc_t const * p_xfer_desc,
                          uint32_t                     flags)
 {
     spi_control_block_t * p_cb  = &m_cb[p_instance->drv_inst_idx];
+
     NRFX_ASSERT(p_cb->state != NRFX_DRV_STATE_UNINITIALIZED);
     NRFX_ASSERT(p_xfer_desc->p_tx_buffer != NULL || p_xfer_desc->tx_length == 0);
     NRFX_ASSERT(p_xfer_desc->p_rx_buffer != NULL || p_xfer_desc->rx_length == 0);
@@ -375,7 +419,7 @@ nrfx_err_t nrfx_spi_xfer(nrfx_spi_t     const * const p_instance,
 
     if (p_cb->ss_pin != NRFX_SPI_PIN_NOT_USED)
     {
-        nrf_gpio_pin_clear(p_cb->ss_pin);
+        nrf_gpio_pin_write(p_cb->ss_pin, 0);
     }
     if (flags)
     {
@@ -395,7 +439,9 @@ nrfx_err_t nrfx_spi_xfer(nrfx_spi_t     const * const p_instance,
 void nrfx_spi_abort(nrfx_spi_t const * p_instance)
 {
     spi_control_block_t * p_cb = &m_cb[p_instance->drv_inst_idx];
+
     NRFX_ASSERT(p_cb->state != NRFX_DRV_STATE_UNINITIALIZED);
+
     p_cb->abort = true;
 }
 
@@ -412,25 +458,6 @@ static void irq_handler(NRF_SPI_Type * p_spi, spi_control_block_t * p_cb)
     }
 }
 
-#if NRFX_CHECK(NRFX_SPI0_ENABLED)
-void nrfx_spi_0_irq_handler(void)
-{
-    irq_handler(NRF_SPI0, &m_cb[NRFX_SPI0_INST_IDX]);
-}
-#endif
-
-#if NRFX_CHECK(NRFX_SPI1_ENABLED)
-void nrfx_spi_1_irq_handler(void)
-{
-    irq_handler(NRF_SPI1, &m_cb[NRFX_SPI1_INST_IDX]);
-}
-#endif
-
-#if NRFX_CHECK(NRFX_SPI2_ENABLED)
-void nrfx_spi_2_irq_handler(void)
-{
-    irq_handler(NRF_SPI2, &m_cb[NRFX_SPI2_INST_IDX]);
-}
-#endif
+NRFX_INSTANCE_IRQ_HANDLERS(SPI, spi)
 
 #endif // NRFX_CHECK(NRFX_SPI_ENABLED)

@@ -41,11 +41,10 @@
 
 #if NRF_MODULE_ENABLED(NRF_FSTORAGE)
 
-#include "nrf_fstorage_nvmc.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
-#include "nrf_nvmc.h"
+#include "nrf_fstorage_nvmc.h"
 #include "nrf_atomic.h"
 
 
@@ -64,6 +63,47 @@ static nrf_fstorage_info_t m_flash_info =
 
  /* An operation initiated by fstorage is ongoing. */
 static nrf_atomic_flag_t m_flash_operation_ongoing;
+
+static inline void wait_for_flash_ready(void)
+{
+    while (NRF_NVMC->READY == NVMC_READY_READY_Busy) {;}
+}
+
+void nrf_nvmc_page_erase(uint32_t address)
+{
+    // Enable erase.
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Een;
+    __ISB();
+    __DSB();
+
+    // Erase the page
+    NRF_NVMC->ERASEPAGE = address;
+    wait_for_flash_ready();
+
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
+    __ISB();
+    __DSB();
+}
+
+void nrf_nvmc_write_words(uint32_t address, const uint32_t * src, uint32_t num_words)
+{
+    uint32_t i;
+
+    // Enable write.
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen;
+    __ISB();
+    __DSB();
+
+    for (i = 0; i < num_words; i++)
+    {
+        ((uint32_t*)address)[i] = src[i];
+        wait_for_flash_ready();
+    }
+
+    NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
+    __ISB();
+    __DSB();
+}
 
 
 /* Send event to the event handler. */

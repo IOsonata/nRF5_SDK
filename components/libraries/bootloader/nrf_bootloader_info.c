@@ -65,11 +65,11 @@ void nrf_bootloader_mbr_addrs_populate(void)
 {
     if (*(const uint32_t *)MBR_BOOTLOADER_ADDR == 0xFFFFFFFF)
     {
-        nrf_nvmc_write_word(MBR_BOOTLOADER_ADDR, BOOTLOADER_START_ADDR);
+    	nrf_nvmc_word_write(MBR_BOOTLOADER_ADDR, BOOTLOADER_START_ADDR);
     }
     if (*(const uint32_t *)MBR_PARAM_PAGE_ADDR == 0xFFFFFFFF)
     {
-        nrf_nvmc_write_word(MBR_PARAM_PAGE_ADDR, NRF_MBR_PARAMS_PAGE_ADDRESS);
+    	nrf_nvmc_word_write(MBR_PARAM_PAGE_ADDR, NRF_MBR_PARAMS_PAGE_ADDRESS);
     }
 }
 
@@ -78,13 +78,13 @@ void nrf_bootloader_debug_port_disable(void)
 {
     if (NRF_UICR->APPROTECT != 0x0)
     {
-        nrf_nvmc_write_word((uint32_t)&NRF_UICR->APPROTECT, 0x0);
+    	nrf_nvmc_word_write((uint32_t)&NRF_UICR->APPROTECT, 0x0);
         NVIC_SystemReset();
     }
 #if (!defined (NRF52810_XXAA) && !defined (NRF52811_XXAA) && !defined (NRF52832_XXAA) && !defined (NRF52832_XXAB))
     if (NRF_UICR->DEBUGCTRL != 0x0)
     {
-        nrf_nvmc_write_word((uint32_t)&NRF_UICR->DEBUGCTRL, 0x0);
+    	nrf_nvmc_word_write((uint32_t)&NRF_UICR->DEBUGCTRL, 0x0);
         NVIC_SystemReset();
     }
 #endif

@@ -49,13 +49,13 @@ NRF_LOG_MODULE_REGISTER();
 
 static void wdt_feed(void)
 {
-    if (nrf_wdt_started())
+    if (nrf_wdt_started_check(NRF_WDT))
     {
         for (nrf_wdt_rr_register_t i = NRF_WDT_RR0; i < NRF_WDT_RR7; i++)
         {
-            if (nrf_wdt_reload_request_is_enabled(i))
+            if (nrf_wdt_reload_request_enable_check(NRF_WDT, i))
             {
-                nrf_wdt_reload_request_set(i);
+                nrf_wdt_reload_request_set(NRF_WDT, i);
             }
         }
     }
@@ -71,7 +71,7 @@ static void wdt_feed_timer_handler(void)
 
 void WDT_IRQHandler(void)
 {
-    nrf_wdt_event_clear(NRF_WDT_EVENT_TIMEOUT);
+    nrf_wdt_event_clear(NRF_WDT, NRF_WDT_EVENT_TIMEOUT);
     NRF_LOG_FINAL_FLUSH();
 }
 
@@ -86,9 +86,9 @@ void nrf_bootloader_wdt_init(void)
         return;
     }
 
-    if (nrf_wdt_started())
+    if (nrf_wdt_started_check(NRF_WDT))
     {
-        uint32_t wdt_ticks = nrf_wdt_reload_value_get();
+        uint32_t wdt_ticks = nrf_wdt_reload_value_get(NRF_WDT);
 
         NRF_LOG_INFO("WDT enabled CRV:%d ticks", wdt_ticks);
 
@@ -114,7 +114,7 @@ void nrf_bootloader_wdt_init(void)
 
 void nrf_bootloader_wdt_feed(void)
 {
-    if (nrf_wdt_started())
+    if (nrf_wdt_started_check(NRF_WDT))
     {
         wdt_feed();
     }

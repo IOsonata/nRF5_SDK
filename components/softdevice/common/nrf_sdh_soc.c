@@ -68,7 +68,7 @@ NRF_SECTION_SET_DEF(sdh_soc_observers, nrf_sdh_soc_evt_observer_t, NRF_SDH_SOC_O
  *
  * @param[in]   p_context   Context of the observer.
  */
-static void nrf_sdh_soc_evts_poll(void * p_context)
+void nrf_sdh_soc_evts_poll(void * p_context)
 {
     ret_code_t ret_code;
 

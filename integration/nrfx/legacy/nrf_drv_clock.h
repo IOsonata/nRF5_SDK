@@ -41,6 +41,7 @@
 #define NRF_DRV_CLOCK_H__
 
 #include <nrfx_clock.h>
+#include "sdk_errors.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -281,12 +282,12 @@ void nrf_drv_clock_on_sd_disable(void);
 #ifndef SUPPRESS_INLINE_IMPLEMENTATION
 __STATIC_INLINE uint32_t nrf_drv_clock_ppi_task_addr(nrf_clock_task_t task)
 {
-    return nrf_clock_task_address_get(task);
+    return nrf_clock_task_address_get(NRF_CLOCK, task);
 }
 
 __STATIC_INLINE uint32_t nrf_drv_clock_ppi_event_addr(nrf_clock_event_t event)
 {
-    return nrf_clock_event_address_get(event);
+    return nrf_clock_event_address_get(NRF_CLOCK, event);
 }
 #endif //SUPPRESS_INLINE_IMPLEMENTATION
 

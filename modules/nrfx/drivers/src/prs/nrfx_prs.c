@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2017 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2017 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <nrfx.h>
@@ -80,7 +73,21 @@ PRS_BOX_DEFINE(3)
 #if defined(NRFX_PRS_BOX_4_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_4_ENABLED)
 PRS_BOX_DEFINE(4)
 #endif
-
+#if defined(NRFX_PRS_BOX_5_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_5_ENABLED)
+PRS_BOX_DEFINE(5)
+#endif
+#if defined(NRFX_PRS_BOX_6_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_6_ENABLED)
+PRS_BOX_DEFINE(6)
+#endif
+#if defined(NRFX_PRS_BOX_7_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_7_ENABLED)
+PRS_BOX_DEFINE(7)
+#endif
+#if defined(NRFX_PRS_BOX_8_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_8_ENABLED)
+PRS_BOX_DEFINE(8)
+#endif
+#if defined(NRFX_PRS_BOX_9_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_9_ENABLED)
+PRS_BOX_DEFINE(9)
+#endif
 
 static prs_box_t * prs_box_get(void const * p_base_addr)
 {
@@ -106,6 +113,26 @@ static prs_box_t * prs_box_get(void const * p_base_addr)
 #endif
 #if defined(NRFX_PRS_BOX_4_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_4_ENABLED)
     if (IS_PRS_BOX(4, p_base_addr)) { return &m_prs_box_4; }
+    else
+#endif
+#if defined(NRFX_PRS_BOX_5_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_5_ENABLED)
+    if (IS_PRS_BOX(5, p_base_addr)) { return &m_prs_box_5; }
+    else
+#endif
+#if defined(NRFX_PRS_BOX_6_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_6_ENABLED)
+    if (IS_PRS_BOX(6, p_base_addr)) { return &m_prs_box_6; }
+    else
+#endif
+#if defined(NRFX_PRS_BOX_7_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_7_ENABLED)
+    if (IS_PRS_BOX(7, p_base_addr)) { return &m_prs_box_7; }
+    else
+#endif
+#if defined(NRFX_PRS_BOX_8_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_8_ENABLED)
+    if (IS_PRS_BOX(8, p_base_addr)) { return &m_prs_box_8; }
+    else
+#endif
+#if defined(NRFX_PRS_BOX_9_ADDR) && NRFX_CHECK(NRFX_PRS_BOX_9_ENABLED)
+    if (IS_PRS_BOX(9, p_base_addr)) { return &m_prs_box_9; }
     else
 #endif
     {

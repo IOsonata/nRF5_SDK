@@ -1,51 +1,47 @@
-/**
- * Copyright (c) 2018 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2018 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 #include "nrfx_atomic.h"
+
+#if NRFX_CHECK(ISA_ARM) && ((__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U))
+#define NRFX_ATOMIC_STREX_LDREX_PRESENT
+#else
+/* Cortex-M0 does not have build-in atomic function. Force disabling to avoid linking failure. */
+#undef NRFX_ATOMIC_USE_BUILT_IN
+#endif
 
 #ifndef NRFX_ATOMIC_USE_BUILT_IN
     #define NRFX_ATOMIC_USE_BUILT_IN 0
 #endif // NRFX_ATOMIC_USE_BUILT_IN
-
-#if ((__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U))
-#define NRFX_ATOMIC_STREX_LDREX_PRESENT
-#endif
 
 #if (NRFX_ATOMIC_USE_BUILT_IN == 0) && defined(NRFX_ATOMIC_STREX_LDREX_PRESENT)
 #include "nrfx_atomic_internal.h"
@@ -62,8 +58,9 @@ uint32_t nrfx_atomic_u32_fetch_store(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data = value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -100,8 +97,9 @@ uint32_t nrfx_atomic_u32_fetch_or(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data |= value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -119,11 +117,12 @@ uint32_t nrfx_atomic_u32_or(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) old_val;
     return new_val;
 #else
+    uint32_t new_val;
     NRFX_CRITICAL_SECTION_ENTER();
     *p_data |= value;
-    uint32_t new_value = *p_data;
+    new_val = *p_data;
     NRFX_CRITICAL_SECTION_EXIT();
-    return new_value;
+    return new_val;
 #endif //NRFX_ATOMIC_USE_BUILT_IN
 }
 
@@ -138,8 +137,9 @@ uint32_t nrfx_atomic_u32_fetch_and(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data &= value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -157,11 +157,12 @@ uint32_t nrfx_atomic_u32_and(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) old_val;
     return new_val;
 #else
+    uint32_t new_val;
     NRFX_CRITICAL_SECTION_ENTER();
     *p_data &= value;
-    uint32_t new_value = *p_data;
+    new_val = *p_data;
     NRFX_CRITICAL_SECTION_EXIT();
-    return new_value;
+    return new_val;
 #endif //NRFX_ATOMIC_USE_BUILT_IN
 }
 
@@ -176,8 +177,9 @@ uint32_t nrfx_atomic_u32_fetch_xor(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data ^= value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -195,11 +197,12 @@ uint32_t nrfx_atomic_u32_xor(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) old_val;
     return new_val;
 #else
+    uint32_t new_val;
     NRFX_CRITICAL_SECTION_ENTER();
     *p_data ^= value;
-    uint32_t new_value = *p_data;
+    new_val = *p_data;
     NRFX_CRITICAL_SECTION_EXIT();
-    return new_value;
+    return new_val;
 #endif //NRFX_ATOMIC_USE_BUILT_IN
 }
 
@@ -214,8 +217,9 @@ uint32_t nrfx_atomic_u32_fetch_add(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data += value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -233,11 +237,12 @@ uint32_t nrfx_atomic_u32_add(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) old_val;
     return new_val;
 #else
+    uint32_t new_val;
     NRFX_CRITICAL_SECTION_ENTER();
     *p_data += value;
-    uint32_t new_value = *p_data;
+    new_val = *p_data;
     NRFX_CRITICAL_SECTION_EXIT();
-    return new_value;
+    return new_val;
 #endif //NRFX_ATOMIC_USE_BUILT_IN
 }
 
@@ -252,8 +257,9 @@ uint32_t nrfx_atomic_u32_fetch_sub(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data -= value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -271,11 +277,12 @@ uint32_t nrfx_atomic_u32_sub(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) old_val;
     return new_val;
 #else
+    uint32_t new_val;
     NRFX_CRITICAL_SECTION_ENTER();
     *p_data -= value;
-    uint32_t new_value = *p_data;
+    new_val = *p_data;
     NRFX_CRITICAL_SECTION_EXIT();
-    return new_value;
+    return new_val;
 #endif //NRFX_ATOMIC_USE_BUILT_IN
 }
 
@@ -334,8 +341,9 @@ uint32_t nrfx_atomic_u32_fetch_sub_hs(nrfx_atomic_u32_t * p_data, uint32_t value
     (void) new_val;
     return old_val;
 #else
+    uint32_t old_val;
     NRFX_CRITICAL_SECTION_ENTER();
-    uint32_t old_val = *p_data;
+    old_val = *p_data;
     *p_data -= value;
     NRFX_CRITICAL_SECTION_EXIT();
     return old_val;
@@ -366,11 +374,12 @@ uint32_t nrfx_atomic_u32_sub_hs(nrfx_atomic_u32_t * p_data, uint32_t value)
     (void) old_val;
     return new_val;
 #else
+    uint32_t new_val;
     NRFX_CRITICAL_SECTION_ENTER();
     *p_data -= value;
-    uint32_t new_value = *p_data;
+    new_val = *p_data;
     NRFX_CRITICAL_SECTION_EXIT();
-    return new_value;
+    return new_val;
 #endif //NRFX_ATOMIC_USE_BUILT_IN
 }
 

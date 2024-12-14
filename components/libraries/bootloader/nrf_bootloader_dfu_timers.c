@@ -90,9 +90,9 @@ static void timer_init(void)
 
     if (!m_timer_initialized)
     {
-        if (!nrf_clock_lf_is_running())
+        if (!nrf_clock_lf_is_running(NRF_CLOCK))
         {
-            nrf_clock_task_trigger(NRF_CLOCK_TASK_LFCLKSTART);
+            nrf_clock_task_trigger(NRF_CLOCK, NRF_CLOCK_TASK_LFCLKSTART);
         }
 
         nrf_rtc_event_clear(RTC_STRUCT, NRF_RTC_EVENT_TICK);
@@ -120,8 +120,8 @@ static void rtc_update(uint32_t cc_channel, uint32_t cc_value)
 
     nrf_rtc_cc_set(RTC_STRUCT, cc_channel, cc_value);
     nrf_delay_us(31);
-    nrf_rtc_event_clear(RTC_STRUCT, RTC_CHANNEL_EVENT_ADDR(cc_channel));
-    nrf_rtc_int_enable(RTC_STRUCT, RTC_CHANNEL_INT_MASK(cc_channel));
+    nrf_rtc_event_clear(RTC_STRUCT, NRF_RTC_CHANNEL_EVENT_ADDR(cc_channel));
+    nrf_rtc_int_enable(RTC_STRUCT, NRF_RTC_CHANNEL_INT_MASK(cc_channel));
 }
 
 
@@ -143,7 +143,7 @@ static void timer_activate(dfu_timer_t * p_timer, uint32_t timeout_ticks)
     ASSERT(timeout_ticks <= MAX_TIMEOUT_TICKS);
     ASSERT(timeout_ticks >= NRF_BOOTLOADER_MIN_TIMEOUT_TICKS);
     uint32_t next_timeout_ticks = MIN(timeout_ticks, MAX_TIMEOUT_TICKS);
-    uint32_t cc_value = RTC_WRAP(next_timeout_ticks + nrf_rtc_counter_get(RTC_STRUCT));
+    uint32_t cc_value = NRF_RTC_WRAP(next_timeout_ticks + nrf_rtc_counter_get(RTC_STRUCT));
     p_timer->timeout  = timeout_ticks - next_timeout_ticks;
 
     if ((p_timer->timeout > 0) && (p_timer->timeout < NRF_BOOTLOADER_MIN_TIMEOUT_TICKS))
@@ -166,7 +166,7 @@ static void timer_activate(dfu_timer_t * p_timer, uint32_t timeout_ticks)
 static void timer_stop(dfu_timer_t * p_timer)
 {
     NRF_LOG_DEBUG("timer_stop (0x%x)", p_timer);
-    nrf_rtc_int_disable(RTC_STRUCT, RTC_CHANNEL_INT_MASK(p_timer->cc_channel));
+    nrf_rtc_int_disable(RTC_STRUCT, NRF_RTC_CHANNEL_INT_MASK(p_timer->cc_channel));
 }
 
 
@@ -225,7 +225,7 @@ static void timer_start(dfu_timer_t *                         p_timer,
  */
 void RTC_IRQHandler(void)
 {
-    if (nrf_rtc_event_pending(RTC_STRUCT, NRF_RTC_EVENT_OVERFLOW))
+    if (nrf_rtc_event_check(RTC_STRUCT, NRF_RTC_EVENT_OVERFLOW))
     {
         m_counter_loops++;
         nrf_rtc_event_clear(RTC_STRUCT, NRF_RTC_EVENT_OVERFLOW);
@@ -233,9 +233,9 @@ void RTC_IRQHandler(void)
 
     for (uint32_t channel = 0; channel < 2; channel++)
     {
-        if (nrf_rtc_event_pending(RTC_STRUCT, RTC_CHANNEL_EVENT_ADDR(channel)))
+        if (nrf_rtc_event_check(RTC_STRUCT, NRF_RTC_CHANNEL_EVENT_ADDR(channel)))
         {
-            nrf_rtc_event_clear(RTC_STRUCT, RTC_CHANNEL_EVENT_ADDR(channel));
+            nrf_rtc_event_clear(RTC_STRUCT, NRF_RTC_CHANNEL_EVENT_ADDR(channel));
             timer_stop(&m_timers[channel]);
             timer_fire(&m_timers[channel]);
         }

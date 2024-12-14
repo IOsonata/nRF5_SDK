@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2015 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <nrfx.h>
@@ -43,10 +36,15 @@
 #if NRFX_CHECK(NRFX_PDM_ENABLED)
 
 #include <nrfx_pdm.h>
-#include <hal/nrf_gpio.h>
+#include <haly/nrfy_pdm.h>
+#include <haly/nrfy_gpio.h>
 
 #define NRFX_LOG_MODULE PDM
 #include <nrfx_log.h>
+
+#if !NRFX_FEATURE_PRESENT(NRFX_PDM, _ENABLED)
+#error "No enabled PDM instances. Check <nrfx_config.h>."
+#endif
 
 #define EVT_TO_STR(event)                                       \
     (event == NRF_PDM_EVENT_STARTED ? "NRF_PDM_EVENT_STARTED" : \
@@ -55,7 +53,7 @@
                                       "UNKNOWN EVENT")))
 
 
-/** @brief PDM interface status. */
+/** @brief PDM driver instance status. */
 typedef enum
 {
     NRFX_PDM_STATE_IDLE,
@@ -64,7 +62,7 @@ typedef enum
     NRFX_PDM_STATE_STOPPING
 } nrfx_pdm_state_t;
 
-/** @brief PDM interface control block.*/
+/** @brief PDM driver instance control block.*/
 typedef struct
 {
     nrfx_pdm_event_handler_t  event_handler;    ///< Event handler function pointer.
@@ -75,156 +73,138 @@ typedef struct
     uint8_t                   active_buffer;    ///< Number of currently active buffer.
     uint8_t                   error;            ///< Driver error flag.
     volatile uint8_t          irq_buff_request; ///< Request the next buffer in the ISR.
+    bool                      skip_gpio_cfg;    ///< Do not touch GPIO configuration of used pins.
 } nrfx_pdm_cb_t;
 
-static nrfx_pdm_cb_t m_cb;
+#define _NRFX_PDM_CB_INITIALIZER(periph_name, prefix, idx, _) \
+    [NRFX_CONCAT(NRFX_, periph_name, idx, _INST_IDX)] = {     \
+        .drv_state = NRFX_DRV_STATE_UNINITIALIZED,            \
+    },
 
+static nrfx_pdm_cb_t m_cb[NRFX_PDM_ENABLED_COUNT] = {
+    NRFX_FOREACH_ENABLED(PDM, _NRFX_PDM_CB_INITIALIZER, (), ())
+};
 
-void nrfx_pdm_irq_handler(void)
+/** @brief Function for getting instance control block.
+ *
+ * Function is optimized for case when there is only one PDM instance.
+ *
+ * @param[in] idx Instance index.
+ *
+ * @return Control block.
+ */
+static nrfx_pdm_cb_t * get_cb(uint32_t idx)
 {
-    if (nrf_pdm_event_check(NRF_PDM_EVENT_STARTED))
+    if (NRFX_PDM_ENABLED_COUNT == 1)
     {
-        nrf_pdm_event_clear(NRF_PDM_EVENT_STARTED);
-        NRFX_LOG_DEBUG("Event: %s.", EVT_TO_STR(NRF_PDM_EVENT_STARTED));
-
-        uint8_t finished_buffer = m_cb.active_buffer;
-
-        // Check if the next buffer was set before.
-        uint8_t next_buffer = (~m_cb.active_buffer) & 0x01;
-        if (m_cb.buff_address[next_buffer] ||
-            m_cb.op_state == NRFX_PDM_STATE_STARTING)
-        {
-            nrfx_pdm_evt_t evt;
-            evt.error = NRFX_PDM_NO_ERROR;
-            m_cb.error = 0;
-
-            // Release the full buffer if ready and request the next one.
-            if (m_cb.op_state == NRFX_PDM_STATE_STARTING)
-            {
-                evt.buffer_released = 0;
-                m_cb.op_state = NRFX_PDM_STATE_RUNNING;
-            }
-            else
-            {
-                evt.buffer_released = m_cb.buff_address[finished_buffer];
-                m_cb.buff_address[finished_buffer] = 0;
-                m_cb.active_buffer = next_buffer;
-            }
-            evt.buffer_requested = true;
-            m_cb.event_handler(&evt);
-        }
-        else
-        {
-            // No next buffer available. Report an error.
-            // Do not request the new buffer as it was already done.
-            if (m_cb.error == 0)
-            {
-                nrfx_pdm_evt_t const evt = {
-                    .buffer_requested = false,
-                    .buffer_released  = NULL,
-                    .error = NRFX_PDM_ERROR_OVERFLOW
-                };
-                m_cb.error = 1;
-                m_cb.event_handler(&evt);
-            }
-        }
-
-        if (m_cb.op_state == NRFX_PDM_STATE_STARTING)
-        {
-            m_cb.op_state = NRFX_PDM_STATE_RUNNING;
-        }
+        return &m_cb[0];
     }
-    else if (nrf_pdm_event_check(NRF_PDM_EVENT_STOPPED))
+    else
     {
-        nrf_pdm_event_clear(NRF_PDM_EVENT_STOPPED);
-        NRFX_LOG_DEBUG("Event: %s.", EVT_TO_STR(NRF_PDM_EVENT_STOPPED));
-        nrf_pdm_disable();
-        m_cb.op_state = NRFX_PDM_STATE_IDLE;
-
-        // Release the buffers.
-        nrfx_pdm_evt_t evt;
-        evt.error = NRFX_PDM_NO_ERROR;
-        evt.buffer_requested = false;
-        if (m_cb.buff_address[m_cb.active_buffer])
-        {
-            evt.buffer_released = m_cb.buff_address[m_cb.active_buffer];
-            m_cb.buff_address[m_cb.active_buffer] = 0;
-            m_cb.event_handler(&evt);
-        }
-
-        uint8_t second_buffer = (~m_cb.active_buffer) & 0x01;
-        if (m_cb.buff_address[second_buffer])
-        {
-            evt.buffer_released = m_cb.buff_address[second_buffer];
-            m_cb.buff_address[second_buffer] = 0;
-            m_cb.event_handler(&evt);
-        }
-        m_cb.active_buffer = 0;
-    }
-
-    if (m_cb.irq_buff_request)
-    {
-        nrfx_pdm_evt_t const evt =
-        {
-            .buffer_requested = true,
-            .buffer_released  = NULL,
-            .error = NRFX_PDM_NO_ERROR,
-        };
-        m_cb.irq_buff_request = 0;
-        m_cb.event_handler(&evt);
+        return &m_cb[idx];
     }
 }
 
+static void pdm_configure(nrfx_pdm_t const *        p_instance,
+                          nrfx_pdm_config_t const * p_config)
+{
+    if (!p_config->skip_gpio_cfg)
+    {
+        nrfy_gpio_pin_clear(p_config->clk_pin);
+        nrfy_gpio_cfg_output(p_config->clk_pin);
+        nrfy_gpio_cfg_input(p_config->din_pin, NRF_GPIO_PIN_NOPULL);
+    }
+    if (!p_config->skip_psel_cfg)
+    {
+        nrf_pdm_psel_connect(p_instance->p_reg,
+                             p_config->clk_pin,
+                             p_config->din_pin);
+    }
 
-nrfx_err_t nrfx_pdm_init(nrfx_pdm_config_t const * p_config,
-                         nrfx_pdm_event_handler_t  event_handler)
+    nrfy_pdm_config_t nrfy_config =
+    {
+        .mode        = p_config->mode,
+        .edge        = p_config->edge,
+        .pins =
+        {
+            .clk_pin = p_config->clk_pin,
+            .din_pin = p_config->din_pin,
+        },
+        NRFX_COND_CODE_1(NRF_PDM_HAS_PDMCLKCTRL, (.clock_freq  = p_config->clock_freq,), ())
+        NRFX_COND_CODE_1(NRF_PDM_HAS_PRESCALER, (.prescaler  = p_config->prescaler,), ())
+        .gain_l      = p_config->gain_l,
+        .gain_r      = p_config->gain_r,
+        NRFX_COND_CODE_1(NRF_PDM_HAS_RATIO_CONFIG, (.ratio = p_config->ratio,), ())
+        NRFX_COND_CODE_1(NRF_PDM_HAS_MCLKCONFIG, (.mclksrc = p_config->mclksrc,), ())
+        .skip_psel_cfg = p_config->skip_psel_cfg
+    };
+
+    nrfy_pdm_periph_configure(p_instance->p_reg, &nrfy_config);
+
+    nrfy_pdm_int_init(p_instance->p_reg,
+                      NRF_PDM_INT_STARTED | NRF_PDM_INT_STOPPED,
+                      p_config->interrupt_priority,
+                      true);
+}
+
+static nrfx_err_t pdm_init(nrfx_pdm_t const *        p_instance,
+                           nrfx_pdm_config_t const * p_config,
+                           nrfx_pdm_event_handler_t  event_handler)
 {
     NRFX_ASSERT(p_config);
     NRFX_ASSERT(event_handler);
     nrfx_err_t err_code;
 
-    if (m_cb.drv_state != NRFX_DRV_STATE_UNINITIALIZED)
+    nrfx_pdm_cb_t * p_cb = get_cb(p_instance->drv_inst_idx);
+
+    if (p_cb->drv_state != NRFX_DRV_STATE_UNINITIALIZED)
     {
+#if NRFX_API_VER_AT_LEAST(3, 2, 0)
+        err_code = NRFX_ERROR_ALREADY;
+#else
         err_code = NRFX_ERROR_INVALID_STATE;
+#endif
         NRFX_LOG_WARNING("Function: %s, error code: %s.",
                          __func__,
                          NRFX_LOG_ERROR_STRING_GET(err_code));
         return err_code;
     }
 
-    if (p_config->gain_l > NRF_PDM_GAIN_MAXIMUM ||
-        p_config->gain_r > NRF_PDM_GAIN_MAXIMUM)
+    p_cb->buff_address[0] = 0;
+    p_cb->buff_address[1] = 0;
+    p_cb->active_buffer = 0;
+    p_cb->error = 0;
+    p_cb->event_handler = event_handler;
+    p_cb->op_state = NRFX_PDM_STATE_IDLE;
+
+    if (p_config)
     {
-        err_code = NRFX_ERROR_INVALID_PARAM;
-        NRFX_LOG_WARNING("Function: %s, error code: %s.",
-                         __func__,
-                         NRFX_LOG_ERROR_STRING_GET(err_code));
-        return err_code;
+        p_cb->skip_gpio_cfg = p_config->skip_gpio_cfg;
+
+        if (p_config->gain_l > NRF_PDM_GAIN_MAXIMUM ||
+            p_config->gain_r > NRF_PDM_GAIN_MAXIMUM)
+        {
+            err_code = NRFX_ERROR_INVALID_PARAM;
+            NRFX_LOG_WARNING("Function: %s, error code: %s.",
+                             __func__,
+                             NRFX_LOG_ERROR_STRING_GET(err_code));
+            return err_code;
+        }
+#if NRF_PDM_HAS_PRESCALER
+        if (p_config->prescaler < NRF_PDM_PRESCALER_MIN ||
+            p_config->prescaler > NRF_PDM_PRESCALER_MAX)
+        {
+            err_code = NRFX_ERROR_INVALID_PARAM;
+            NRFX_LOG_WARNING("Function: %s, error code: %s.",
+                             __func__,
+                             NRFX_LOG_ERROR_STRING_GET(err_code));
+            return err_code;
+        }
+#endif
+        pdm_configure(p_instance, p_config);
     }
 
-    m_cb.buff_address[0] = 0;
-    m_cb.buff_address[1] = 0;
-    m_cb.active_buffer = 0;
-    m_cb.error = 0;
-    m_cb.event_handler = event_handler;
-    m_cb.op_state = NRFX_PDM_STATE_IDLE;
-
-    nrf_pdm_clock_set(p_config->clock_freq);
-    nrf_pdm_mode_set(p_config->mode, p_config->edge);
-    nrf_pdm_gain_set(p_config->gain_l, p_config->gain_r);
-
-    nrf_gpio_cfg_output(p_config->pin_clk);
-    nrf_gpio_pin_clear(p_config->pin_clk);
-    nrf_gpio_cfg_input(p_config->pin_din, NRF_GPIO_PIN_NOPULL);
-    nrf_pdm_psel_connect(p_config->pin_clk, p_config->pin_din);
-
-    nrf_pdm_event_clear(NRF_PDM_EVENT_STARTED);
-    nrf_pdm_event_clear(NRF_PDM_EVENT_END);
-    nrf_pdm_event_clear(NRF_PDM_EVENT_STOPPED);
-    nrf_pdm_int_enable(NRF_PDM_INT_STARTED | NRF_PDM_INT_STOPPED);
-    NRFX_IRQ_PRIORITY_SET(PDM_IRQn, p_config->interrupt_priority);
-    NRFX_IRQ_ENABLE(PDM_IRQn);
-    m_cb.drv_state = NRFX_DRV_STATE_INITIALIZED;
+    p_cb->drv_state = NRFX_DRV_STATE_INITIALIZED;
 
     err_code = NRFX_SUCCESS;
     NRFX_LOG_INFO("Function: %s, error code: %s.",
@@ -233,36 +213,81 @@ nrfx_err_t nrfx_pdm_init(nrfx_pdm_config_t const * p_config,
     return err_code;
 }
 
-void nrfx_pdm_uninit(void)
+static nrfx_err_t pdm_reconfigure(nrfx_pdm_t const *        p_instance,
+                                  nrfx_pdm_config_t const * p_config)
 {
-    nrf_pdm_disable();
-    nrf_pdm_psel_disconnect();
-    m_cb.drv_state = NRFX_DRV_STATE_UNINITIALIZED;
+    nrfx_pdm_cb_t * p_cb = get_cb(p_instance->drv_inst_idx);
+
+    NRFX_ASSERT(p_config);
+    if (p_cb->drv_state == NRFX_DRV_STATE_UNINITIALIZED)
+    {
+        return NRFX_ERROR_INVALID_STATE;
+    }
+
+    if (p_config->gain_l > NRF_PDM_GAIN_MAXIMUM ||
+        p_config->gain_r > NRF_PDM_GAIN_MAXIMUM)
+    {
+        return NRFX_ERROR_INVALID_PARAM;
+    }
+
+#if NRF_PDM_HAS_PRESCALER
+    if (p_config->prescaler < NRF_PDM_PRESCALER_MIN ||
+        p_config->prescaler > NRF_PDM_PRESCALER_MAX)
+    {
+        return NRFX_ERROR_INVALID_PARAM;
+    }
+#endif
+
+    if (p_cb->op_state != NRFX_PDM_STATE_IDLE)
+    {
+        return NRFX_ERROR_BUSY;
+    }
+    nrfy_pdm_disable(p_instance->p_reg);
+    pdm_configure(p_instance, p_config);
+    nrfy_pdm_enable(p_instance->p_reg);
+    return NRFX_SUCCESS;
+}
+
+static void pdm_uninit(nrfx_pdm_t const * p_instance)
+{
+    nrfy_pdm_int_uninit(p_instance->p_reg);
+    nrfy_pdm_disable(p_instance->p_reg);
+
+    nrfx_pdm_cb_t * p_cb = get_cb(p_instance->drv_inst_idx);
+
+    if (!p_cb->skip_gpio_cfg)
+    {
+        nrfy_pdm_pins_t pins;
+        nrfy_pdm_pins_get(p_instance->p_reg, &pins);
+        nrfy_gpio_cfg_default(pins.clk_pin);
+        nrfy_gpio_cfg_default(pins.din_pin);
+    }
+
+    p_cb->drv_state = NRFX_DRV_STATE_UNINITIALIZED;
     NRFX_LOG_INFO("Uninitialized.");
 }
 
-static void pdm_start()
+static bool pdm_init_check(nrfx_pdm_t const * p_instance)
 {
-    m_cb.drv_state = NRFX_DRV_STATE_POWERED_ON;
-    nrf_pdm_enable();
-    nrf_pdm_event_clear(NRF_PDM_EVENT_STARTED);
-    nrf_pdm_task_trigger(NRF_PDM_TASK_START);
+    return (get_cb(p_instance->drv_inst_idx)->drv_state != NRFX_DRV_STATE_UNINITIALIZED);
 }
 
-static void pdm_buf_request()
+static void pdm_buf_request(nrfx_pdm_t const * p_instance)
 {
-    m_cb.irq_buff_request = 1;
-    NRFX_IRQ_PENDING_SET(PDM_IRQn);
+    get_cb(p_instance->drv_inst_idx)->irq_buff_request = 1;
+    NRFY_IRQ_PENDING_SET(nrfx_get_irq_number(p_instance->p_reg));
 }
 
-nrfx_err_t nrfx_pdm_start(void)
+static nrfx_err_t pdm_start(nrfx_pdm_t const * p_instance)
 {
-    NRFX_ASSERT(m_cb.drv_state != NRFX_DRV_STATE_UNINITIALIZED);
+    nrfx_pdm_cb_t * p_cb = get_cb(p_instance->drv_inst_idx);
+
+    NRFX_ASSERT(p_cb->drv_state != NRFX_DRV_STATE_UNINITIALIZED);
     nrfx_err_t err_code;
 
-    if (m_cb.op_state != NRFX_PDM_STATE_IDLE)
+    if (p_cb->op_state != NRFX_PDM_STATE_IDLE)
     {
-        if (m_cb.op_state == NRFX_PDM_STATE_RUNNING)
+        if (p_cb->op_state == NRFX_PDM_STATE_RUNNING)
         {
             err_code = NRFX_SUCCESS;
             NRFX_LOG_INFO("Function: %s, error code: %s.",
@@ -277,8 +302,8 @@ nrfx_err_t nrfx_pdm_start(void)
         return err_code;
     }
 
-    m_cb.op_state = NRFX_PDM_STATE_STARTING;
-    pdm_buf_request();
+    p_cb->op_state = NRFX_PDM_STATE_STARTING;
+    pdm_buf_request(p_instance);
 
     err_code = NRFX_SUCCESS;
     NRFX_LOG_INFO("Function: %s, error code: %s.",
@@ -287,13 +312,17 @@ nrfx_err_t nrfx_pdm_start(void)
     return err_code;
 }
 
-nrfx_err_t nrfx_pdm_buffer_set(int16_t * buffer, uint16_t buffer_length)
+static nrfx_err_t pdm_buffer_set(nrfx_pdm_t const * p_instance,
+                                 int16_t *          buffer,
+                                 uint16_t           buffer_length)
 {
-    if (m_cb.drv_state == NRFX_DRV_STATE_UNINITIALIZED)
+    nrfx_pdm_cb_t * p_cb = get_cb(p_instance->drv_inst_idx);
+
+    if (p_cb->drv_state == NRFX_DRV_STATE_UNINITIALIZED)
     {
         return NRFX_ERROR_INVALID_STATE;
     }
-    if (m_cb.op_state == NRFX_PDM_STATE_STOPPING)
+    if (p_cb->op_state == NRFX_PDM_STATE_STOPPING)
     {
         return NRFX_ERROR_BUSY;
     }
@@ -305,47 +334,57 @@ nrfx_err_t nrfx_pdm_buffer_set(int16_t * buffer, uint16_t buffer_length)
     nrfx_err_t err_code = NRFX_SUCCESS;
 
     // Enter the PDM critical section.
-    NRFX_IRQ_DISABLE(PDM_IRQn);
+    NRFY_IRQ_DISABLE(nrfx_get_irq_number(p_instance->p_reg));
 
-    uint8_t next_buffer = (~m_cb.active_buffer) & 0x01;
-    if (m_cb.op_state == NRFX_PDM_STATE_STARTING)
+    uint8_t next_buffer = (~p_cb->active_buffer) & 0x01;
+    if (p_cb->op_state == NRFX_PDM_STATE_STARTING)
     {
         next_buffer = 0;
     }
 
-    if (m_cb.buff_address[next_buffer])
+    if (p_cb->buff_address[next_buffer])
     {
         // Buffer already set.
         err_code = NRFX_ERROR_BUSY;
     }
     else
     {
-        m_cb.buff_address[next_buffer] = buffer;
-        m_cb.buff_length[next_buffer] = buffer_length;
-        nrf_pdm_buffer_set((uint32_t *)buffer, buffer_length);
+        p_cb->buff_address[next_buffer] = buffer;
+        p_cb->buff_length[next_buffer] = buffer_length;
 
-        if (m_cb.drv_state != NRFX_DRV_STATE_POWERED_ON)
+        nrfy_pdm_buffer_t nrfy_buffer =
         {
-            pdm_start();
+            .p_buff = buffer,
+            .length = buffer_length,
+        };
+        nrfy_pdm_buffer_set(p_instance->p_reg, &nrfy_buffer);
+
+        if (p_cb->drv_state != NRFX_DRV_STATE_POWERED_ON)
+        {
+            p_cb->drv_state = NRFX_DRV_STATE_POWERED_ON;
+            nrfy_pdm_enable(p_instance->p_reg);
+            nrfy_pdm_start(p_instance->p_reg, NULL);
         }
     }
 
-    NRFX_IRQ_ENABLE(PDM_IRQn);
+    NRFY_IRQ_ENABLE(nrfx_get_irq_number(p_instance->p_reg));
     return err_code;
 }
 
-nrfx_err_t nrfx_pdm_stop(void)
+static nrfx_err_t pdm_stop(nrfx_pdm_t const * p_instance)
 {
-    NRFX_ASSERT(m_cb.drv_state != NRFX_DRV_STATE_UNINITIALIZED);
+    nrfx_pdm_cb_t * p_cb = get_cb(p_instance->drv_inst_idx);
+
+    NRFX_ASSERT(p_cb->drv_state != NRFX_DRV_STATE_UNINITIALIZED);
     nrfx_err_t err_code;
 
-    if (m_cb.op_state != NRFX_PDM_STATE_RUNNING)
+    if (p_cb->op_state != NRFX_PDM_STATE_RUNNING)
     {
-        if (m_cb.op_state == NRFX_PDM_STATE_IDLE ||
-            m_cb.op_state == NRFX_PDM_STATE_STARTING)
+        if (p_cb->op_state == NRFX_PDM_STATE_IDLE ||
+            p_cb->op_state == NRFX_PDM_STATE_STARTING)
         {
-            nrf_pdm_disable();
-            m_cb.op_state = NRFX_PDM_STATE_IDLE;
+            nrfy_pdm_disable(p_instance->p_reg);
+            p_cb->op_state = NRFX_PDM_STATE_IDLE;
             err_code = NRFX_SUCCESS;
             NRFX_LOG_INFO("Function: %s, error code: %s.",
                           __func__,
@@ -358,13 +397,309 @@ nrfx_err_t nrfx_pdm_stop(void)
                          NRFX_LOG_ERROR_STRING_GET(err_code));
         return err_code;
     }
-    m_cb.drv_state = NRFX_DRV_STATE_INITIALIZED;
-    m_cb.op_state = NRFX_PDM_STATE_STOPPING;
+    p_cb->drv_state = NRFX_DRV_STATE_INITIALIZED;
+    p_cb->op_state = NRFX_PDM_STATE_STOPPING;
 
-    nrf_pdm_task_trigger(NRF_PDM_TASK_STOP);
+    nrfy_pdm_abort(p_instance->p_reg, NULL);
     err_code = NRFX_SUCCESS;
     NRFX_LOG_INFO("Function: %s, error code: %s.", __func__, NRFX_LOG_ERROR_STRING_GET(err_code));
     return err_code;
 }
+
+#if NRFX_API_VER_AT_LEAST(3, 7, 0)
+
+nrfx_err_t nrfx_pdm_init(nrfx_pdm_t const *        p_instance,
+                         nrfx_pdm_config_t const * p_config,
+                         nrfx_pdm_event_handler_t  event_handler)
+{
+    return pdm_init(p_instance, p_config, event_handler);
+}
+
+nrfx_err_t nrfx_pdm_reconfigure(nrfx_pdm_t const *        p_instance,
+                                nrfx_pdm_config_t const * p_config)
+{
+    return pdm_reconfigure(p_instance, p_config);
+}
+
+void nrfx_pdm_uninit(nrfx_pdm_t const * p_instance)
+{
+    pdm_uninit(p_instance);
+}
+
+bool nrfx_pdm_init_check(nrfx_pdm_t const * p_instance)
+{
+    return pdm_init_check(p_instance);
+}
+
+nrfx_err_t nrfx_pdm_start(nrfx_pdm_t const * p_instance)
+{
+    return pdm_start(p_instance);
+}
+
+nrfx_err_t nrfx_pdm_buffer_set(nrfx_pdm_t const * p_instance,
+                               int16_t *          buffer,
+                               uint16_t           buffer_length)
+{
+    return pdm_buffer_set(p_instance, buffer, buffer_length);
+}
+
+nrfx_err_t nrfx_pdm_stop(nrfx_pdm_t const * p_instance)
+{
+    return pdm_stop(p_instance);
+}
+
+#else
+
+nrfx_pdm_t const pdm_instance = NRFX_PDM_INSTANCE(NRF_PDM_INDEX);
+
+nrfx_err_t nrfx_pdm_init(nrfx_pdm_config_t const * p_config,
+                         nrfx_pdm_event_handler_t  event_handler)
+{
+    return pdm_init(&pdm_instance, p_config, event_handler);
+}
+
+nrfx_err_t nrfx_pdm_reconfigure(nrfx_pdm_config_t const * p_config)
+{
+    return pdm_reconfigure(&pdm_instance, p_config);
+}
+
+void nrfx_pdm_uninit(void)
+{
+    pdm_uninit(&pdm_instance);
+}
+
+bool nrfx_pdm_init_check(void)
+{
+    return pdm_init_check(&pdm_instance);
+}
+
+nrfx_err_t nrfx_pdm_start(void)
+{
+    return pdm_start(&pdm_instance);
+}
+
+nrfx_err_t nrfx_pdm_buffer_set(int16_t * buffer, uint16_t buffer_length)
+{
+    return pdm_buffer_set(&pdm_instance, buffer, buffer_length);
+}
+
+nrfx_err_t nrfx_pdm_stop(void)
+{
+    return pdm_stop(&pdm_instance);
+}
+
+void nrfx_pdm_irq_handler(void)
+{
+    nrfx_pdm_cb_t * p_cb = get_cb(0);
+
+    nrfy_pdm_buffer_t buffer =
+    {
+        .p_buff = p_cb->buff_address[p_cb->active_buffer],
+        .length = p_cb->buff_length[p_cb->active_buffer],
+    };
+
+    uint32_t evt_mask = nrfy_pdm_events_process(NRF_PDM0,
+                                                NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STARTED) |
+                                                NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STOPPED),
+                                                &buffer);
+
+    if (evt_mask & NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STARTED))
+    {
+        NRFX_LOG_DEBUG("Event: %s.", EVT_TO_STR(NRF_PDM_EVENT_STARTED));
+
+        uint8_t finished_buffer = p_cb->active_buffer;
+
+        // Check if the next buffer was set before.
+        uint8_t next_buffer = (~p_cb->active_buffer) & 0x01;
+        if (p_cb->buff_address[next_buffer] ||
+            p_cb->op_state == NRFX_PDM_STATE_STARTING)
+        {
+            nrfx_pdm_evt_t evt;
+            evt.error = NRFX_PDM_NO_ERROR;
+            p_cb->error = 0;
+
+            // Release the full buffer if ready and request the next one.
+            if (p_cb->op_state == NRFX_PDM_STATE_STARTING)
+            {
+                evt.buffer_released = 0;
+                p_cb->op_state = NRFX_PDM_STATE_RUNNING;
+            }
+            else
+            {
+                evt.buffer_released = p_cb->buff_address[finished_buffer];
+                p_cb->buff_address[finished_buffer] = 0;
+                p_cb->active_buffer = next_buffer;
+            }
+            evt.buffer_requested = true;
+            p_cb->event_handler(&evt);
+        }
+        else
+        {
+            // No next buffer available. Report an error.
+            // Do not request the new buffer as it was already done.
+            if (p_cb->error == 0)
+            {
+                nrfx_pdm_evt_t const evt = {
+                    .buffer_requested = false,
+                    .buffer_released  = NULL,
+                    .error = NRFX_PDM_ERROR_OVERFLOW
+                };
+                p_cb->error = 1;
+                p_cb->event_handler(&evt);
+            }
+        }
+
+        if (p_cb->op_state == NRFX_PDM_STATE_STARTING)
+        {
+            p_cb->op_state = NRFX_PDM_STATE_RUNNING;
+        }
+    }
+    else if (evt_mask & NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STOPPED))
+    {
+        NRFX_LOG_DEBUG("Event: %s.", EVT_TO_STR(NRF_PDM_EVENT_STOPPED));
+        nrfy_pdm_disable(NRF_PDM0);
+        p_cb->op_state = NRFX_PDM_STATE_IDLE;
+
+        // Release the buffers.
+        nrfx_pdm_evt_t evt;
+        evt.error = NRFX_PDM_NO_ERROR;
+        evt.buffer_requested = false;
+        if (p_cb->buff_address[p_cb->active_buffer])
+        {
+            evt.buffer_released = p_cb->buff_address[p_cb->active_buffer];
+            p_cb->buff_address[p_cb->active_buffer] = 0;
+            p_cb->event_handler(&evt);
+        }
+
+        uint8_t second_buffer = (~p_cb->active_buffer) & 0x01;
+        if (p_cb->buff_address[second_buffer])
+        {
+            evt.buffer_released = p_cb->buff_address[second_buffer];
+            p_cb->buff_address[second_buffer] = 0;
+            p_cb->event_handler(&evt);
+        }
+        p_cb->active_buffer = 0;
+    }
+
+    if (p_cb->irq_buff_request)
+    {
+        nrfx_pdm_evt_t const evt =
+        {
+            .buffer_requested = true,
+            .buffer_released  = NULL,
+            .error = NRFX_PDM_NO_ERROR,
+        };
+        p_cb->irq_buff_request = 0;
+        p_cb->event_handler(&evt);
+    }
+}
+
+#endif // NRFX_API_VER_AT_LEAST(3, 7, 0)
+
+static void irq_handler(NRF_PDM_Type * p_pdm, nrfx_pdm_cb_t * p_cb)
+{
+    nrfy_pdm_buffer_t buffer =
+    {
+        .p_buff = p_cb->buff_address[p_cb->active_buffer],
+        .length = p_cb->buff_length[p_cb->active_buffer],
+    };
+
+    uint32_t evt_mask = nrfy_pdm_events_process(p_pdm,
+                                                NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STARTED) |
+                                                NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STOPPED),
+                                                &buffer);
+
+    if (evt_mask & NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STARTED))
+    {
+        NRFX_LOG_DEBUG("Event: %s.", EVT_TO_STR(NRF_PDM_EVENT_STARTED));
+
+        uint8_t finished_buffer = p_cb->active_buffer;
+
+        // Check if the next buffer was set before.
+        uint8_t next_buffer = (~p_cb->active_buffer) & 0x01;
+        if (p_cb->buff_address[next_buffer] ||
+            p_cb->op_state == NRFX_PDM_STATE_STARTING)
+        {
+            nrfx_pdm_evt_t evt;
+            evt.error = NRFX_PDM_NO_ERROR;
+            p_cb->error = 0;
+
+            // Release the full buffer if ready and request the next one.
+            if (p_cb->op_state == NRFX_PDM_STATE_STARTING)
+            {
+                evt.buffer_released = 0;
+                p_cb->op_state = NRFX_PDM_STATE_RUNNING;
+            }
+            else
+            {
+                evt.buffer_released = p_cb->buff_address[finished_buffer];
+                p_cb->buff_address[finished_buffer] = 0;
+                p_cb->active_buffer = next_buffer;
+            }
+            evt.buffer_requested = true;
+            p_cb->event_handler(&evt);
+        }
+        else
+        {
+            // No next buffer available. Report an error.
+            // Do not request the new buffer as it was already done.
+            if (p_cb->error == 0)
+            {
+                nrfx_pdm_evt_t const evt = {
+                    .buffer_requested = false,
+                    .buffer_released  = NULL,
+                    .error = NRFX_PDM_ERROR_OVERFLOW
+                };
+                p_cb->error = 1;
+                p_cb->event_handler(&evt);
+            }
+        }
+
+        if (p_cb->op_state == NRFX_PDM_STATE_STARTING)
+        {
+            p_cb->op_state = NRFX_PDM_STATE_RUNNING;
+        }
+    }
+    else if (evt_mask & NRFY_EVENT_TO_INT_BITMASK(NRF_PDM_EVENT_STOPPED))
+    {
+        NRFX_LOG_DEBUG("Event: %s.", EVT_TO_STR(NRF_PDM_EVENT_STOPPED));
+        nrfy_pdm_disable(p_pdm);
+        p_cb->op_state = NRFX_PDM_STATE_IDLE;
+
+        // Release the buffers.
+        nrfx_pdm_evt_t evt;
+        evt.error = NRFX_PDM_NO_ERROR;
+        evt.buffer_requested = false;
+        if (p_cb->buff_address[p_cb->active_buffer])
+        {
+            evt.buffer_released = p_cb->buff_address[p_cb->active_buffer];
+            p_cb->buff_address[p_cb->active_buffer] = 0;
+            p_cb->event_handler(&evt);
+        }
+
+        uint8_t second_buffer = (~p_cb->active_buffer) & 0x01;
+        if (p_cb->buff_address[second_buffer])
+        {
+            evt.buffer_released = p_cb->buff_address[second_buffer];
+            p_cb->buff_address[second_buffer] = 0;
+            p_cb->event_handler(&evt);
+        }
+        p_cb->active_buffer = 0;
+    }
+
+    if (p_cb->irq_buff_request)
+    {
+        nrfx_pdm_evt_t const evt =
+        {
+            .buffer_requested = true,
+            .buffer_released  = NULL,
+            .error = NRFX_PDM_NO_ERROR,
+        };
+        p_cb->irq_buff_request = 0;
+        p_cb->event_handler(&evt);
+    }
+}
+
+NRFX_INSTANCE_IRQ_HANDLERS(PDM, pdm)
 
 #endif // NRFX_CHECK(NRFX_PDM_ENABLED)

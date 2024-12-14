@@ -49,14 +49,14 @@
 #include "nrf_atomic.h"
 #include "nrf_atfifo.h"
 
-#include "nrf_fstorage.h"
-#if (FDS_BACKEND == NRF_FSTORAGE_SD)
-#include "nrf_fstorage_sd.h"
-#elif (FDS_BACKEND == NRF_FSTORAGE_NVMC)
-#include "nrf_fstorage_nvmc.h"
-#else
-#error Invalid FDS backend.
-#endif
+//#include "nrf_fstorage.h"
+//#if (FDS_BACKEND == NRF_FSTORAGE_SD)
+//#include "nrf_fstorage_sd.h"
+//#elif (FDS_BACKEND == NRF_FSTORAGE_NVMC)
+//#include "nrf_fstorage_nvmc.h"
+//#else
+//#error Invalid FDS backend.
+//#endif
 
 #if (FDS_CRC_CHECK_ON_READ)
 #include "crc16.h"
@@ -1683,7 +1683,7 @@ static void flash_bounds_set(void)
     m_fs.start_addr = m_fs.end_addr - flash_size;
 }
 
-
+#if 0
 static ret_code_t flash_subsystem_init(void)
 {
     flash_bounds_set();
@@ -1696,7 +1696,7 @@ static ret_code_t flash_subsystem_init(void)
         #error Invalid FDS_BACKEND.
     #endif
 }
-
+#endif
 
 static void queue_init(void)
 {
@@ -1704,7 +1704,7 @@ static void queue_init(void)
 }
 
 
-ret_code_t fds_init(void)
+ret_code_t fds_init_intern(nrf_fstorage_api_t *pStorage)
 {
     ret_code_t ret;
     fds_evt_t const evt_success =
@@ -1727,8 +1727,11 @@ ret_code_t fds_init(void)
     }
 
     // Otherwise, the flag is set and we proceed to initialization.
+//    ret = flash_subsystem_init();
 
-    ret = flash_subsystem_init();
+    flash_bounds_set();
+
+   	ret = nrf_fstorage_init(&m_fs, pStorage, NULL);
     if (ret != NRF_SUCCESS)
     {
         return ret;

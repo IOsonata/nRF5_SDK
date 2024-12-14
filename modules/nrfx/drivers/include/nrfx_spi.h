@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2015 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #ifndef NRFX_SPI_H__
@@ -43,6 +36,7 @@
 
 #include <nrfx.h>
 #include <hal/nrf_spi.h>
+#include <hal/nrf_gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,24 +56,19 @@ typedef struct
     uint8_t        drv_inst_idx; ///< Index of the driver instance. For internal use only.
 } nrfx_spi_t;
 
+#ifndef __NRFX_DOXYGEN__
 enum {
-#if NRFX_CHECK(NRFX_SPI0_ENABLED)
-    NRFX_SPI0_INST_IDX,
-#endif
-#if NRFX_CHECK(NRFX_SPI1_ENABLED)
-    NRFX_SPI1_INST_IDX,
-#endif
-#if NRFX_CHECK(NRFX_SPI2_ENABLED)
-    NRFX_SPI2_INST_IDX,
-#endif
+    /* List all enabled driver instances (in the format NRFX_\<instance_name\>_INST_IDX). */
+    NRFX_INSTANCE_ENUM_LIST(SPI)
     NRFX_SPI_ENABLED_COUNT
 };
+#endif
 
 /** @brief Macro for creating an instance of the SPI master driver. */
 #define NRFX_SPI_INSTANCE(id)                               \
 {                                                           \
-    .p_reg        = NRFX_CONCAT_2(NRF_SPI, id),             \
-    .drv_inst_idx = NRFX_CONCAT_3(NRFX_SPI, id, _INST_IDX), \
+    .p_reg        = NRFX_CONCAT(NRF_, SPI, id),             \
+    .drv_inst_idx = NRFX_CONCAT(NRFX_SPI, id, _INST_IDX),   \
 }
 
 /**
@@ -92,40 +81,75 @@ enum {
 /** @brief Configuration structure of the SPI master driver instance. */
 typedef struct
 {
-    uint8_t sck_pin;                ///< SCK pin number.
-    uint8_t mosi_pin;               ///< MOSI pin number (optional).
-                                    /**< Set to @ref NRFX_SPI_PIN_NOT_USED
-                                     *   if this signal is not needed. */
-    uint8_t miso_pin;               ///< MISO pin number (optional).
-                                    /**< Set to @ref NRFX_SPI_PIN_NOT_USED
-                                     *   if this signal is not needed. */
-    uint8_t ss_pin;                 ///< Slave Select pin number (optional).
-                                    /**< Set to @ref NRFX_SPI_PIN_NOT_USED
-                                     *   if this signal is not needed. The driver
-                                     *   supports only active low for this signal.
-                                     *   If the signal must be active high,
-                                     *   it must be controlled externally. */
-    uint8_t irq_priority;           ///< Interrupt priority.
-    uint8_t orc;                    ///< Overrun character.
-                                    /**< This character is used when all bytes from the TX buffer are sent,
-                                         but the transfer continues due to RX. */
-    nrf_spi_frequency_t frequency;  ///< SPI frequency.
-    nrf_spi_mode_t      mode;       ///< SPI mode.
-    nrf_spi_bit_order_t bit_order;  ///< SPI bit order.
+    uint8_t             sck_pin;       ///< SCK pin number.
+    uint8_t             mosi_pin;      ///< MOSI pin number (optional).
+                                       /**< Set to @ref NRFX_SPI_PIN_NOT_USED
+                                        *   if this signal is not needed. */
+    uint8_t             miso_pin;      ///< MISO pin number (optional).
+                                       /**< Set to @ref NRFX_SPI_PIN_NOT_USED
+                                        *   if this signal is not needed. */
+    uint8_t             ss_pin;        ///< Slave Select pin number (optional).
+                                       /**< Set to @ref NRFX_SPI_PIN_NOT_USED
+                                        *   if this signal is not needed. The driver
+                                        *   supports only active low for this signal.
+                                        *   If the signal must be active high,
+                                        *   it must be controlled externally.
+                                        *   @note Unlike the other fields that specify
+                                        *   pin numbers, this one cannot be omitted
+                                        *   when both GPIO configuration and pin
+                                        *   selection are to be skipped, as the driver
+                                        *   must control the signal as a regular GPIO. */
+    uint8_t             irq_priority;  ///< Interrupt priority.
+    uint8_t             orc;           ///< Overrun character.
+                                       /**< This character is used when all bytes from the TX buffer are sent,
+                                        *   but the transfer continues due to RX. */
+    nrf_spi_frequency_t frequency;     ///< SPI frequency.
+    nrf_spi_mode_t      mode;          ///< SPI mode.
+    nrf_spi_bit_order_t bit_order;     ///< SPI bit order.
+    nrf_gpio_pin_pull_t miso_pull;     ///< MISO pull up configuration.
+    bool                skip_gpio_cfg; ///< Skip GPIO configuration of pins.
+                                       /**< When set to true, the driver does not modify
+                                        *   any GPIO parameters of the used pins. Those
+                                        *   parameters are supposed to be configured
+                                        *   externally before the driver is initialized. */
+    bool                skip_psel_cfg; ///< Skip pin selection configuration.
+                                       /**< When set to true, the driver does not modify
+                                        *   pin select registers in the peripheral.
+                                        *   Those registers are supposed to be set up
+                                        *   externally before the driver is initialized.
+                                        *   @note When both GPIO configuration and pin
+                                        *   selection are to be skipped, the structure
+                                        *   fields that specify pins can be omitted,
+                                        *   as they are ignored anyway. This does not
+                                        *   apply to the @p ss_pin field. */
 } nrfx_spi_config_t;
 
-/** @brief SPI master instance default configuration. */
-#define NRFX_SPI_DEFAULT_CONFIG                           \
-{                                                         \
-    .sck_pin      = NRFX_SPI_PIN_NOT_USED,                \
-    .mosi_pin     = NRFX_SPI_PIN_NOT_USED,                \
-    .miso_pin     = NRFX_SPI_PIN_NOT_USED,                \
-    .ss_pin       = NRFX_SPI_PIN_NOT_USED,                \
-    .irq_priority = NRFX_SPI_DEFAULT_CONFIG_IRQ_PRIORITY, \
-    .orc          = 0xFF,                                 \
-    .frequency    = NRF_SPI_FREQ_4M,                      \
-    .mode         = NRF_SPI_MODE_0,                       \
-    .bit_order    = NRF_SPI_BIT_ORDER_MSB_FIRST,          \
+/**
+ * @brief SPI master instance default configuration.
+ * This configuration sets up SPI with the following options:
+ * - over-run character set to 0xFF
+ * - clock frequency 4 MHz
+ * - mode 0 enabled (SCK active high, sample on leading edge of clock)
+ * - MSB shifted out first
+ * - MISO pull-up disabled
+ *
+ * @param[in] _pin_sck  SCK pin.
+ * @param[in] _pin_mosi MOSI pin.
+ * @param[in] _pin_miso MISO pin.
+ * @param[in] _pin_ss   SS pin.
+ */
+#define NRFX_SPI_DEFAULT_CONFIG(_pin_sck, _pin_mosi, _pin_miso, _pin_ss)    \
+{                                                                           \
+    .sck_pin      = _pin_sck,                                               \
+    .mosi_pin     = _pin_mosi,                                              \
+    .miso_pin     = _pin_miso,                                              \
+    .ss_pin       = _pin_ss,                                                \
+    .irq_priority = NRFX_SPI_DEFAULT_CONFIG_IRQ_PRIORITY,                   \
+    .orc          = 0xFF,                                                   \
+    .frequency    = NRF_SPI_FREQ_4M,                                        \
+    .mode         = NRF_SPI_MODE_0,                                         \
+    .bit_order    = NRF_SPI_BIT_ORDER_MSB_FIRST,                            \
+    .miso_pull    = NRF_GPIO_PIN_NOPULL,                                    \
 }
 
 /** @brief Single transfer descriptor structure. */
@@ -194,23 +218,48 @@ typedef void (* nrfx_spi_evt_handler_t)(nrfx_spi_evt_t const * p_event,
  * @param[in] p_context  Context passed to the event handler.
  *
  * @retval NRFX_SUCCESS             Initialization was successful.
- * @retval NRFX_ERROR_INVALID_STATE The driver was already initialized.
+ * @retval NRFX_ERROR_ALREADY       The driver is already initialized.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is already initialized.
+ *                                  Deprecated - use @ref NRFX_ERROR_ALREADY instead.
  * @retval NRFX_ERROR_BUSY          Some other peripheral with the same
  *                                  instance ID is already in use. This is
  *                                  possible only if @ref nrfx_prs module
  *                                  is enabled.
  */
-nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
+nrfx_err_t nrfx_spi_init(nrfx_spi_t const *        p_instance,
                          nrfx_spi_config_t const * p_config,
                          nrfx_spi_evt_handler_t    handler,
                          void *                    p_context);
+
+/**
+ * @brief Function for reconfiguring the SPI master driver instance.
+ *
+ * @param[in] p_instance Pointer to the driver instance structure.
+ * @param[in] p_config   Pointer to the structure with the configuration.
+ *
+ * @retval NRFX_SUCCESS             Reconfiguration was successful.
+ * @retval NRFX_ERROR_BUSY          The driver is during transfer.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is uninitialized.
+ */
+nrfx_err_t nrfx_spi_reconfigure(nrfx_spi_t const *        p_instance,
+                                nrfx_spi_config_t const * p_config);
 
 /**
  * @brief Function for uninitializing the SPI master driver instance.
  *
  * @param[in] p_instance Pointer to the driver instance structure.
  */
-void nrfx_spi_uninit(nrfx_spi_t const * const p_instance);
+void nrfx_spi_uninit(nrfx_spi_t const * p_instance);
+
+/**
+ * @brief Function for checking if the SPI driver instance is initialized.
+ *
+ * @param[in] p_instance Pointer to the driver instance structure.
+ *
+ * @retval true  Instance is already initialized.
+ * @retval false Instance is not initialized.
+ */
+bool nrfx_spi_init_check(nrfx_spi_t const * p_instance);
 
 /**
  * @brief Function for starting the SPI data transfer.
@@ -229,7 +278,7 @@ void nrfx_spi_uninit(nrfx_spi_t const * const p_instance);
  * @retval NRFX_ERROR_BUSY          The driver is not ready for a new transfer.
  * @retval NRFX_ERROR_NOT_SUPPORTED The provided parameters are not supported.
  */
-nrfx_err_t nrfx_spi_xfer(nrfx_spi_t const * const     p_instance,
+nrfx_err_t nrfx_spi_xfer(nrfx_spi_t const *           p_instance,
                          nrfx_spi_xfer_desc_t const * p_xfer_desc,
                          uint32_t                     flags);
 
@@ -240,12 +289,31 @@ nrfx_err_t nrfx_spi_xfer(nrfx_spi_t const * const     p_instance,
  */
 void nrfx_spi_abort(nrfx_spi_t const * p_instance);
 
+/**
+ * @brief Macro returning SPI interrupt handler.
+ *
+ * param[in] idx SPI index.
+ *
+ * @return Interrupt handler.
+ */
+#define NRFX_SPI_INST_HANDLER_GET(idx) NRFX_CONCAT_3(nrfx_spi_, idx, _irq_handler)
+
 /** @} */
 
-
-void nrfx_spi_0_irq_handler(void);
-void nrfx_spi_1_irq_handler(void);
-void nrfx_spi_2_irq_handler(void);
+/*
+ * Declare interrupt handlers for all enabled driver instances in the following format:
+ * nrfx_\<periph_name\>_\<idx\>_irq_handler (for example, nrfx_spi_0_irq_handler).
+ *
+ * A specific interrupt handler for the driver instance can be retrieved by using
+ * the NRFX_SPI_INST_HANDLER_GET macro.
+ *
+ * Here is a sample of using the NRFX_SPI_INST_HANDLER_GET macro to map an interrupt handler
+ * in a Zephyr application:
+ *
+ * IRQ_CONNECT(NRFX_IRQ_NUMBER_GET(NRF_SPI_INST_GET(\<instance_index\>)), \<priority\>,
+ *             NRFX_SPI_INST_HANDLER_GET(\<instance_index\>), 0, 0);
+ */
+NRFX_INSTANCE_IRQ_HANDLERS_DECLARE(SPI, spi)
 
 
 #ifdef __cplusplus

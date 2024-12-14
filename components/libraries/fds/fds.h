@@ -40,6 +40,8 @@
 #ifndef FDS_H__
 #define FDS_H__
 
+#include "nrf_fstorage.h"
+
 /**
  * @defgroup fds Flash Data Storage
  * @ingroup app_common
@@ -293,7 +295,7 @@ ret_code_t fds_register(fds_cb_t cb);
  * @retval  FDS_ERR_NO_PAGES    If there is no space available in flash memory to install the
  *                              file system.
  */
-ret_code_t fds_init(void);
+ret_code_t fds_init_intern(nrf_fstorage_api_t *pStorage);
 
 
 /**@brief   Function for writing a record to flash.
@@ -692,6 +694,15 @@ ret_code_t fds_record_id_from_desc(fds_record_desc_t const * p_desc,
  */
 ret_code_t fds_stat(fds_stat_t * p_stat);
 
+/// NOTE: Patch for dynamic usage with SD or without SD
+#include "fds_internal_defs.h"
+#if (FDS_BACKEND == NRF_FSTORAGE_SD)
+#include "fds_sd.h"
+#elif (FDS_BACKEND == NRF_FSTORAGE_NVMC)
+#include "fds_nvmc.h"
+#else
+#error Invalid FDS backend.
+#endif
 
 /** @} */
 

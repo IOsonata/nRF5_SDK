@@ -1,41 +1,34 @@
-/**
- * Copyright (c) 2015 - 2021, Nordic Semiconductor ASA
- *
+/*
+ * Copyright (c) 2015 - 2024, Nordic Semiconductor ASA
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  *
- * 2. Redistributions in binary form, except as embedded into a Nordic
- *    Semiconductor ASA integrated circuit in a product or a software update for
- *    such product, must reproduce the above copyright notice, this list of
- *    conditions and the following disclaimer in the documentation and/or other
- *    materials provided with the distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
  *
- * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ * 3. Neither the name of the copyright holder nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  *
- * 4. This software, with or without modification, must only be used with a
- *    Nordic Semiconductor ASA integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #ifndef NRFX_TWI_H__
@@ -68,18 +61,14 @@ typedef struct
 /** @brief Macro for creating a TWI master driver instance. */
 #define NRFX_TWI_INSTANCE(id)                               \
 {                                                           \
-    .p_twi        = NRFX_CONCAT_2(NRF_TWI, id),             \
-    .drv_inst_idx = NRFX_CONCAT_3(NRFX_TWI, id, _INST_IDX), \
+    .p_twi        = NRFX_CONCAT(NRF_, TWI, id),             \
+    .drv_inst_idx = NRFX_CONCAT(NRFX_TWI, id, _INST_IDX),   \
 }
 
 #ifndef __NRFX_DOXYGEN__
 enum {
-#if NRFX_CHECK(NRFX_TWI0_ENABLED)
-    NRFX_TWI0_INST_IDX,
-#endif
-#if NRFX_CHECK(NRFX_TWI1_ENABLED)
-    NRFX_TWI1_INST_IDX,
-#endif
+    /* List all enabled driver instances (in the format NRFX_\<instance_name\>_INST_IDX). */
+    NRFX_INSTANCE_ENUM_LIST(TWI)
     NRFX_TWI_ENABLED_COUNT
 };
 #endif
@@ -92,16 +81,39 @@ typedef struct
     nrf_twi_frequency_t frequency;          ///< TWI frequency.
     uint8_t             interrupt_priority; ///< Interrupt priority.
     bool                hold_bus_uninit;    ///< Hold pull up state on GPIO pins after uninit.
+    bool                skip_gpio_cfg;      ///< Skip GPIO configuration of pins.
+                                            /**< When set to true, the driver does not modify
+                                             *   any GPIO parameters of the used pins. Those
+                                             *   parameters are supposed to be configured
+                                             *   externally before the driver is initialized. */
+    bool                skip_psel_cfg;      ///< Skip pin selection configuration.
+                                            /**< When set to true, the driver does not modify
+                                             *   pin select registers in the peripheral.
+                                             *   Those registers are supposed to be set up
+                                             *   externally before the driver is initialized.
+                                             *   @note When both GPIO configuration and pin
+                                             *   selection are to be skipped, the structure
+                                             *   fields that specify pins can be omitted,
+                                             *   as they are ignored anyway. */
 } nrfx_twi_config_t;
 
-/** @brief The default configuration of the TWI master driver instance. */
-#define NRFX_TWI_DEFAULT_CONFIG                                                   \
-{                                                                                 \
-    .frequency          = (nrf_twi_frequency_t)NRFX_TWI_DEFAULT_CONFIG_FREQUENCY, \
-    .scl                = 31,                                                     \
-    .sda                = 31,                                                     \
-    .interrupt_priority = NRFX_TWI_DEFAULT_CONFIG_IRQ_PRIORITY,                   \
-    .hold_bus_uninit    = NRFX_TWI_DEFAULT_CONFIG_HOLD_BUS_UNINIT,                \
+/**
+ * @brief TWI master driver instance default configuration.
+ *
+ * This configuration sets up TWI with the following options:
+ * - clock frequency: 100 kHz
+ * - disable bus holding after uninit
+ *
+ * @param[in] _pin_scl SCL pin.
+ * @param[in] _pin_sda SDA pin.
+ */
+#define NRFX_TWI_DEFAULT_CONFIG(_pin_scl, _pin_sda)              \
+{                                                                \
+    .scl                = _pin_scl,                              \
+    .sda                = _pin_sda,                              \
+    .frequency          = NRF_TWI_FREQ_100K,                     \
+    .interrupt_priority = NRFX_TWI_DEFAULT_CONFIG_IRQ_PRIORITY,  \
+    .hold_bus_uninit    = false,                                 \
 }
 
 /** @brief Flag indicating that the interrupt after each transfer will be suppressed, and the event handler will not be called. */
@@ -206,7 +218,9 @@ typedef void (* nrfx_twi_evt_handler_t)(nrfx_twi_evt_t const * p_event,
  * @param[in] p_context     Context passed to event handler.
  *
  * @retval NRFX_SUCCESS             Initialization is successful.
- * @retval NRFX_ERROR_INVALID_STATE The driver is in invalid state.
+ * @retval NRFX_ERROR_ALREADY       The driver is already initialized.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is already initialized.
+ *                                  Deprecated - use @ref NRFX_ERROR_ALREADY instead.
  * @retval NRFX_ERROR_BUSY          Some other peripheral with the same
  *                                  instance ID is already in use. This is
  *                                  possible only if @ref nrfx_prs module
@@ -218,11 +232,34 @@ nrfx_err_t nrfx_twi_init(nrfx_twi_t const *        p_instance,
                          void *                    p_context);
 
 /**
+ * @brief Function for reconfiguring the TWI instance.
+ *
+ * @param[in] p_instance Pointer to the driver instance structure.
+ * @param[in] p_config   Pointer to the structure with the configuration.
+ *
+ * @retval NRFX_SUCCESS             Reconfiguration was successful.
+ * @retval NRFX_ERROR_BUSY          The driver is during transaction.
+ * @retval NRFX_ERROR_INVALID_STATE The driver is uninitialized.
+ */
+nrfx_err_t nrfx_twi_reconfigure(nrfx_twi_t const *        p_instance,
+                                nrfx_twi_config_t const * p_config);
+
+/**
  * @brief Function for uninitializing the TWI instance.
  *
  * @param[in] p_instance Pointer to the driver instance structure.
  */
 void nrfx_twi_uninit(nrfx_twi_t const * p_instance);
+
+/**
+ * @brief Function for checking if the TWI driver instance is initialized.
+ *
+ * @param[in] p_instance Pointer to the driver instance structure.
+ *
+ * @retval true  Instance is already initialized.
+ * @retval false Instance is not initialized.
+ */
+bool nrfx_twi_init_check(nrfx_twi_t const * p_instance);
 
 /**
  * @brief Function for enabling the TWI instance.
@@ -239,69 +276,9 @@ void nrfx_twi_enable(nrfx_twi_t const * p_instance);
 void nrfx_twi_disable(nrfx_twi_t const * p_instance);
 
 /**
- * @brief Function for sending data to a TWI slave.
- *
- * The transmission will be stopped when an error occurs. If a transfer is ongoing,
- * the function returns the error code @ref NRFX_ERROR_BUSY.
- *
- * @note This function is deprecated. Use @ref nrfx_twi_xfer instead.
- *
- * @param[in] p_instance Pointer to the driver instance structure.
- * @param[in] address    Address of a specific slave device (only 7 LSB).
- * @param[in] p_data     Pointer to a transmit buffer.
- * @param[in] length     Number of bytes to send.
- * @param[in] no_stop    If set, the stop condition is not generated on the bus
- *                       after the transfer has completed successfully (allowing
- *                       for a repeated start in the next transfer).
- *
- * @retval NRFX_SUCCESS                 The procedure is successful.
- * @retval NRFX_ERROR_BUSY              The driver is not ready for a new transfer.
- * @retval NRFX_ERROR_INTERNAL          An error is detected by hardware.
- * @retval NRFX_ERROR_INVALID_STATE     RX transaction is suspended on bus.
- * @retval NRFX_ERROR_DRV_TWI_ERR_ANACK Negative acknowledgement (NACK) is received after sending
- *                                      the address in polling mode.
- * @retval NRFX_ERROR_DRV_TWI_ERR_DNACK Negative acknowledgement (NACK) is received after sending
- *                                      a data byte in polling mode.
- */
-nrfx_err_t nrfx_twi_tx(nrfx_twi_t const * p_instance,
-                       uint8_t            address,
-                       uint8_t const *    p_data,
-                       size_t             length,
-                       bool               no_stop);
-
-/**
- * @brief Function for reading data from a TWI slave.
- *
- * The transmission will be stopped when an error occurs. If a transfer is ongoing,
- * the function returns the error code @ref NRFX_ERROR_BUSY.
- *
- * @note This function is deprecated. Use @ref nrfx_twi_xfer instead.
- *
- * @param[in] p_instance Pointer to the driver instance structure.
- * @param[in] address    Address of a specific slave device (only 7 LSB).
- * @param[in] p_data     Pointer to a receive buffer.
- * @param[in] length     Number of bytes to be received.
- *
- * @retval NRFX_SUCCESS                   The procedure is successful.
- * @retval NRFX_ERROR_BUSY                The driver is not ready for a new transfer.
- * @retval NRFX_ERROR_INTERNAL            An error is detected by hardware.
- * @retval NRFX_ERROR_INVALID_STATE       TX transaction is suspended on bus.
- * @retval NRFX_ERROR_DRV_TWI_ERR_OVERRUN The unread data is replaced by new data.
- * @retval NRFX_ERROR_DRV_TWI_ERR_ANACK   Negative acknowledgement (NACK) is received after sending
- *                                        the address in polling mode.
- * @retval NRFX_ERROR_DRV_TWI_ERR_DNACK   Negative acknowledgement (NACK) is received after sending
- *                                        a data byte in polling mode.
- */
-nrfx_err_t nrfx_twi_rx(nrfx_twi_t const * p_instance,
-                       uint8_t            address,
-                       uint8_t *          p_data,
-                       size_t             length);
-
-
-/**
  * @brief Function for performing a TWI transfer.
  *
- * The following transfer types can be configured (@ref nrfx_twi_xfer_desc_t::type):
+ * The following transfer types can be configured (@ref nrfx_twi_xfer_desc_t.type):
  * - @ref NRFX_TWI_XFER_TXRX - Write operation followed by a read operation (without STOP condition in between).
  * - @ref NRFX_TWI_XFER_TXTX - Write operation followed by a write operation (without STOP condition in between).
  * - @ref NRFX_TWI_XFER_TX - Write operation (with or without STOP condition).
@@ -317,7 +294,7 @@ nrfx_err_t nrfx_twi_rx(nrfx_twi_t const * p_instance,
  *
  * @note
  * Some flag combinations are invalid:
- * - @ref NRFX_TWI_FLAG_TX_NO_STOP with @ref nrfx_twi_xfer_desc_t::type different than @ref NRFX_TWI_XFER_TX
+ * - @ref NRFX_TWI_FLAG_TX_NO_STOP with @ref nrfx_twi_xfer_desc_t.type different than @ref NRFX_TWI_XFER_TX
  *
  * @param[in] p_instance  Pointer to the driver instance structure.
  * @param[in] p_xfer_desc Pointer to the transfer descriptor.
@@ -355,7 +332,7 @@ bool nrfx_twi_is_busy(nrfx_twi_t const * p_instance);
  *
  * @return Data count.
  */
-size_t nrfx_twi_data_count_get(nrfx_twi_t const * const p_instance);
+size_t nrfx_twi_data_count_get(nrfx_twi_t const * p_instance);
 
 /**
  * @brief Function for returning the address of a STOPPED TWI event.
@@ -384,21 +361,40 @@ uint32_t nrfx_twi_stopped_event_get(nrfx_twi_t const * p_instance);
  * @retval NRFX_SUCCESS        Bus recovery was successful.
  * @retval NRFX_ERROR_INTERNAL Bus recovery failed.
  */
-__STATIC_INLINE nrfx_err_t nrfx_twi_bus_recover(uint32_t scl_pin, uint32_t sda_pin);
+NRFX_STATIC_INLINE nrfx_err_t nrfx_twi_bus_recover(uint32_t scl_pin, uint32_t sda_pin);
 
-#ifndef SUPPRESS_INLINE_IMPLEMENTATION
-__STATIC_INLINE nrfx_err_t nrfx_twi_bus_recover(uint32_t scl_pin, uint32_t sda_pin)
+#ifndef NRFX_DECLARE_ONLY
+NRFX_STATIC_INLINE nrfx_err_t nrfx_twi_bus_recover(uint32_t scl_pin, uint32_t sda_pin)
 {
     return nrfx_twi_twim_bus_recover(scl_pin, sda_pin);
 }
 #endif
 
+/**
+ * @brief Macro returning TWI interrupt handler.
+ *
+ * param[in] idx TWI index.
+ *
+ * @return Interrupt handler.
+ */
+#define NRFX_TWI_INST_HANDLER_GET(idx) NRFX_CONCAT_3(nrfx_twi_, idx, _irq_handler)
+
 /** @} */
 
-
-void nrfx_twi_0_irq_handler(void);
-void nrfx_twi_1_irq_handler(void);
-
+/*
+ * Declare interrupt handlers for all enabled driver instances in the following format:
+ * nrfx_\<periph_name\>_\<idx\>_irq_handler (for example, nrfx_twi_0_irq_handler).
+ *
+ * A specific interrupt handler for the driver instance can be retrieved by using
+ * the NRFX_TWI_INST_HANDLER_GET macro.
+ *
+ * Here is a sample of using the NRFX_TWI_INST_HANDLER_GET macro to map an interrupt handler
+ * in a Zephyr application:
+ *
+ * IRQ_CONNECT(NRFX_IRQ_NUMBER_GET(NRF_TWI_INST_GET(\<instance_index\>)), \<priority\>,
+ *             NRFX_TWI_INST_HANDLER_GET(\<instance_index\>), 0, 0);
+ */
+NRFX_INSTANCE_IRQ_HANDLERS_DECLARE(TWI, twi)
 
 #ifdef __cplusplus
 }

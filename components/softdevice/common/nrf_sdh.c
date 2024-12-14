@@ -38,19 +38,15 @@
  *
  */
 
-#include "sdk_common.h"
-#if NRF_MODULE_ENABLED(NRF_SDH)
-
-#include "nrf_sdh.h"
-
 #include <stdint.h>
 
+#include "sdk_common.h"
+#include "nrf_sdh.h"
 #include "nrf_sdm.h"
 #include "nrf_nvic.h"
 #include "sdk_config.h"
 #include "app_error.h"
 #include "app_util_platform.h"
-
 
 #define NRF_LOG_MODULE_NAME nrf_sdh
 #if NRF_SDH_LOG_ENABLED
@@ -63,6 +59,7 @@
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
 
+#include "coredev/system_core_clock.h"
 
 // Validate configuration options.
 
@@ -93,6 +90,62 @@ static bool m_nrf_sdh_enabled;   /**< Variable to indicate whether the SoftDevic
 static bool m_nrf_sdh_suspended; /**< Variable to indicate whether this module is suspended. */
 static bool m_nrf_sdh_continue;  /**< Variable to indicate whether enable/disable process was started. */
 
+
+static uint32_t GetLFAccuracy(uint32_t AccPpm)
+{
+	uint32_t retval = 0;
+
+	if (AccPpm < 2)
+	{
+		retval = 11;
+	}
+	else if (AccPpm < 5)
+	{
+		retval = 10;
+	}
+	else if (AccPpm < 10)
+	{
+		retval = 9;
+	}
+	else if (AccPpm < 20)
+	{
+		retval = 8;
+	}
+	else if (AccPpm < 30)
+	{
+		retval = 7;
+	}
+	else if (AccPpm < 50)
+	{
+		retval = 6;
+	}
+	else if (AccPpm < 75)
+	{
+		retval = 5;
+	}
+	else if (AccPpm < 100)
+	{
+		retval = 4;
+	}
+	else if (AccPpm < 150)
+	{
+		retval = 3;
+	}
+	else if (AccPpm < 250)
+	{
+		retval = 2;
+	}
+	else if (AccPpm < 500)
+	{
+		retval = 0;
+	}
+	else
+	{
+		retval = 1;
+	}
+
+	return retval;
+}
 
 /**@brief   Function for notifying request observers.
  *
@@ -177,8 +230,7 @@ static void softdevice_evt_irq_disable(void)
 #endif
 }
 
-
-ret_code_t nrf_sdh_enable_request(void)
+ret_code_t nrf_sdh_enable(nrf_clock_lf_cfg_t *p_clock_lf_cfg)
 {
     ret_code_t ret_code;
 
@@ -199,22 +251,19 @@ ret_code_t nrf_sdh_enable_request(void)
     // Notify observers about starting SoftDevice enable process.
     sdh_state_observer_notify(NRF_SDH_EVT_STATE_ENABLE_PREPARE);
 
-    nrf_clock_lf_cfg_t const clock_lf_cfg =
-    {
-        .source       = NRF_SDH_CLOCK_LF_SRC,
-        .rc_ctiv      = NRF_SDH_CLOCK_LF_RC_CTIV,
-        .rc_temp_ctiv = NRF_SDH_CLOCK_LF_RC_TEMP_CTIV,
-        .accuracy     = NRF_SDH_CLOCK_LF_ACCURACY
-    };
+    //CRITICAL_REGION_ENTER();
+    uint8_t __CR_NESTED = 0;
+    /* return value can be safely ignored */
+    (void) sd_nvic_critical_region_enter(&__CR_NESTED);
 
-    CRITICAL_REGION_ENTER();
 #ifdef ANT_LICENSE_KEY
-    ret_code = sd_softdevice_enable(&clock_lf_cfg, app_error_fault_handler, ANT_LICENSE_KEY);
+    ret_code = sd_softdevice_enable(p_clock_lf_cfg, app_error_fault_handler, ANT_LICENSE_KEY);
 #else
-    ret_code = sd_softdevice_enable(&clock_lf_cfg, app_error_fault_handler);
+    ret_code = sd_softdevice_enable(p_clock_lf_cfg, app_error_fault_handler);
 #endif
     m_nrf_sdh_enabled = (ret_code == NRF_SUCCESS);
-    CRITICAL_REGION_EXIT();
+    //CRITICAL_REGION_EXIT();
+    (void) sd_nvic_critical_region_exit(__CR_NESTED);
 
     if (ret_code != NRF_SUCCESS)
     {
@@ -234,6 +283,85 @@ ret_code_t nrf_sdh_enable_request(void)
     return NRF_SUCCESS;
 }
 
+ret_code_t nrf_sdh_enable_request(void)
+{
+#if 0
+    ret_code_t ret_code;
+
+    if (m_nrf_sdh_enabled)
+    {
+        return NRF_ERROR_INVALID_STATE;
+    }
+
+    m_nrf_sdh_continue = true;
+
+    // Notify observers about SoftDevice enable request.
+    if (sdh_request_observer_notify(NRF_SDH_EVT_ENABLE_REQUEST) == NRF_ERROR_BUSY)
+    {
+        // Enable process was stopped.
+        return NRF_SUCCESS;
+    }
+
+    // Notify observers about starting SoftDevice enable process.
+    sdh_state_observer_notify(NRF_SDH_EVT_STATE_ENABLE_PREPARE);
+#endif
+
+    nrf_clock_lf_cfg_t clock_lf_cfg =
+    {
+        .source       = NRF_SDH_CLOCK_LF_SRC,
+        .rc_ctiv      = NRF_SDH_CLOCK_LF_RC_CTIV,
+        .rc_temp_ctiv = NRF_SDH_CLOCK_LF_RC_TEMP_CTIV,
+        .accuracy     = NRF_SDH_CLOCK_LF_ACCURACY
+    };
+
+    OscDesc_t const *lfosc = GetLowFreqOscDesc();
+	if (lfosc->Type == OSC_TYPE_RC)
+	{
+		clock_lf_cfg.source = NRF_SDH_CLOCK_LF_SRC;
+		clock_lf_cfg.rc_ctiv = NRF_SDH_CLOCK_LF_RC_CTIV;
+		clock_lf_cfg.rc_temp_ctiv = NRF_SDH_CLOCK_LF_RC_TEMP_CTIV;
+	}
+	else
+	{
+		clock_lf_cfg.accuracy = GetLFAccuracy(lfosc->Accuracy);
+		clock_lf_cfg.source = NRF_CLOCK_LF_SRC_XTAL;
+	}
+
+#if 0
+//    CRITICAL_REGION_ENTER();
+    uint8_t __CR_NESTED = 0;
+    /* return value can be safely ignored */
+    (void) sd_nvic_critical_region_enter(&__CR_NESTED);
+
+#ifdef ANT_LICENSE_KEY
+    ret_code = sd_softdevice_enable(&clock_lf_cfg, app_error_fault_handler, ANT_LICENSE_KEY);
+#else
+    ret_code = sd_softdevice_enable(&clock_lf_cfg, app_error_fault_handler);
+#endif
+    m_nrf_sdh_enabled = (ret_code == NRF_SUCCESS);
+    //CRITICAL_REGION_EXIT();
+
+    /* return value can be safely ignored */
+    (void) sd_nvic_critical_region_exit(__CR_NESTED);
+
+    if (ret_code != NRF_SUCCESS)
+    {
+        return ret_code;
+    }
+
+    m_nrf_sdh_continue  = false;
+    m_nrf_sdh_suspended = false;
+
+    // Enable event interrupt.
+    // Interrupt priority has already been set by the stack.
+    softdevices_evt_irq_enable();
+
+    // Notify observers about a finished SoftDevice enable process.
+    sdh_state_observer_notify(NRF_SDH_EVT_STATE_ENABLED);
+#endif
+
+    return nrf_sdh_enable(&clock_lf_cfg);
+}
 
 ret_code_t nrf_sdh_disable_request(void)
 {
@@ -256,10 +384,17 @@ ret_code_t nrf_sdh_disable_request(void)
     // Notify observers about starting SoftDevice disable process.
     sdh_state_observer_notify(NRF_SDH_EVT_STATE_DISABLE_PREPARE);
 
-    CRITICAL_REGION_ENTER();
+    //CRITICAL_REGION_ENTER();
+    uint8_t __CR_NESTED = 0;
+    /* return value can be safely ignored */
+    (void) sd_nvic_critical_region_enter(&__CR_NESTED);
+
     ret_code          = sd_softdevice_disable();
     m_nrf_sdh_enabled = false;
-    CRITICAL_REGION_EXIT();
+    //CRITICAL_REGION_EXIT();
+
+    /* return value can be safely ignored */
+    (void) sd_nvic_critical_region_exit(__CR_NESTED);
 
     if (ret_code != NRF_SUCCESS)
     {
@@ -275,7 +410,6 @@ ret_code_t nrf_sdh_disable_request(void)
 
     return NRF_SUCCESS;
 }
-
 
 ret_code_t nrf_sdh_request_continue(void)
 {
@@ -293,7 +427,6 @@ ret_code_t nrf_sdh_request_continue(void)
         return nrf_sdh_enable_request();
     }
 }
-
 
 bool nrf_sdh_is_enabled(void)
 {
@@ -361,11 +494,12 @@ void nrf_sdh_evts_poll(void)
 
 
 #if (NRF_SDH_DISPATCH_MODEL == NRF_SDH_DISPATCH_MODEL_INTERRUPT)
-
+#if 0
 void SD_EVT_IRQHandler(void)
 {
     nrf_sdh_evts_poll();
 }
+#endif
 
 #elif (NRF_SDH_DISPATCH_MODEL == NRF_SDH_DISPATCH_MODEL_APPSH)
 
@@ -398,5 +532,3 @@ void SD_EVT_IRQHandler(void)
 #error "Unknown SoftDevice handler dispatch model."
 
 #endif // NRF_SDH_DISPATCH_MODEL
-
-#endif // NRF_MODULE_ENABLED(NRF_SDH)
