@@ -488,8 +488,8 @@ static inline void app_usbd_event_add(app_usbd_internal_evt_t const * const p_ev
 
     if (p_event->type == APP_USBD_EVT_DRV_SETUP)
     {
-        uint8_t bRequest      = nrf_usbd_setup_brequest_get();
-        uint8_t bmRequestType = nrf_usbd_setup_bmrequesttype_get();
+        uint8_t bRequest      = nrf_usbd_setup_brequest_get(NRF_USBD);
+        uint8_t bmRequestType = nrf_usbd_setup_bmrequesttype_get(NRF_USBD);
 
         if ((bmRequestType == app_usbd_setup_req_val(
                 APP_USBD_SETUP_REQREC_DEVICE,
@@ -1008,10 +1008,10 @@ void app_usbd_start(void)
 
     /* Power should be already enabled - wait just in case if user calls
      * app_usbd_start just after app_usbd_enable without waiting for the event. */
-    while (!nrf_power_usbregstatus_outrdy_get())
+    while (!nrf_power_usbregstatus_outrdy_get(NRF_POWER))
     {
         /* Wait for the power but terminate the function if USBD power disappears */
-        if (!nrf_power_usbregstatus_vbusdet_get())
+        if (!nrf_power_usbregstatus_vbusdet_get(NRF_POWER))
             return;
     }
 

@@ -429,7 +429,7 @@ static void shutdown_process(void)
 #endif
         }
 #endif // SOFTDEVICE_PRESENT
-        nrf_power_system_off();
+        nrf_power_system_off(NRF_POWER);
     }
 }
 

@@ -61,11 +61,31 @@ extern "C" {
 APP_USBD_CLASS_FORWARD(app_usbd_cdc_acm);
 
 /*lint -save -e165*/
+#if 0
 /**
  * @brief Forward declaration of @ref app_usbd_cdc_acm_user_event_e.
  *
  */
 enum app_usbd_cdc_acm_user_event_e;
+#else
+/**
+ * @brief Events passed to user event handler.
+ *
+ * @note Example prototype of user event handler:
+ *
+ * @code
+   void cdc_acm_user_ev_handler(app_usbd_class_inst_t const * p_inst,
+                              app_usbd_cdc_acm_user_event_t   event);
+ * @endcode
+ */
+typedef enum app_usbd_cdc_acm_user_event_e {
+    APP_USBD_CDC_ACM_USER_EVT_RX_DONE,     /**< User event RX_DONE.    */
+    APP_USBD_CDC_ACM_USER_EVT_TX_DONE,     /**< User event TX_DONE.    */
+
+    APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN,   /**< User event PORT_OPEN.  */
+    APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE,  /**< User event PORT_CLOSE. */
+} app_usbd_cdc_acm_user_event_t;
+#endif
 
 /*lint -restore*/
 

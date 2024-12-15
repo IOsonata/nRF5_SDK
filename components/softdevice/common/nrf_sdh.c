@@ -75,6 +75,7 @@ NRF_LOG_MODULE_REGISTER();
     #warning Please select NRF_CLOCK_LF_ACCURACY_500_PPM when using NRF_CLOCK_LF_SRC_RC
 #endif
 
+__WEAK nrf_nvic_state_t nrf_nvic_state;
 
 // Create section "sdh_req_observers".
 NRF_SECTION_SET_DEF(sdh_req_observers, nrf_sdh_req_observer_t, NRF_SDH_REQ_OBSERVER_PRIO_LEVELS);

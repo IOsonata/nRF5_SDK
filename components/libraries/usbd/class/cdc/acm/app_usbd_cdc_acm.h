@@ -91,7 +91,7 @@ APP_USBD_CLASS_TYPEDEF(app_usbd_cdc_acm,            \
 
 
 /*lint -save -e407 */
-
+#if 0
 /**
  * @brief Events passed to user event handler.
  *
@@ -109,7 +109,7 @@ typedef enum app_usbd_cdc_acm_user_event_e {
     APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN,   /**< User event PORT_OPEN.  */
     APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE,  /**< User event PORT_CLOSE. */
 } app_usbd_cdc_acm_user_event_t;
-
+#endif
 /*lint -restore*/
 
 /**

@@ -325,7 +325,7 @@ static ret_code_t cdc_acm_req_out_datastage(app_usbd_class_inst_t const * p_inst
                               &p_cdc_acm_ctx->request.payload,
                               p_cdc_acm_ctx->request.len);
     ret_code_t ret;
-    CRITICAL_REGION_ENTER();
+   // CRITICAL_REGION_ENTER();
     ret = app_usbd_ep_transfer(NRF_DRV_USBD_EPOUT0, &transfer);
     if (ret == NRF_SUCCESS)
     {
@@ -336,7 +336,7 @@ static ret_code_t cdc_acm_req_out_datastage(app_usbd_class_inst_t const * p_inst
 
         ret = app_usbd_core_setup_data_handler_set(NRF_DRV_USBD_EPOUT0, &desc);
     }
-    CRITICAL_REGION_EXIT();
+   // CRITICAL_REGION_EXIT();
 
     return ret;
 }
@@ -991,7 +991,7 @@ ret_code_t app_usbd_cdc_acm_read(app_usbd_cdc_acm_t const * p_cdc_acm,
     }
 
 #if (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
-    CRITICAL_REGION_ENTER();
+   // CRITICAL_REGION_ENTER();
 #endif // (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
 
     if (p_cdc_acm_ctx->rx_transfer[0].p_buf == NULL)
@@ -1043,7 +1043,7 @@ ret_code_t app_usbd_cdc_acm_read(app_usbd_cdc_acm_t const * p_cdc_acm,
         ret = NRF_ERROR_BUSY;
     }
 #if (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
-    CRITICAL_REGION_EXIT();
+   // CRITICAL_REGION_EXIT();
 #endif // (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
 
     return ret;
@@ -1064,7 +1064,7 @@ ret_code_t app_usbd_cdc_acm_read_any(app_usbd_cdc_acm_t const * p_cdc_acm,
     }
 
 #if (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
-    CRITICAL_REGION_ENTER();
+  //  CRITICAL_REGION_ENTER();
 #endif // (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
     if (p_cdc_acm_ctx->bytes_left > 0)
     {
@@ -1100,7 +1100,7 @@ ret_code_t app_usbd_cdc_acm_read_any(app_usbd_cdc_acm_t const * p_cdc_acm,
     }
 
 #if (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
-    CRITICAL_REGION_EXIT();
+ //   CRITICAL_REGION_EXIT();
 #endif // (APP_USBD_CONFIG_EVENT_QUEUE_ENABLE == 0)
 
     return ret;
@@ -1126,7 +1126,7 @@ ret_code_t app_usbd_cdc_acm_serial_state_notify(app_usbd_cdc_acm_t const *      
     app_usbd_cdc_acm_ctx_t * p_cdc_acm_ctx = cdc_acm_ctx_get(p_cdc_acm);
 
     ret_code_t ret;
-    CRITICAL_REGION_ENTER();
+  //  CRITICAL_REGION_ENTER();
     ret = NRF_SUCCESS;
     switch (serial_state)
     {
@@ -1168,7 +1168,7 @@ ret_code_t app_usbd_cdc_acm_serial_state_notify(app_usbd_cdc_acm_t const *      
 
         ret = cdc_acm_serial_state_notify(p_cdc_acm);
     }
-    CRITICAL_REGION_EXIT();
+  //  CRITICAL_REGION_EXIT();
 
     return ret;
 }
@@ -1180,7 +1180,7 @@ ret_code_t app_usbd_cdc_acm_line_state_get(app_usbd_cdc_acm_t const *    p_cdc_a
     app_usbd_cdc_acm_ctx_t * p_cdc_acm_ctx = cdc_acm_ctx_get(p_cdc_acm);
 
     ret_code_t ret;
-    CRITICAL_REGION_ENTER();
+  //  CRITICAL_REGION_ENTER();
     ret = NRF_SUCCESS;
     switch (line_state)
     {
@@ -1192,7 +1192,7 @@ ret_code_t app_usbd_cdc_acm_line_state_get(app_usbd_cdc_acm_t const *    p_cdc_a
             ret = NRF_ERROR_NOT_SUPPORTED;
             break;
     }
-    CRITICAL_REGION_EXIT();
+  //  CRITICAL_REGION_EXIT();
 
     return ret;
 }
