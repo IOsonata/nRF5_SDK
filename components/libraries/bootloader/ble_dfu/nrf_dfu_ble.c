@@ -58,6 +58,8 @@
 #include "nrf_dfu_settings.h"
 #include "nrf_dfu_ble.h"
 
+#include "sd_dispatch.h"
+
 #define NRF_LOG_MODULE_NAME nrf_dfu_ble
 #include "nrf_log.h"
 NRF_LOG_MODULE_REGISTER();
@@ -971,6 +973,8 @@ static uint32_t ble_stack_init()
     err_code = sd_softdevice_vector_table_base_set(BOOTLOADER_START_ADDR);
     VERIFY_SUCCESS(err_code);
 #endif
+
+    SetSoftdeviceDispatch(nrf_sdh_evts_poll);
 
     NRF_LOG_DEBUG("Enabling SoftDevice.");
     err_code = nrf_sdh_enable_request();
