@@ -89,7 +89,6 @@ static app_button_cfg_t const *       mp_buttons = NULL;           /**< Button c
 static uint8_t                        m_button_count;              /**< Number of configured buttons. */
 static uint32_t                       m_detection_delay;           /**< Delay before a button is reported as pushed. */
 APP_TIMER_DEF(m_detection_delay_timer_id);  /**< Polling timer id. */
-static nrfx_gpiote_t m_gpiote = {0,};
 
 static uint64_t m_pin_active;
 
@@ -232,7 +231,7 @@ static void detection_delay_timeout_handler(void * p_context)
     for (int i = 0; i < m_button_count; i++)
     {
         app_button_cfg_t const * p_btn = &mp_buttons[i];
-        bool is_set = nrf_drv_gpiote_in_is_set(p_btn->pin_no);
+        bool is_set = IOPinRead(0, p_btn->pin_no);//nrf_drv_gpiote_in_is_set(p_btn->pin_no);
         bool is_active = !((p_btn->active_state == APP_BUTTON_ACTIVE_HIGH) ^ is_set);
         evt_handle(p_btn->pin_no, is_active);
     }
@@ -246,7 +245,7 @@ static void detection_delay_timeout_handler(void * p_context)
         NRF_LOG_DEBUG("No active buttons, stopping timer");
     }
 }
-
+#if 0
 /* GPIOTE event is used only to start periodic timer when first button is activated. */
 static void gpiote_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
@@ -263,6 +262,7 @@ static void gpiote_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t
         timer_start();
     }
 }
+#endif
 
 static void AppButtonHandler(int IntNo, void *pCtx)
 {
