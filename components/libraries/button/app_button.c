@@ -163,9 +163,9 @@ void evt_handle(uint8_t pin, uint8_t value)
         {
             NRF_LOG_DEBUG("Pin %d idle->armed", pin);
             state_set(pin, BTN_PRESS_ARMED);
-            //CRITICAL_REGION_ENTER();
-            atomic_fetch_or(&m_pin_active,  1ULL << pin);
-            //CRITICAL_REGION_EXIT();
+            CRITICAL_REGION_ENTER();
+            m_pin_active |= (1ULL << (uint64_t)pin);
+            CRITICAL_REGION_EXIT();
         }
         else
         {
@@ -208,9 +208,9 @@ void evt_handle(uint8_t pin, uint8_t value)
         {
             state_set(pin, BTN_IDLE);
             usr_event(pin, APP_BUTTON_RELEASE);
-            //CRITICAL_REGION_ENTER();
-            atomic_fetch_and(&m_pin_active, ~(1ULL << pin));
-            //CRITICAL_REGION_EXIT();
+            CRITICAL_REGION_ENTER();
+            m_pin_active &= (1ULL << (uint64_t)pin);
+            CRITICAL_REGION_EXIT();
         }
         NRF_LOG_DEBUG("Pin %d release_detected->%s", pin, value ? "pressed" : "idle");
         break;
@@ -345,9 +345,9 @@ uint32_t app_button_disable(void)
     	IOPinDisableInterrupt(i);
 //       nrf_drv_gpiote_in_event_disable(mp_buttons[i].pin_no);
     }
-//    CRITICAL_REGION_ENTER();
-    atomic_store(&m_pin_active, 0);
-//    CRITICAL_REGION_EXIT();
+    CRITICAL_REGION_ENTER();
+    m_pin_active = 0;
+    CRITICAL_REGION_EXIT();
 
     /* Make sure polling timer is not running. */
     return app_timer_stop(m_detection_delay_timer_id);

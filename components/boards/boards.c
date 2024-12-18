@@ -37,12 +37,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "nrf_assert.h"
 #include "boards.h"
 #if defined(BOARDS_WITH_USB_DFU_TRIGGER) && defined(BOARD_PCA10059)
 #include "nrf_dfu_trigger_usb.h"
 #endif
-#include <stdint.h>
-#include <stdbool.h>
+
 
 #if LEDS_NUMBER > 0
 static const uint8_t m_board_led_list[LEDS_NUMBER] = LEDS_LIST;
