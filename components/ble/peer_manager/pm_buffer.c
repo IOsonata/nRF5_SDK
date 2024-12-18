@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "pm_buffer.h"
 
 #include <stdbool.h>
@@ -167,4 +167,4 @@ void pm_buffer_release(pm_buffer_t * p_buffer, uint8_t id)
         mutex_unlock(p_buffer->p_mutex, id);
     }
 }
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

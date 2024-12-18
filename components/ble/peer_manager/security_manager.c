@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "security_manager.h"
 
 #include <string.h>
@@ -766,4 +766,4 @@ ret_code_t sm_link_secure(uint16_t conn_handle, bool force_repairing)
     ret = link_secure(conn_handle, false, force_repairing, false);
     return ret;
 }
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

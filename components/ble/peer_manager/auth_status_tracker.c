@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER) && NRF_MODULE_ENABLED(PM_RA_PROTECTION)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER) && NRF_MODULE_ENABLED(PM_RA_PROTECTION)
 #include "auth_status_tracker.h"
 
 #include "app_timer.h"
@@ -337,4 +337,4 @@ bool ast_peer_blacklisted(uint16_t conn_handle)
 }
 
 
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER) && NRF_MODULE_ENABLED(PM_RA_PROTECTION)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER) && NRF_MODULE_ENABLED(PM_RA_PROTECTION)

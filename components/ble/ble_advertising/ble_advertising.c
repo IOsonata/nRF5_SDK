@@ -38,7 +38,7 @@
  *
  */
 #include  "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_ADVERTISING)
+//#if NRF_MODULE_ENABLED(BLE_ADVERTISING)
 #include "ble_advdata.h"
 #include "ble_advertising.h"
 #include "nrf_soc.h"
@@ -810,4 +810,4 @@ ret_code_t ble_advertising_advdata_update(ble_advertising_t   * const p_advertis
 }
 
 
-#endif // NRF_MODULE_ENABLED(BLE_ADVERTISING)
+//#endif // NRF_MODULE_ENABLED(BLE_ADVERTISING)

@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "peer_data_storage.h"
 
 #include <stdint.h>
@@ -654,4 +654,4 @@ uint32_t pds_peer_count_get(void)
     NRF_PM_DEBUG_CHECK(m_module_initialized);
     return peer_id_n_ids();
 }
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

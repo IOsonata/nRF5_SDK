@@ -39,7 +39,7 @@
  */
 
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(NRF_BLE_LESC)
+//#if NRF_MODULE_ENABLED(NRF_BLE_LESC)
 
 #include "nrf_ble_lesc.h"
 #include "nrf_crypto.h"
@@ -516,4 +516,4 @@ void nrf_ble_lesc_on_ble_evt(ble_evt_t const * p_ble_evt)
 }
 
 
-#endif // NRF_BLE_LESC_ENABLED
+//#endif // NRF_BLE_LESC_ENABLED

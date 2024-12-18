@@ -40,7 +40,7 @@
 
 #include "sdk_common.h"
 
-#if NRF_MODULE_ENABLED(NRF_FSTORAGE)
+//#if NRF_MODULE_ENABLED(NRF_FSTORAGE)
 
 #include "nrf_fstorage_sd.h"
 #include <stdint.h>
@@ -621,4 +621,4 @@ nrf_fstorage_api_t nrf_fstorage_sd =
 };
 
 
-#endif // NRF_FSTORAGE_ENABLED
+//#endif // NRF_FSTORAGE_ENABLED

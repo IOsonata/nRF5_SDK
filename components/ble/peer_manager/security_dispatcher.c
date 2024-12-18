@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "security_dispatcher.h"
 
 #include <string.h>
@@ -1093,4 +1093,4 @@ void smd_ble_evt_handler(ble_evt_t const * p_ble_evt)
             break;
     };
 }
-#endif //NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif //NRF_MODULE_ENABLED(PEER_MANAGER)

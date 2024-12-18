@@ -42,7 +42,7 @@
  * qualification listings, this section of source code must not be modified.
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_HIDS)
+//#if NRF_MODULE_ENABLED(BLE_HIDS)
 #include "ble_hids.h"
 #include <string.h>
 #include "app_error.h"
@@ -1573,4 +1573,4 @@ uint32_t ble_hids_outp_rep_get(ble_hids_t * p_hids,
 /**
    @}
  */
-#endif // NRF_MODULE_ENABLED(BLE_HIDS)
+//#endif // NRF_MODULE_ENABLED(BLE_HIDS)

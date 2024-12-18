@@ -42,7 +42,7 @@
  * qualification listings, this section of source code must not be modified.
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(BLE_BAS)
+//#if NRF_MODULE_ENABLED(BLE_BAS)
 #include "ble_bas.h"
 #include <string.h>
 #include "ble_srv_common.h"
@@ -362,4 +362,4 @@ ret_code_t ble_bas_battery_lvl_on_reconnection_update(ble_bas_t * p_bas,
 }
 
 
-#endif // NRF_MODULE_ENABLED(BLE_BAS)
+//#endif // NRF_MODULE_ENABLED(BLE_BAS)

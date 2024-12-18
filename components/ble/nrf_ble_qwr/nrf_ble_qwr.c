@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(NRF_BLE_QWR)
+//#if NRF_MODULE_ENABLED(NRF_BLE_QWR)
 #include <stdlib.h>
 #include "nrf_ble_qwr.h"
 #include "ble.h"
@@ -485,4 +485,4 @@ void nrf_ble_qwr_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context)
     }
 
 }
-#endif // NRF_MODULE_ENABLED(NRF_BLE_QWR)
+//#endif // NRF_MODULE_ENABLED(NRF_BLE_QWR)

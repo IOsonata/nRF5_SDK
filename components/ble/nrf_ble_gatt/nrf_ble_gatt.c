@@ -39,7 +39,6 @@
  */
 
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(NRF_BLE_GATT)
 
 #include "nrf_ble_gatt.h"
 
@@ -551,5 +550,3 @@ void nrf_ble_gatt_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context)
         }
     }
 }
-
-#endif //NRF_BLE_GATT_ENABLED

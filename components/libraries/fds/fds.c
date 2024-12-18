@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(FDS)
+//#if NRF_MODULE_ENABLED(FDS)
 #include "fds.h"
 #include "fds_internal_defs.h"
 
@@ -2201,4 +2201,4 @@ ret_code_t fds_stat(fds_stat_t * const p_stat)
     return NRF_SUCCESS;
 }
 
-#endif //NRF_MODULE_ENABLED(FDS)
+//#endif //NRF_MODULE_ENABLED(FDS)

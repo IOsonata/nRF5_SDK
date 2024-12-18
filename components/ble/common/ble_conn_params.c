@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(NRF_BLE_CONN_PARAMS)
+//#if NRF_MODULE_ENABLED(NRF_BLE_CONN_PARAMS)
 #include <stdlib.h>
 #include "nrf.h"
 #include "sdk_errors.h"
@@ -569,4 +569,4 @@ ret_code_t ble_conn_params_change_conn_params(uint16_t                conn_handl
 
 NRF_SDH_BLE_OBSERVER(m_ble_observer, BLE_CONN_PARAMS_BLE_OBSERVER_PRIO, ble_evt_handler, NULL);
 
-#endif //ENABLED
+//#endif //ENABLED

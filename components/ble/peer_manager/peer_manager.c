@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "ble_err.h"
 #include "peer_manager.h"
 #include <string.h>
@@ -1240,4 +1240,4 @@ ret_code_t pm_peer_rank_highest(pm_peer_id_t peer_id)
     return err_code;
 #endif
 }
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

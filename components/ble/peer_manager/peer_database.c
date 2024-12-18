@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "peer_database.h"
 
 #include <string.h>
@@ -723,4 +723,4 @@ ret_code_t pdb_write_buf_store(pm_peer_id_t      peer_id,
 }
 
 
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

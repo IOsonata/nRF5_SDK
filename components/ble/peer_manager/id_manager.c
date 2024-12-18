@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "id_manager.h"
 
 #include <string.h>
@@ -755,4 +755,4 @@ bool im_address_resolve(ble_gap_addr_t const * p_addr, ble_gap_irk_t const * p_i
 
     return (memcmp(hash, local_hash, IM_ADDR_CIPHERTEXT_LENGTH) == 0);
 }
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

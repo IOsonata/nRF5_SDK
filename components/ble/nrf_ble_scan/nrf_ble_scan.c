@@ -39,7 +39,7 @@
  */
 
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(NRF_BLE_SCAN)
+//#if NRF_MODULE_ENABLED(NRF_BLE_SCAN)
 
 #include "sdk_config.h"
 #include <stdlib.h>
@@ -1220,5 +1220,5 @@ void nrf_ble_scan_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_contex)
 }
 
 
-#endif // NRF_BLE_SCAN_ENABLED
+//#endif // NRF_BLE_SCAN_ENABLED
 

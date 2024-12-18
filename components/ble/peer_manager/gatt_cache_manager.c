@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "gatt_cache_manager.h"
 
 #include "ble_gap.h"
@@ -839,4 +839,4 @@ void gcm_local_database_has_changed(void)
     service_changed_pending_flags_check();
 }
 #endif
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

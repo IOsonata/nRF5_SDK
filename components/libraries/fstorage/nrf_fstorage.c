@@ -39,7 +39,7 @@
  */
 #include "sdk_config.h"
 
-#if NRF_FSTORAGE_ENABLED
+//#if NRF_FSTORAGE_ENABLED
 
 #include "nrf_fstorage.h"
 #include <stddef.h>
@@ -241,4 +241,4 @@ static bool addr_is_page_aligned(nrf_fstorage_t const * p_fs,
 }
 
 
-#endif // NRF_FSTORAGE_ENABLED
+//#endif // NRF_FSTORAGE_ENABLED

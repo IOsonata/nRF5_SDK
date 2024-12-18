@@ -38,7 +38,7 @@
  *
  */
 #include "sdk_common.h"
-#if NRF_MODULE_ENABLED(PEER_MANAGER)
+//#if NRF_MODULE_ENABLED(PEER_MANAGER)
 #include "gatts_cache_manager.h"
 
 #include <string.h>
@@ -454,4 +454,4 @@ void gscm_db_change_notification_done(pm_peer_id_t peer_id)
     //lint -restore
 }
 #endif
-#endif // NRF_MODULE_ENABLED(PEER_MANAGER)
+//#endif // NRF_MODULE_ENABLED(PEER_MANAGER)

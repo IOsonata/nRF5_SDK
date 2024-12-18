@@ -39,7 +39,7 @@
  */
 #include "sdk_common.h"
 
-#if NRF_MODULE_ENABLED(NRF_FSTORAGE)
+//#if NRF_MODULE_ENABLED(NRF_FSTORAGE)
 
 #include <stdint.h>
 #include <string.h>
@@ -254,4 +254,4 @@ nrf_fstorage_api_t nrf_fstorage_nvmc =
 };
 
 
-#endif // NRF_FSTORAGE_ENABLED
+//#endif // NRF_FSTORAGE_ENABLED
