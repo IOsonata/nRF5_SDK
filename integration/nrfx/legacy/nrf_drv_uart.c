@@ -67,8 +67,8 @@ static void uarte_evt_handler(nrfx_uarte_event_t const * p_event,
             {
                 .rxtx =
                 {
-                    .p_data = p_event->data.error.rxtx.p_data,
-                    .bytes  = p_event->data.error.rxtx.bytes,
+                    .p_data = p_event->data.error.rx.p_buffer,// rxtx.p_data,
+                    .bytes  = p_event->data.error.rx.length,//.bytes,
                 },
                 .error_mask = p_event->data.error.error_mask,
             }
