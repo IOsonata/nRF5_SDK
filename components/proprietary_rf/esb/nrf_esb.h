@@ -202,7 +202,7 @@ STATIC_ASSERT(NRF_ESB_PIPE_COUNT <= 8);
  * @return  Initializer that sets up the pipe, length, and byte array for content of the TX data.
  */
 #define NRF_ESB_CREATE_PAYLOAD(_pipe, ...)                                                  \
-        {.pipe = _pipe, .length = NUM_VA_ARGS(__VA_ARGS__), .data = {__VA_ARGS__}};         \
+        {.length = NUM_VA_ARGS(__VA_ARGS__), .pipe = _pipe, .data = {__VA_ARGS__}};         \
         STATIC_ASSERT(NUM_VA_ARGS(__VA_ARGS__) > 0 && NUM_VA_ARGS(__VA_ARGS__) <= 63)
 
 
