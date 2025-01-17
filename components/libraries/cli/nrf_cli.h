@@ -484,7 +484,7 @@ struct nrf_cli
  * @param[in] log_queue_size    Logger processing queue size.
  */
 #define NRF_CLI_DEF(name, cli_prefix, p_transport_iface, newline_ch, log_queue_size)    \
-        static nrf_cli_t const name;                                            \
+        extern nrf_cli_t const name;                                            \
         static nrf_cli_ctx_t CONCAT_2(name, _ctx);                              \
         NRF_FPRINTF_DEF(CONCAT_2(name, _fprintf_ctx),                           \
                         &name,                                                  \
@@ -495,7 +495,7 @@ struct nrf_cli
         NRF_LOG_BACKEND_CLI_DEF(CONCAT_2(name, _log_backend), log_queue_size);  \
         NRF_CLI_HISTORY_MEM_OBJ(name);                                          \
         /*lint -save -e31*/                                                     \
-        static nrf_cli_t const name = {                                         \
+        nrf_cli_t const name = {                                         		\
             .p_name = cli_prefix,                                               \
             .p_iface = p_transport_iface,                                       \
             .p_ctx = &CONCAT_2(name, _ctx),                                     \
