@@ -65,7 +65,10 @@
 
 static void fs_event_handler(nrf_fstorage_evt_t * evt);
 
-NRF_FSTORAGE_DEF(nrf_fstorage_t m_fs) =
+//NRF_FSTORAGE_DEF(nrf_fstorage_t m_fs) =
+//NRF_SECTION_ITEM_REGISTER(fs_data, nrf_fstorage_t m_fs) =
+//nrf_fstorage_t m_fs __attribute__ ((section("." STRINGIFY(fs_data)))) __attribute__((used)) =
+nrf_fstorage_t m_fs __attribute__ ((section(".fs_data"))) __attribute__((used)) =
 {
     // The flash area boundaries are set in fds_init().
     .evt_handler = fs_event_handler,
@@ -1658,8 +1661,8 @@ ret_code_t fds_register(fds_cb_t cb)
 
 static uint32_t flash_end_addr(void)
 {
-    uint32_t const bootloader_addr = BOOTLOADER_ADDRESS;
-    uint32_t const page_sz         = NRF_FICR->CODEPAGESIZE;
+    uint32_t addr = NRF_UICR->NRFFW[0];//BOOTLOADER_ADDRESS;
+    uint32_t page_sz         = NRF_FICR->CODEPAGESIZE;
 
 #if defined(NRF52810_XXAA) || defined(NRF52811_XXAA)
     // Hardcode the number of flash pages, necessary for SoC emulation.
@@ -1670,7 +1673,7 @@ static uint32_t flash_end_addr(void)
    uint32_t const code_sz = NRF_FICR->CODESIZE;
 #endif
 
-    uint32_t end_addr = (bootloader_addr != 0xFFFFFFFF) ? bootloader_addr : (code_sz * page_sz);
+    uint32_t end_addr = (addr != 0xFFFFFFFF) ? addr : (code_sz * page_sz);
 
     return end_addr - (FDS_PHY_PAGES_RESERVED * FDS_PHY_PAGE_SIZE * sizeof(uint32_t));
 }

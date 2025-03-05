@@ -129,14 +129,14 @@ extern uint32_t __etext;
  */
 /* lint -restore */
 
-#if defined(MBR_PRESENT) || defined(SOFTDEVICE_PRESENT)
-#include "nrf_mbr.h"
-#define BOOTLOADER_ADDRESS      ((*(uint32_t *)MBR_BOOTLOADER_ADDR) == 0xFFFFFFFF ? *MBR_UICR_BOOTLOADER_ADDR : *(uint32_t *)MBR_BOOTLOADER_ADDR) /**< The currently configured start address of the bootloader. If 0xFFFFFFFF, no bootloader start address is configured. */
-#define MBR_PARAMS_PAGE_ADDRESS ((*(uint32_t *)MBR_PARAM_PAGE_ADDR) == 0xFFFFFFFF ? *MBR_UICR_PARAM_PAGE_ADDR : *(uint32_t *)MBR_PARAM_PAGE_ADDR) /**< The currently configured address of the MBR params page. If 0xFFFFFFFF, no MBR params page address is configured. */
-#else
+//#if defined(MBR_PRESENT) || defined(SOFTDEVICE_PRESENT)
+//#include "nrf_mbr.h"
+//#define BOOTLOADER_ADDRESS      ((*(uint32_t *)MBR_BOOTLOADER_ADDR) == 0xFFFFFFFF ? *MBR_UICR_BOOTLOADER_ADDR : *(uint32_t *)MBR_BOOTLOADER_ADDR) /**< The currently configured start address of the bootloader. If 0xFFFFFFFF, no bootloader start address is configured. */
+//#define MBR_PARAMS_PAGE_ADDRESS ((*(uint32_t *)MBR_PARAM_PAGE_ADDR) == 0xFFFFFFFF ? *MBR_UICR_PARAM_PAGE_ADDR : *(uint32_t *)MBR_PARAM_PAGE_ADDR) /**< The currently configured address of the MBR params page. If 0xFFFFFFFF, no MBR params page address is configured. */
+//#else
 #define BOOTLOADER_ADDRESS      (NRF_UICR->NRFFW[0]) /**< Check UICR, just in case. */
 #define MBR_PARAMS_PAGE_ADDRESS (NRF_UICR->NRFFW[1]) /**< Check UICR, just in case. */
-#endif
+//#endif
 
 enum
 {

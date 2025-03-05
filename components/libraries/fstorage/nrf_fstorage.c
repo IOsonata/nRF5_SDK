@@ -54,8 +54,11 @@ NRF_LOG_MODULE_REGISTER();
 
 
 /* Create the section "fs_data". */
-NRF_SECTION_DEF(fs_data, nrf_fstorage_t);
-
+//NRF_SECTION_DEF(fs_data, nrf_fstorage_t);
+//extern data_type * CONCAT_2(__start_, section_name);
+//extern void      * CONCAT_2(__stop_,  section_name)
+extern nrf_fstorage_t * __start_fs_data;
+extern void * __stop_fs_data;
 
 /**@brief   Macro to handle user input validation.
  *
