@@ -1,7 +1,7 @@
 /**-------------------------------------------------------------------------
-@file	fds_sd.h
+@file	fds_nvmc.h
 
-@brief	Instanciation of fds with Softddevice
+@brief	Instanciation of fds without Softddevice
 
 @author	Hoang Nguyen Hoan
 @date	Nov. 29, 2024
