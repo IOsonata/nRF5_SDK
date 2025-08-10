@@ -56,7 +56,7 @@ extern "C" {
  */
 
 /** @brief Type definition for forwarding the new implementation. */
-typedef nrfx_saadc_config_t nrf_drv_saadc_config_t;
+typedef nrfx_saadc_adv_config_t nrf_drv_saadc_config_t;
 
 /** @brief Macro for forwarding the new implementation. */
 #define NRF_DRV_SAADC_EVT_DONE          NRFX_SAADC_EVT_DONE
@@ -128,7 +128,7 @@ __STATIC_INLINE ret_code_t nrf_drv_saadc_init(nrf_drv_saadc_config_t const * p_c
 {
     if (p_config == NULL)
     {
-        static const nrfx_saadc_config_t default_config = NRFX_SAADC_DEFAULT_CONFIG;
+        static const nrfx_saadc_adv_config_t default_config = NRFX_SAADC_DEFAULT_ADV_CONFIG;
         p_config = &default_config;
     }
     return nrfx_saadc_init(p_config, event_handler);

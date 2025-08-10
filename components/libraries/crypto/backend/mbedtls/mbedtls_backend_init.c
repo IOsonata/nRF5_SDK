@@ -83,7 +83,9 @@ static void mbedtls_backend_free(void * p_data)
  */
 static ret_code_t mbedtls_backend_init(void)
 {
+#if defined(MBEDTLS_PLATFORM_MEMORY)
     (void)mbedtls_platform_set_calloc_free(mbedtls_backend_calloc, mbedtls_backend_free);
+#endif
     return NRF_SUCCESS;
 }
 

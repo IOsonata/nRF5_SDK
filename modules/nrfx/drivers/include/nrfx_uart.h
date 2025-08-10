@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 - 2024, Nordic Semiconductor ASA
+ * Copyright (c) 2015 - 2025, Nordic Semiconductor ASA
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -67,7 +67,7 @@ enum {
 #define NRFX_UART_INSTANCE(id)                               \
 {                                                            \
     .p_reg        = NRFX_CONCAT(NRF_, UART, id),             \
-    .drv_inst_idx = NRFX_CONCAT(NRFX_UART, id, _INST_IDX),   \
+    .drv_inst_idx = NRFX_CONCAT(NRFX_UARTE, id, _INST_IDX),   \
 }
 
 /** @brief Types of UART driver events. */
