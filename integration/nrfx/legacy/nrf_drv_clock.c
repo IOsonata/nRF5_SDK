@@ -52,7 +52,7 @@
 
 #include <hal/nrf_wdt.h>
 
-#include "interrupt.h"
+#include "coredev/interrupt.h"
 
 #define NRF_LOG_MODULE_NAME clock
 #if CLOCK_CONFIG_LOG_ENABLED

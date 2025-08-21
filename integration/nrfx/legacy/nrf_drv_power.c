@@ -50,7 +50,7 @@
 //#include "app_util_platform.h"
 //#include <app_util.h>
 
-#include "interrupt.h"
+#include "coredev/interrupt.h"
 
 // The structure with default configuration data.
 static const nrfx_power_config_t m_drv_power_config_default =
