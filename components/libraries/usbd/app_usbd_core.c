@@ -50,7 +50,7 @@
 #include "app_usbd.h"
 #include "app_usbd_class_base.h"
 
-#include "interrupt.h"
+#include "coredev/interrupt.h"
 
 #define NRF_LOG_MODULE_NAME app_usbd_core
 
