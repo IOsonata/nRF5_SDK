@@ -275,7 +275,7 @@ static void pdb_evt_send(pm_evt_t * p_event)
  *
  * @param[out] p_event  The event to dispatch.
  */
-static void internal_state_reset()
+static void internal_state_reset(void)
 {
     for (uint32_t i = 0; i < PM_FLASH_BUFFERS; i++)
     {

@@ -358,7 +358,7 @@ NRF_SDH_BLE_OBSERVER(m_ble_evt_observer, PM_BLE_OBSERVER_PRIO, ble_evt_handler, 
 
 /**@brief Function for resetting the internal state of this module.
  */
-static void internal_state_reset()
+static void internal_state_reset(void)
 {
     m_highest_ranked_peer = PM_PEER_ID_INVALID;
     m_peer_rank_token     = PM_STORE_TOKEN_INVALID;

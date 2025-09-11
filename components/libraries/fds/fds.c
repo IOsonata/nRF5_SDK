@@ -1662,7 +1662,7 @@ ret_code_t fds_register(fds_cb_t cb)
 static uint32_t flash_end_addr(void)
 {
     uint32_t addr = NRF_UICR->NRFFW[0];//BOOTLOADER_ADDRESS;
-    uint32_t page_sz         = NRF_FICR->CODEPAGESIZE;
+    uint32_t page_sz = NRF_FICR->CODEPAGESIZE;
 
 #if defined(NRF52810_XXAA) || defined(NRF52811_XXAA)
     // Hardcode the number of flash pages, necessary for SoC emulation.
