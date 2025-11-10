@@ -146,12 +146,12 @@ static const uint8_t easydma_support_bits[] __UNUSED =
 #define USE_WORKAROUND_FOR_ANOMALY_195 1
 #endif
 
-#if NRFX_CHECK(NRF54L_ERRATA_8_PRESENT) || NRFX_CHECK(NRF54H_ERRATA_212_PRESENT)
+#if NRFX_CHECK(NRF54L_ERRATA_8_ENABLE_WORKAROUND) || NRFX_CHECK(NRF54H_ERRATA_212_ENABLE_WORKAROUND)
 #define USE_WORKAROUND_FOR_ANOMALY_NRF54L_8_NRF54H_212 1
 static inline bool apply_errata_nrf54l_8_nrf54h_212(void)
 {
-    return (NRFX_COND_CODE_1(NRF54L_ERRATA_8_PRESENT, (nrf54l_errata_8()), (false)) ||
-            NRFX_COND_CODE_1(NRF54H_ERRATA_212_PRESENT, (nrf54h_errata_212()), (false)));
+    return (NRFX_COND_CODE_1(NRF54L_ERRATA_8_ENABLE_WORKAROUND, (nrf54l_errata_8()), (false)) ||
+            NRFX_COND_CODE_1(NRF54H_ERRATA_212_ENABLE_WORKAROUND, (nrf54h_errata_212()), (false)));
 }
 #endif
 
@@ -163,11 +163,14 @@ typedef struct
     nrfx_spim_evt_t         evt;  // Keep the struct that is ready for event handler. Less memcpy.
     nrfx_drv_state_t        state;
     volatile bool           transfer_in_progress;
-    bool                    skip_gpio_cfg       : 1;
-    bool                    ss_active_high      : 1;
-    bool                    disable_on_xfer_end : 1;
+    bool                    skip_gpio_cfg          : 1;
+    bool                    ss_active_high         : 1;
+    bool                    disable_on_xfer_end    : 1;
 #ifdef USE_WORKAROUND_FOR_ANOMALY_NRF54L_8_NRF54H_212
-    bool                    apply_errata_8_212  : 1;
+    bool                    apply_errata_8_212     : 1;
+#endif
+#if NRFX_CHECK(NRF54L_ERRATA_55_ENABLE_WORKAROUND)
+    bool                    apply_errata_nrf54l_55 : 1;
 #endif
     uint32_t                ss_pin;
 } spim_control_block_t;
@@ -216,15 +219,18 @@ static void anomaly_198_disable(void)
 
 static void spim_abort(NRF_SPIM_Type * p_spim, spim_control_block_t * p_cb)
 {
-    nrfy_spim_abort(p_spim, NULL);
-    bool stopped;
-    uint32_t stopped_mask = NRFY_EVENT_TO_INT_BITMASK(NRF_SPIM_EVENT_STOPPED);
-    NRFX_WAIT_FOR(nrfy_spim_events_process(p_spim, stopped_mask, NULL), 100, 1, stopped);
-    if (!stopped)
+    if (p_cb->transfer_in_progress)
     {
-        NRFX_LOG_ERROR("Failed to stop instance with base address: %p.", (void *)p_spim);
+        nrfy_spim_abort(p_spim, NULL);
+        bool stopped;
+        uint32_t stopped_mask = NRFY_EVENT_TO_INT_BITMASK(NRF_SPIM_EVENT_STOPPED);
+        NRFX_WAIT_FOR(nrfy_spim_events_process(p_spim, stopped_mask, NULL), 100, 1, stopped);
+        if (!stopped)
+        {
+            NRFX_LOG_ERROR("Failed to stop instance with base address: %p.", (void *)p_spim);
+        }
+        p_cb->transfer_in_progress = false;
     }
-    p_cb->transfer_in_progress = false;
 #if defined(HALTIUM_XXAA)
     if (p_cb->disable_on_xfer_end)
 #endif
@@ -480,6 +486,13 @@ static void spim_configure(nrfx_spim_t const *        p_instance,
     nrf_spim_frequency_t frequency = spim_frequency_bit_decode(p_config->frequency);
 #elif NRF_SPIM_HAS_PRESCALER
     uint32_t prescaler = spim_prescaler_calculate(p_instance, p_config->frequency);
+#endif
+
+#if NRFX_CHECK(NRF54L_ERRATA_55_ENABLE_WORKAROUND)
+    if (nrf54l_errata_55())
+    {
+        p_cb->apply_errata_nrf54l_55 = 1;
+    }
 #endif
 
 #ifdef USE_WORKAROUND_FOR_ANOMALY_NRF54L_8_NRF54H_212
@@ -850,10 +863,18 @@ static nrfx_err_t spim_xfer(NRF_SPIM_Type               * p_spim,
                                 true : !nrfy_spim_enable_check(p_spim);
 #endif
     nrfy_spim_enable(p_spim);
+
+#if NRFX_CHECK(NRF54L_ERRATA_55_ENABLE_WORKAROUND)
+    if (p_cb->apply_errata_nrf54l_55)
+    {
+        *(volatile uint32_t *)((uint8_t *)p_spim + 0xc80) = 0x82;
+    }
+#endif
+
 #ifdef USE_WORKAROUND_FOR_ANOMALY_NRF54L_8_NRF54H_212
     if (apply_errata_nrf54l_8_nrf54h_212() && p_cb->apply_errata_8_212)
     {
-        *(volatile uint32_t *)((uintptr_t)p_spim + 0xc84) = 0x82;
+        *(volatile uint32_t *)((uint8_t *)p_spim + 0xc84) = 0x82;
         if (p_cb->handler)
         {
             nrfy_spim_event_clear(p_spim, NRF_SPIM_EVENT_STARTED);
@@ -869,10 +890,17 @@ static nrfx_err_t spim_xfer(NRF_SPIM_Type               * p_spim,
 
     if (!p_cb->handler)
     {
+#if NRFX_CHECK(NRF54L_ERRATA_55_ENABLE_WORKAROUND)
+        if (p_cb->apply_errata_nrf54l_55)
+        {
+            *(volatile uint32_t *)((uint8_t *)p_spim + 0xc80) = 0;
+        }
+#endif
+
 #ifdef USE_WORKAROUND_FOR_ANOMALY_NRF54L_8_NRF54H_212
         if (apply_errata_nrf54l_8_nrf54h_212() && p_cb->apply_errata_8_212)
         {
-            *(volatile uint32_t *)((uintptr_t)p_spim + 0xc84) = 0;
+            *(volatile uint32_t *)((uint8_t *)p_spim + 0xc84) = 0;
         }
 #endif
 
@@ -967,6 +995,13 @@ void nrfx_spim_abort(nrfx_spim_t const * p_instance)
 
 static void irq_handler(NRF_SPIM_Type * p_spim, spim_control_block_t * p_cb)
 {
+#if NRFX_CHECK(NRF54L_ERRATA_55_ENABLE_WORKAROUND)
+    if (p_cb->apply_errata_nrf54l_55 && nrfy_spim_event_check(p_spim, NRF_SPIM_EVENT_END))
+    {
+        *(volatile uint32_t *)((uint8_t *)p_spim + 0xc80) = 0;
+    }
+#endif
+
 #ifdef USE_WORKAROUND_FOR_ANOMALY_NRF54L_8_NRF54H_212
     if (apply_errata_nrf54l_8_nrf54h_212() && p_cb->apply_errata_8_212)
     {
@@ -974,7 +1009,7 @@ static void irq_handler(NRF_SPIM_Type * p_spim, spim_control_block_t * p_cb)
             nrfy_spim_event_check(p_spim, NRF_SPIM_EVENT_STARTED))
         {
             nrfy_spim_event_clear(p_spim, NRF_SPIM_EVENT_STARTED);
-            *(volatile uint32_t *)((uintptr_t)p_spim + 0xc84) = 0;
+            *(volatile uint32_t *)((uint8_t *)p_spim + 0xc84) = 0;
             nrfy_spim_int_disable(p_spim, NRF_SPIM_INT_STARTED_MASK);
         }
     }

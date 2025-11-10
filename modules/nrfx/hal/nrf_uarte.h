@@ -99,6 +99,13 @@ extern "C" {
 #define NRF_UARTE_HAS_FRAME_TIMEOUT 0
 #endif
 
+#if defined(UARTE_ADDRESS_ADDRESS_Msk) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether UARTE supports variable frame size. */
+#define NRF_UARTE_HAS_FRAME_SIZE 1
+#else
+#define NRF_UARTE_HAS_FRAME_SIZE 0
+#endif
+
 /** @brief Base frequency value 320 MHz for UARTE. */
 #define NRF_UARTE_BASE_FREQUENCY_320MHZ (NRFX_MHZ_TO_HZ(320UL))
 /** @brief Base frequency value 128 MHz for UARTE. */
@@ -302,6 +309,24 @@ typedef enum {
 } nrf_uarte_frame_timeout_t;
 #endif
 
+#if NRF_UARTE_HAS_FRAME_SIZE
+/** @brief Types of UARTE Frame size. */
+typedef enum {
+    NRF_UARTE_FRAME_SIZE_4_BIT  = UARTE_CONFIG_FRAMESIZE_4bit << UARTE_CONFIG_FRAMESIZE_Pos,  ///< 4 bit frame size.
+    NRF_UARTE_FRAME_SIZE_5_BIT  = UARTE_CONFIG_FRAMESIZE_5bit << UARTE_CONFIG_FRAMESIZE_Pos,  ///< 5 bit frame size.
+    NRF_UARTE_FRAME_SIZE_6_BIT  = UARTE_CONFIG_FRAMESIZE_6bit << UARTE_CONFIG_FRAMESIZE_Pos,  ///< 6 bit frame size.
+    NRF_UARTE_FRAME_SIZE_7_BIT  = UARTE_CONFIG_FRAMESIZE_7bit << UARTE_CONFIG_FRAMESIZE_Pos,  ///< 7 bit frame size.
+    NRF_UARTE_FRAME_SIZE_8_BIT  = UARTE_CONFIG_FRAMESIZE_8bit << UARTE_CONFIG_FRAMESIZE_Pos,  ///< 8 bit frame size.
+    NRF_UARTE_FRAME_SIZE_9_BIT  = UARTE_CONFIG_FRAMESIZE_9bit << UARTE_CONFIG_FRAMESIZE_Pos,  ///< 9 bit frame size.
+} nrf_uarte_frame_size_t;
+
+/** @brief Types of UARTE Frame trimming endianness when frame size is less than 8. */
+typedef enum {
+    NRF_UARTE_ENDIAN_MSB  = UARTE_CONFIG_ENDIAN_MSB << UARTE_CONFIG_ENDIAN_Pos,  ///< Data is trimmed from MSB end.
+    NRF_UARTE_ENDIAN_LSB  = UARTE_CONFIG_ENDIAN_LSB << UARTE_CONFIG_ENDIAN_Pos,  ///< Data is trimmed from LSB end.
+} nrf_uarte_endian_t;
+#endif
+
 /** @brief Structure for UARTE transmission configuration. */
 typedef struct
 {
@@ -315,6 +340,10 @@ typedef struct
 #endif
 #if NRF_UARTE_HAS_FRAME_TIMEOUT
     nrf_uarte_frame_timeout_t frame_timeout; ///< Frame timeout.
+#endif
+#if NRF_UARTE_HAS_FRAME_SIZE
+    nrf_uarte_frame_size_t frame_size;       ///< Frame size.
+    nrf_uarte_endian_t     endian;           ///< Frame trimming endianness.
 #endif
 } nrf_uarte_config_t;
 
@@ -436,6 +465,18 @@ NRF_STATIC_INLINE void nrf_uarte_subscribe_clear(NRF_UARTE_Type * p_reg,
                                                  nrf_uarte_task_t task);
 
 /**
+ * @brief Function for getting the subscribe configuration for a given
+ *        UARTE task.
+ *
+ * @param[in] p_reg Pointer to the structure of registers of the peripheral.
+ * @param[in] task  Task for which to read the configuration.
+ *
+ * @return UARTE subscribe configuration.
+ */
+NRF_STATIC_INLINE uint32_t nrf_uarte_subscribe_get(NRF_UARTE_Type const * p_reg,
+                                                   nrf_uarte_task_t       task);
+
+/**
  * @brief Function for setting the publish configuration for a given
  *        UARTE event.
  *
@@ -456,6 +497,18 @@ NRF_STATIC_INLINE void nrf_uarte_publish_set(NRF_UARTE_Type *  p_reg,
  */
 NRF_STATIC_INLINE void nrf_uarte_publish_clear(NRF_UARTE_Type *  p_reg,
                                                nrf_uarte_event_t event);
+
+/**
+ * @brief Function for getting the publish configuration for a given
+ *        UARTE event.
+ *
+ * @param[in] p_reg Pointer to the structure of registers of the peripheral.
+ * @param[in] event Event for which to read the configuration.
+ *
+ * @return UARTE publish configuration.
+ */
+NRF_STATIC_INLINE uint32_t nrf_uarte_publish_get(NRF_UARTE_Type const * p_reg,
+                                                 nrf_uarte_event_t      event);
 #endif // defined(DPPI_PRESENT) || defined(__NRFX_DOXYGEN__)
 
 /**
@@ -651,6 +704,24 @@ NRF_STATIC_INLINE void nrf_uarte_baudrate_set(NRF_UARTE_Type *     p_reg,
                                               nrf_uarte_baudrate_t baudrate);
 
 /**
+ * @brief Function for setting the transmit buffer length.
+ *
+ * @param[in] p_reg    Pointer to the structure of registers of the peripheral.
+ * @param[in] length   Maximum number of data bytes to receive.
+ */
+NRF_STATIC_INLINE void nrf_uarte_tx_maxcnt_set(NRF_UARTE_Type * p_reg,
+                                               size_t           length);
+
+/**
+ * @brief Function for setting the transmit buffer pointer.
+ *
+ * @param[in] p_reg    Pointer to the structure of registers of the peripheral.
+ * @param[in] p_buffer Pointer to the buffer for received data.
+ */
+NRF_STATIC_INLINE void nrf_uarte_tx_ptr_set(NRF_UARTE_Type * p_reg,
+                                            uint8_t  const * p_buffer);
+
+/**
  * @brief Function for setting the transmit buffer.
  *
  * @param[in] p_reg    Pointer to the structure of registers of the peripheral.
@@ -678,6 +749,24 @@ NRF_STATIC_INLINE uint8_t const * nrf_uarte_tx_buffer_get(NRF_UARTE_Type * p_reg
  * @retval Amount of bytes transmitted.
  */
 NRF_STATIC_INLINE uint32_t nrf_uarte_tx_amount_get(NRF_UARTE_Type const * p_reg);
+
+/**
+ * @brief Function for setting the receive buffer length.
+ *
+ * @param[in] p_reg    Pointer to the structure of registers of the peripheral.
+ * @param[in] length   Maximum number of data bytes to receive.
+ */
+NRF_STATIC_INLINE void nrf_uarte_rx_maxcnt_set(NRF_UARTE_Type * p_reg,
+                                               size_t           length);
+
+/**
+ * @brief Function for setting the receive buffer pointer.
+ *
+ * @param[in] p_reg    Pointer to the structure of registers of the peripheral.
+ * @param[in] p_buffer Pointer to the buffer for received data.
+ */
+NRF_STATIC_INLINE void nrf_uarte_rx_ptr_set(NRF_UARTE_Type * p_reg,
+                                            uint8_t *        p_buffer);
 
 /**
  * @brief Function for setting the receive buffer.
@@ -716,6 +805,25 @@ NRF_STATIC_INLINE uint32_t nrf_uarte_rx_amount_get(NRF_UARTE_Type const * p_reg)
  * @param[in] timeout Frame timeout in bits.
  */
 NRF_STATIC_INLINE void nrf_uarte_frame_timeout_set(NRF_UARTE_Type * p_reg, uint32_t timeout);
+#endif
+
+#if NRF_UARTE_HAS_FRAME_SIZE
+/**
+ * @brief Function for setting address register.
+ *
+ * @param[in] p_reg   Pointer to the structure of registers of the peripheral.
+ * @param[in] address Address.
+ */
+NRF_STATIC_INLINE void nrf_uarte_address_set(NRF_UARTE_Type * p_reg, uint8_t address);
+
+/**
+ * @brief Function for getting address.
+ *
+ * @param[in] p_reg   Pointer to the structure of registers of the peripheral.
+ *
+ * @retval Address value.
+ */
+NRF_STATIC_INLINE uint8_t nrf_uarte_address_get(NRF_UARTE_Type const * p_reg);
 #endif
 
 #ifndef NRF_DECLARE_ONLY
@@ -787,6 +895,12 @@ NRF_STATIC_INLINE void nrf_uarte_subscribe_clear(NRF_UARTE_Type * p_reg,
     *((volatile uint32_t *) ((uint8_t *) p_reg + (uint32_t) task + 0x80uL)) = 0;
 }
 
+NRF_STATIC_INLINE uint32_t nrf_uarte_subscribe_get(NRF_UARTE_Type const * p_reg,
+                                                   nrf_uarte_task_t       task)
+{
+    return *((volatile uint32_t const *) ((uint8_t const *) p_reg + (uint32_t) task + 0x80uL));
+}
+
 NRF_STATIC_INLINE void nrf_uarte_publish_set(NRF_UARTE_Type *  p_reg,
                                              nrf_uarte_event_t event,
                                              uint8_t           channel)
@@ -799,6 +913,12 @@ NRF_STATIC_INLINE void nrf_uarte_publish_clear(NRF_UARTE_Type *  p_reg,
                                                nrf_uarte_event_t event)
 {
     *((volatile uint32_t *) ((uint8_t *) p_reg + (uint32_t) event + 0x80uL)) = 0;
+}
+
+NRF_STATIC_INLINE uint32_t nrf_uarte_publish_get(NRF_UARTE_Type const * p_reg,
+                                                 nrf_uarte_event_t      event)
+{
+    return *((volatile uint32_t const *) ((uint8_t const *) p_reg + (uint32_t) event + 0x80uL));
 }
 #endif // defined(DPPI_PRESENT)
 
@@ -924,6 +1044,10 @@ NRF_STATIC_INLINE void nrf_uarte_configure(NRF_UARTE_Type           * p_reg,
 #if NRF_UARTE_HAS_FRAME_TIMEOUT
                     | (uint32_t)p_cfg->frame_timeout
 #endif
+#if NRF_UARTE_HAS_FRAME_SIZE
+                    | (uint32_t)p_cfg->frame_size
+                    | (uint32_t)p_cfg->endian
+#endif
                     | (uint32_t)p_cfg->hwfc;
 }
 
@@ -932,17 +1056,32 @@ NRF_STATIC_INLINE void nrf_uarte_baudrate_set(NRF_UARTE_Type * p_reg, nrf_uarte_
     p_reg->BAUDRATE = baudrate;
 }
 
+NRF_STATIC_INLINE void nrf_uarte_tx_maxcnt_set(NRF_UARTE_Type * p_reg,
+                                               size_t           length)
+{
+#if NRF_UARTE_HAS_DMA_REG
+    p_reg->DMA.TX.MAXCNT = length;
+#else
+    p_reg->TXD.MAXCNT = length;
+#endif
+}
+
+NRF_STATIC_INLINE void nrf_uarte_tx_ptr_set(NRF_UARTE_Type * p_reg,
+                                            uint8_t  const * p_buffer)
+{
+#if NRF_UARTE_HAS_DMA_REG
+    p_reg->DMA.TX.PTR = (uint32_t)p_buffer;
+#else
+    p_reg->TXD.PTR = (uint32_t)p_buffer;
+#endif
+}
+
 NRF_STATIC_INLINE void nrf_uarte_tx_buffer_set(NRF_UARTE_Type * p_reg,
                                                uint8_t  const * p_buffer,
                                                size_t           length)
 {
-#if NRF_UARTE_HAS_DMA_REG
-    p_reg->DMA.TX.PTR    = (uint32_t)p_buffer;
-    p_reg->DMA.TX.MAXCNT = length;
-#else
-    p_reg->TXD.PTR    = (uint32_t)p_buffer;
-    p_reg->TXD.MAXCNT = length;
-#endif
+    nrf_uarte_tx_ptr_set(p_reg, p_buffer);
+    nrf_uarte_tx_maxcnt_set(p_reg, length);
 }
 
 NRF_STATIC_INLINE uint8_t const * nrf_uarte_tx_buffer_get(NRF_UARTE_Type * p_reg)
@@ -963,17 +1102,32 @@ NRF_STATIC_INLINE uint32_t nrf_uarte_tx_amount_get(NRF_UARTE_Type const * p_reg)
 #endif
 }
 
+NRF_STATIC_INLINE void nrf_uarte_rx_maxcnt_set(NRF_UARTE_Type * p_reg,
+                                               size_t           length)
+{
+#if NRF_UARTE_HAS_DMA_REG
+    p_reg->DMA.RX.MAXCNT = length;
+#else
+    p_reg->RXD.MAXCNT = length;
+#endif
+}
+
+NRF_STATIC_INLINE void nrf_uarte_rx_ptr_set(NRF_UARTE_Type * p_reg,
+                                            uint8_t *        p_buffer)
+{
+#if NRF_UARTE_HAS_DMA_REG
+    p_reg->DMA.RX.PTR = (uint32_t)p_buffer;
+#else
+    p_reg->RXD.PTR = (uint32_t)p_buffer;
+#endif
+}
+
 NRF_STATIC_INLINE void nrf_uarte_rx_buffer_set(NRF_UARTE_Type * p_reg,
                                                uint8_t *        p_buffer,
                                                size_t           length)
 {
-#if NRF_UARTE_HAS_DMA_REG
-    p_reg->DMA.RX.PTR    = (uint32_t)p_buffer;
-    p_reg->DMA.RX.MAXCNT = length;
-#else
-    p_reg->RXD.PTR    = (uint32_t)p_buffer;
-    p_reg->RXD.MAXCNT = length;
-#endif
+    nrf_uarte_rx_ptr_set(p_reg, p_buffer);
+    nrf_uarte_rx_maxcnt_set(p_reg, length);
 }
 
 NRF_STATIC_INLINE uint8_t * nrf_uarte_rx_buffer_get(NRF_UARTE_Type * p_reg)
@@ -998,6 +1152,18 @@ NRF_STATIC_INLINE uint32_t nrf_uarte_rx_amount_get(NRF_UARTE_Type const * p_reg)
 NRF_STATIC_INLINE void nrf_uarte_frame_timeout_set(NRF_UARTE_Type * p_reg, uint32_t timeout)
 {
     p_reg->FRAMETIMEOUT = timeout;
+}
+#endif
+
+#if NRF_UARTE_HAS_FRAME_SIZE
+NRF_STATIC_INLINE void nrf_uarte_address_set(NRF_UARTE_Type * p_reg, uint8_t address)
+{
+    p_reg->ADDRESS = (uint32_t)address;
+}
+
+NRF_STATIC_INLINE uint8_t nrf_uarte_address_get(NRF_UARTE_Type const * p_reg)
+{
+    return (uint8_t)p_reg->ADDRESS;
 }
 #endif
 

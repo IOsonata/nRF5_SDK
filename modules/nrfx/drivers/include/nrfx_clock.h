@@ -37,6 +37,9 @@
 #include <nrfx.h>
 #include <hal/nrf_clock.h>
 #include <nrfx_power_clock.h>
+#if defined(LFRC_PRESENT)
+#include <hal/nrf_lfrc.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,20 +52,39 @@ extern "C" {
  * @brief   CLOCK peripheral driver.
  */
 
+/** @brief Symbol specifying driver event offset for LFRC hardware events. */
+#define NRFX_CLOCK_LFRC_EVT_OFFSET 32
+
 /** @brief Clock events. */
 typedef enum
 {
-    NRFX_CLOCK_EVT_HFCLK_STARTED,      ///< HFCLK has been started.
-    NRFX_CLOCK_EVT_LFCLK_STARTED,      ///< LFCLK has been started.
-    NRFX_CLOCK_EVT_PLL_STARTED,        ///< PLL has been started.
-    NRFX_CLOCK_EVT_CTTO,               ///< Calibration timeout.
-    NRFX_CLOCK_EVT_CAL_DONE,           ///< Calibration has been done.
-    NRFX_CLOCK_EVT_HFCLKAUDIO_STARTED, ///< HFCLKAUDIO has been started.
-    NRFX_CLOCK_EVT_HFCLK192M_STARTED,  ///< HFCLK192M has been started.
+    NRFX_CLOCK_EVT_HFCLK_STARTED      = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_HF_STARTED_MASK),       ///< HFCLK has been started.
+#if NRF_CLOCK_HAS_PLL
+    NRFX_CLOCK_EVT_PLL_STARTED        = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_PLL_STARTED_MASK),      ///< PLL has been started.
+#endif
+    NRFX_CLOCK_EVT_LFCLK_STARTED      = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_LF_STARTED_MASK),       ///< LFCLK has been started.
+#if NRF_CLOCK_HAS_CALIBRATION_TIMER
+    NRFX_CLOCK_EVT_CTTO               = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_CTTO_MASK),             ///< Calibration timeout.
+#endif
+#if NRF_CLOCK_HAS_CALIBRATION
+    NRFX_CLOCK_EVT_CAL_DONE           = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_DONE_MASK),             ///< Calibration has been done.
+#elif NRFX_CHECK(NRF_LFRC_HAS_CALIBRATION)
+    NRFX_CLOCK_EVT_CAL_DONE           = NRFX_BITMASK_TO_BITPOS(NRF_LFRC_INT_CALDONE_MASK) + \
+                                        NRFX_CLOCK_LFRC_EVT_OFFSET,                                  ///< Calibration has been done.
+#endif
+#if NRF_CLOCK_HAS_HFCLKAUDIO
+    NRFX_CLOCK_EVT_HFCLKAUDIO_STARTED = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_HFAUDIO_STARTED_MASK),  ///< HFCLKAUDIO has been started.
+#endif
+#if NRF_CLOCK_HAS_HFCLK24M
+    NRFX_CLOCK_EVT_HFCLK24M_STARTED   = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_HFCLK24M_STARTED_MASK), ///< HFCLK24M has been started.
+#endif
+#if NRF_CLOCK_HAS_HFCLK192M
+    NRFX_CLOCK_EVT_HFCLK192M_STARTED  = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_HF192M_STARTED_MASK),   ///< HFCLK192M has been started.
+#endif
 #if NRF_CLOCK_HAS_XO_TUNE
-    NRFX_CLOCK_EVT_XO_TUNED,           ///< XO tune has been done.
-    NRFX_CLOCK_EVT_XO_TUNE_ERROR,      ///< XO is not tuned.
-    NRFX_CLOCK_EVT_XO_TUNE_FAILED,     ///< XO tune operation failed.
+    NRFX_CLOCK_EVT_XO_TUNED           = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_XOTUNED_MASK),          ///< XO tune has been done.
+    NRFX_CLOCK_EVT_XO_TUNE_ERROR      = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_XOTUNEERROR_MASK),      ///< XO is not tuned.
+    NRFX_CLOCK_EVT_XO_TUNE_FAILED     = NRFX_BITMASK_TO_BITPOS(NRF_CLOCK_INT_XOTUNEFAILED_MASK),     ///< XO tune operation failed.
 #endif
 } nrfx_clock_evt_type_t;
 
@@ -235,20 +257,6 @@ NRFX_STATIC_INLINE void nrfx_clock_hfclkaudio_config_set(uint16_t freq_value);
 NRFX_STATIC_INLINE uint16_t nrfx_clock_hfclkaudio_config_get(void);
 #endif
 
-#if (NRF_CLOCK_HAS_CALIBRATION && NRFX_CHECK(NRFX_CLOCK_CONFIG_LF_CAL_ENABLED)) || \
-     defined(__NRFX_DOXYGEN__)
-/**
- * @brief Function for starting the calibration of internal LFCLK.
- *
- * This function starts the calibration process. The process cannot be aborted. LFCLK and HFCLK
- * must be running before this function is called.
- *
- * @retval NRFX_SUCCESS             The procedure is successful.
- * @retval NRFX_ERROR_INVALID_STATE The low-frequency of high-frequency clock is off.
- * @retval NRFX_ERROR_BUSY          Clock is in the calibration phase.
- */
-nrfx_err_t nrfx_clock_calibration_start(void);
-
 #if NRF_CLOCK_HAS_XO_TUNE
 
 /**
@@ -265,7 +273,7 @@ nrfx_err_t nrfx_clock_xo_tune_start(void);
 /**
  * @brief Function for aborting tune of crystal HFCLK.
  *
- * This function aborts tuning process. 
+ * This function aborts tuning process.
  *
  * @retval NRFX_SUCCESS             The procedure is successful.
  * @retval NRFX_ERROR_INVALID_STATE The high-frequency XO clock is off or operation is not in progress.
@@ -276,13 +284,35 @@ nrfx_err_t nrfx_clock_xo_tune_abort(void);
  * @brief Function for checking if XO tune error occurred.
  *
  * @note Must be used only if @p event_handler was not provided during driver initialization.
- * 
+ *
  * @retval true  XO tune procedure failed.
  * @retval false No error.
  */
 bool nrfx_clock_xo_tune_error_check(void);
 
+/**
+ * @brief Function for checking if XO has been successfully tuned.
+ *
+ * @retval true  XO is successfully tuned.
+ * @retval false XO is not tuned.
+ */
+bool nrfx_clock_xo_tune_status_check(void);
+
 #endif
+
+#if ((NRF_CLOCK_HAS_CALIBRATION || NRFX_CHECK(NRF_LFRC_HAS_CALIBRATION)) && \
+     NRFX_CHECK(NRFX_CLOCK_CONFIG_LF_CAL_ENABLED)) || defined(__NRFX_DOXYGEN__)
+/**
+ * @brief Function for starting the calibration of internal LFCLK.
+ *
+ * This function starts the calibration process. The process cannot be aborted. LFCLK and HFCLK
+ * must be running before this function is called.
+ *
+ * @retval NRFX_SUCCESS             The procedure is successful.
+ * @retval NRFX_ERROR_INVALID_STATE The low-frequency or high-frequency clock is off.
+ * @retval NRFX_ERROR_BUSY          Clock is in the calibration phase.
+ */
+nrfx_err_t nrfx_clock_calibration_start(void);
 
 /**
  * @brief Function for checking if calibration is in progress.
@@ -306,8 +336,8 @@ void nrfx_clock_calibration_timer_start(uint8_t interval);
 /** @brief Function for stopping the calibration timer. */
 void nrfx_clock_calibration_timer_stop(void);
 #endif
-#endif /* (NRF_CLOCK_HAS_CALIBRATION && NRFX_CHECK(NRFX_CLOCK_CONFIG_LF_CAL_ENABLED)) || \
-           defined(__NRFX_DOXYGEN__) */
+#endif /* ((NRF_CLOCK_HAS_CALIBRATION || NRFX_CHECK(NRF_LFRC_HAS_CALIBRATION)) && \
+           NRFX_CHECK(NRFX_CLOCK_CONFIG_LF_CAL_ENABLED)) || defined(__NRFX_DOXYGEN__) */
 
 /**
  * @brief Function for returning a requested task address for the clock driver module.

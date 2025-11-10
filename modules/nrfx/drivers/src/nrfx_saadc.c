@@ -38,6 +38,10 @@
 #define NRFX_LOG_MODULE SAADC
 #include <nrfx_log.h>
 
+#if NRF_SAADC_HAS_CAL || NRF_SAADC_HAS_CALREF ||  NRF_SAADC_HAS_LIN_CAL
+#include <hal/nrf_ficr.h>
+#endif
+
 #if defined(NRF52_SERIES) && !defined(USE_WORKAROUND_FOR_ANOMALY_212)
     // ANOMALY 212 - SAADC events are missing when switching from single channel
     //               to multi channel configuration with burst enabled.
@@ -217,7 +221,11 @@ static void saadc_generic_mode_set(uint32_t                   ch_to_activate_mas
     m_cb.channels_activated        = (uint8_t)ch_to_activate_mask;
     m_cb.samples_converted         = 0;
 
-    nrfy_saadc_config_t config = {.resolution = resolution, .oversampling = oversampling};
+    nrfy_saadc_config_t config = {.resolution = resolution,
+                                  .oversampling = oversampling,
+                                   NRFX_COND_CODE_1(NRF_SAADC_HAS_BURST,
+                                 (.burst = burst), ())};
+
     nrfy_saadc_periph_configure(NRF_SAADC, &config);
     if (event_handler)
     {
@@ -233,16 +241,22 @@ static void saadc_generic_mode_set(uint32_t                   ch_to_activate_mas
 
     for (uint32_t ch_pos = 0; ch_pos < SAADC_CH_NUM; ch_pos++)
     {
-        nrf_saadc_burst_t burst_to_set = NRF_SAADC_BURST_DISABLED;
         nrfy_saadc_channel_input_t input = {.input_p = NRF_SAADC_INPUT_DISABLED,
                                             .input_n = NRF_SAADC_INPUT_DISABLED};
         if (ch_to_activate_mask & (1 << ch_pos))
         {
             input = m_cb.channels_input[ch_pos];
+        }
+        nrfy_saadc_channel_configure(NRF_SAADC, (uint8_t)ch_pos, NULL, &input);
+
+#if NRF_SAADC_HAS_CH_BURST
+        nrf_saadc_burst_t burst_to_set = NRF_SAADC_BURST_DISABLED;
+        if (ch_to_activate_mask & (1 << ch_pos))
+        {
             burst_to_set = burst;
         }
-        nrfy_saadc_burst_set(NRF_SAADC, (uint8_t)ch_pos, burst_to_set);
-        nrfy_saadc_channel_configure(NRF_SAADC, (uint8_t)ch_pos, NULL, &input);
+        nrfy_saadc_channel_burst_set(NRF_SAADC, (uint8_t)ch_pos, burst_to_set);
+#endif
     }
 }
 
@@ -271,6 +285,24 @@ nrfx_err_t nrfx_saadc_init(uint8_t interrupt_priority)
 
     nrfy_saadc_int_init(NRF_SAADC, mask, interrupt_priority, false);
     m_cb.event_handler = NULL;
+
+#if NRF_SAADC_HAS_CALREF && NRF_FICR_HAS_GLOBAL_SAADC_CALREF
+    uint32_t trim = nrf_ficr_global_saadc_calref_get(NRF_FICR);
+    nrfy_saadc_calref_set(NRF_SAADC, trim);
+#endif
+
+#if NRF_SAADC_HAS_CAL && NRF_FICR_HAS_GLOBAL_SAADC_CAL
+    trim = nrf_ficr_global_saadc_cal_get(NRF_FICR, 0);
+    nrfy_saadc_cal_set(NRF_SAADC, trim);
+#endif
+
+#if NRF_SAADC_HAS_LIN_CAL && NRF_FICR_HAS_GLOBAL_SAADC_LINCALCOEFF
+    for (uint8_t i = 0; i < FICR_TRIM_GLOBAL_SAADC_LINCALCOEFF_MaxIndex; i++)
+    {
+        uint32_t val = nrf_ficr_global_saadc_lincalcoeff_get(NRF_FICR, i);
+        nrfy_saadc_linearity_calibration_coeff_set(NRF_SAADC, i, val);
+    }
+#endif
 
     err_code = NRFX_SUCCESS;
     NRFX_LOG_INFO("Function: %s, error code: %s.", __func__, NRFX_LOG_ERROR_STRING_GET(err_code));
@@ -386,6 +418,12 @@ nrfx_err_t nrfx_saadc_simple_mode_set(uint32_t                   channel_mask,
         // Burst is implicitly enabled if oversampling is enabled.
         burst = NRF_SAADC_BURST_ENABLED;
     }
+
+    /**
+     * Continuous mode has to be disabled for simple mode, this have caused issues when
+     * running first advanced continuous mode and then switching to simple
+     */
+    nrfy_saadc_continuous_mode_disable(NRF_SAADC);
 
     saadc_generic_mode_set(channel_mask,
                            resolution,
@@ -571,18 +609,9 @@ nrfx_err_t nrfx_saadc_mode_trigger(void)
             // END event will arrive when single chunk is filled with samples.
             nrfy_saadc_buffer_t chunk = { .length = m_cb.channels_activated_count};
 
-#if (NRF_SAADC_8BIT_SAMPLE_WIDTH == 8)
-            if (nrfy_saadc_resolution_get(NRF_SAADC) == NRF_SAADC_RESOLUTION_8BIT)
-            {
-                chunk.p_buffer = (nrf_saadc_value_t *)
-                    &((uint8_t *)m_cb.buffer_primary.p_buffer)[m_cb.samples_converted];
-            }
-            else
-#endif
-            {
-                chunk.p_buffer = (nrf_saadc_value_t *)
-                    &((uint16_t *)m_cb.buffer_primary.p_buffer)[m_cb.samples_converted];
-            }
+            chunk.p_buffer = (nrf_saadc_value_t *)
+                &((uint16_t *)m_cb.buffer_primary.p_buffer)[m_cb.samples_converted];
+
             nrfy_saadc_buffer_set(NRF_SAADC, &chunk, true, true);
             if (m_cb.oversampling_without_burst)
             {
@@ -664,6 +693,12 @@ nrfx_err_t nrfx_saadc_limits_set(uint8_t channel, int16_t limit_low, int16_t lim
         return NRFX_ERROR_INVALID_PARAM;
     }
 
+    nrf_saadc_event_t limit_low_evt = nrfy_saadc_limit_event_get(channel, NRF_SAADC_LIMIT_LOW);
+    nrfy_saadc_event_clear(NRF_SAADC, limit_low_evt);
+
+    nrf_saadc_event_t limit_high_evt = nrfy_saadc_limit_event_get(channel, NRF_SAADC_LIMIT_HIGH);
+    nrfy_saadc_event_clear(NRF_SAADC, limit_high_evt);
+
     nrfy_saadc_channel_limits_set(NRF_SAADC, channel, limit_low, limit_high);
 
     uint32_t int_mask = nrfy_saadc_limit_int_get(channel, NRF_SAADC_LIMIT_LOW);
@@ -728,6 +763,7 @@ nrfx_err_t nrfx_saadc_offset_calibrate(nrfx_saadc_event_handler_t calib_event_ha
 
         nrfy_saadc_stop(NRF_SAADC, true);
         nrfy_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_END);
+        nrfy_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_DONE);
         nrfy_saadc_disable(NRF_SAADC);
         m_cb.saadc_state = m_cb.saadc_state_prev;
 
@@ -754,6 +790,7 @@ static void saadc_pre_calibration_state_restore(void)
     }
     nrfy_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_CH0_LIMITL);
     nrfy_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_CH0_LIMITH);
+    nrfy_saadc_event_clear(NRF_SAADC, NRF_SAADC_EVENT_DONE);
     if (m_cb.limits_low_activated & 0x1UL)
     {
         int_mask |= NRF_SAADC_INT_CH0LIMITL;

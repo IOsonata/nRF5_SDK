@@ -63,7 +63,8 @@ extern "C" {
 #endif
 
 #if defined(LUMOS_XXAA)
-#if (defined(ISA_ARM) && defined(NRF_TRUSTZONE_NONSECURE)) || defined(ISA_RISCV)
+#if (defined(ISA_ARM) && defined(NRF_TRUSTZONE_NONSECURE)) || \
+    defined(ISA_RISCV) || defined(NRF54LS05B_ENGA_XXAA)
 #define GPIOTE20_IRQn       GPIOTE20_0_IRQn
 #define GPIOTE20_IRQHandler GPIOTE20_0_IRQHandler
 #define GPIOTE30_IRQn       GPIOTE30_0_IRQn
@@ -135,9 +136,10 @@ extern "C" {
 #define NRF_GPIOTE_IRQ_GROUP
 #endif
 
-#if defined(GPIOTE_INTENSET0_PORT0SECURE_Msk)
-#if defined(NRF_TRUSTZONE_NONSECURE) || \
-    (defined(ISA_RISCV) && defined(HALTIUM_XXAA))
+#if defined(GPIOTE_INTENSET0_PORT0SECURE_Msk) || defined(GPIOTE_INTENSET0_PORT0NONSECURE_Msk)
+#if defined(NRF_TRUSTZONE_NONSECURE)              || \
+    (defined(ISA_RISCV) && defined(HALTIUM_XXAA)) || \
+    defined(NRF54LS05B_ENGA_XXAA)
 #define NRF_GPIOTE_SECURE_SUFFIX NONSECURE
 #else
 #define NRF_GPIOTE_SECURE_SUFFIX SECURE
@@ -145,7 +147,7 @@ extern "C" {
 #else
 /** @brief Symbol indicating a TrustZone suffix added to the register name. */
 #define NRF_GPIOTE_SECURE_SUFFIX
-#endif
+#endif // defined(GPIOTE_INTENSET0_PORT0SECURE_Msk) || defined(GPIOTE_INTENSET0_PORT0NONSECURE_Msk)
 
 #if defined(GPIOTE_INTENSET0_IN0_Msk)
 #if defined(LUMOS_XXAA)
@@ -425,6 +427,18 @@ NRF_STATIC_INLINE void nrf_gpiote_subscribe_set(NRF_GPIOTE_Type * p_reg,
 NRF_STATIC_INLINE void nrf_gpiote_subscribe_clear(NRF_GPIOTE_Type * p_reg, nrf_gpiote_task_t task);
 
 /**
+ * @brief Function for getting the subscribe configuration for a given
+ *        GPIOTE task.
+ *
+ * @param[in] p_reg Pointer to the structure of registers of the peripheral.
+ * @param[in] task  Task for which to read the configuration.
+ *
+ * @return GPIOTE subscribe configuration.
+ */
+NRF_STATIC_INLINE uint32_t nrf_gpiote_subscribe_get(NRF_GPIOTE_Type const * p_reg,
+                                                    nrf_gpiote_task_t       task);
+
+/**
  * @brief Function for setting the publish configuration for a given
  *        GPIOTE event.
  *
@@ -444,6 +458,18 @@ NRF_STATIC_INLINE void nrf_gpiote_publish_set(NRF_GPIOTE_Type *  p_reg,
  * @param[in] event Event for which to clear the configuration.
  */
 NRF_STATIC_INLINE void nrf_gpiote_publish_clear(NRF_GPIOTE_Type * p_reg, nrf_gpiote_event_t event);
+
+/**
+ * @brief Function for getting the publish configuration for a given
+ *        GPIOTE event.
+ *
+ * @param[in] p_reg Pointer to the structure of registers of the peripheral.
+ * @param[in] event Event for which to read the configuration.
+ *
+ * @return GPIOTE publish configuration.
+ */
+NRF_STATIC_INLINE uint32_t nrf_gpiote_publish_get(NRF_GPIOTE_Type const * p_reg,
+                                                  nrf_gpiote_event_t      event);
 #endif // defined(DPPI_PRESENT) || defined(__NRFX_DOXYGEN__)
 
 /**
@@ -806,6 +832,13 @@ NRF_STATIC_INLINE void nrf_gpiote_subscribe_clear(NRF_GPIOTE_Type * p_reg, nrf_g
     *((volatile uint32_t *) ((uint8_t *) p_reg + (uint32_t) task + 0x80uL)) = 0;
 }
 
+NRF_STATIC_INLINE uint32_t nrf_gpiote_subscribe_get(NRF_GPIOTE_Type const * p_reg,
+                                                    nrf_gpiote_task_t       task)
+{
+    return *((volatile uint32_t const *) ((uint8_t const *) p_reg + (uint32_t) task + 0x80uL));
+}
+
+
 NRF_STATIC_INLINE void nrf_gpiote_publish_set(NRF_GPIOTE_Type *  p_reg,
                                               nrf_gpiote_event_t event,
                                               uint8_t            channel)
@@ -817,6 +850,12 @@ NRF_STATIC_INLINE void nrf_gpiote_publish_set(NRF_GPIOTE_Type *  p_reg,
 NRF_STATIC_INLINE void nrf_gpiote_publish_clear(NRF_GPIOTE_Type * p_reg, nrf_gpiote_event_t event)
 {
     *((volatile uint32_t *) ((uint8_t *) p_reg + (uint32_t) event + 0x80uL)) = 0;
+}
+
+NRF_STATIC_INLINE uint32_t nrf_gpiote_publish_get(NRF_GPIOTE_Type const * p_reg,
+                                                  nrf_gpiote_event_t      event)
+{
+    return *((volatile uint32_t const *) ((uint8_t const *) p_reg + (uint32_t) event + 0x80uL));
 }
 #endif // defined(DPPI_PRESENT)
 

@@ -526,6 +526,15 @@
 #endif
 
 /**
+ * @brief NRFX_GPIOTE_CONFIG_NONUNIFORM_INSTANCES
+ *
+ * Boolean. Accepted values: 0 and 1.
+ */
+#ifndef NRFX_GPIOTE_CONFIG_NONUNIFORM_INSTANCES
+#define NRFX_GPIOTE_CONFIG_NONUNIFORM_INSTANCES 1
+#endif
+
+/**
  * @brief NRFX_GPIOTE_DEFAULT_CONFIG_IRQ_PRIORITY
  *
  * Integer value. Minimum: 0. Maximum: 7.
@@ -610,6 +619,15 @@
  */
 #ifndef NRFX_GRTC_CONFIG_CLEAR_AT_INIT
 #define NRFX_GRTC_CONFIG_CLEAR_AT_INIT 0
+#endif
+
+/**
+ * @brief NRFX_GRTC_CONFIG_LFCLK_SELECT_AT_INIT
+ *
+ * Boolean. Accepted values: 0 and 1.
+ */
+#ifndef NRFX_GRTC_CONFIG_LFCLK_SELECT_AT_INIT
+#define NRFX_GRTC_CONFIG_LFCLK_SELECT_AT_INIT 1
 #endif
 
 /**

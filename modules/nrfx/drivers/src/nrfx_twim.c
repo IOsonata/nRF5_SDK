@@ -85,6 +85,13 @@
 #define TWIM_LENGTH_VALIDATE(drv_inst_idx, len1, len2)    \
         (NRFX_FOREACH_ENABLED(TWIM, TWIMX_LENGTH_VALIDATE, (||), (0), drv_inst_idx, len1, len2))
 
+#if NRFX_CHECK(NRFX_TWIM_NRF52_ANOMALY_219_WORKAROUND_ENABLED) || \
+    NRFX_CHECK(NRFX_TWIM_NRF53_ANOMALY_47_WORKAROUND_ENABLED)
+#define USE_WORKAROUND_FOR_TWIM_FREQ_ANOMALY 1
+#else
+#define USE_WORKAROUND_FOR_TWIM_FREQ_ANOMALY 0
+#endif
+
 // Control block - driver instance local data.
 typedef struct
 {
@@ -198,6 +205,14 @@ static void twim_configure(nrfx_twim_t const *        p_instance,
         .frequency     = p_config->frequency,
         .skip_psel_cfg = p_config->skip_psel_cfg
     };
+
+#if USE_WORKAROUND_FOR_TWIM_FREQ_ANOMALY
+    if ((nrf52_errata_219() || nrf53_errata_47()) &&
+        (p_config->frequency == NRF_TWIM_FREQ_400K))
+    {
+        nrfy_config.frequency = (nrf_twim_frequency_t)0x06200000UL;
+    }
+#endif
 
     nrfy_twim_periph_configure(p_instance->p_twim, &nrfy_config);
     if (m_cb[p_instance->drv_inst_idx].handler)
@@ -358,6 +373,42 @@ nrfx_err_t nrfx_twim_reconfigure(nrfx_twim_t const *        p_instance,
     }
     nrfy_twim_enable(p_instance->p_twim);
     return err_code;
+}
+
+void nrfx_twim_callback_get(nrfx_twim_t const *       p_instance,
+                            nrfx_twim_evt_handler_t * p_event_handler,
+                            void **                   pp_context)
+{
+    twim_control_block_t * p_cb  = &m_cb[p_instance->drv_inst_idx];
+
+    *p_event_handler = p_cb->handler;
+    *pp_context      = p_cb->p_context;
+}
+
+nrfx_err_t nrfx_twim_callback_set(nrfx_twim_t const *     p_instance,
+                                  nrfx_twim_evt_handler_t event_handler,
+                                  void *                  p_context)
+{
+    twim_control_block_t * p_cb  = &m_cb[p_instance->drv_inst_idx];
+
+    NRFX_ASSERT(event_handler);
+
+    if (p_cb->busy)
+    {
+        return NRFX_ERROR_BUSY;
+    }
+
+    if (p_cb->handler == NULL)
+    {
+        return NRFX_ERROR_INVALID_STATE;
+    }
+
+    nrfy_twim_int_disable(p_instance->p_twim, NRF_TWIM_ALL_INTS_MASK);
+
+    p_cb->handler   = event_handler;
+    p_cb->p_context = p_context;
+
+    return NRFX_SUCCESS;
 }
 
 void nrfx_twim_uninit(nrfx_twim_t const * p_instance)
@@ -596,7 +647,16 @@ static nrfx_err_t twim_xfer(twim_control_block_t        * p_cb,
         }
         else
         {
-            nrfy_twim_frequency_set(p_twim, p_cb->bus_frequency);
+#if USE_WORKAROUND_FOR_TWIM_FREQ_ANOMALY
+            if (nrf52_errata_219() && p_cb->bus_frequency == NRF_TWIM_FREQ_400K)
+            {
+                nrfy_twim_frequency_set(p_twim, 0x06200000UL);
+            }
+            else
+#endif
+            {
+                nrfy_twim_frequency_set(p_twim, p_cb->bus_frequency);
+            }
         }
 #endif
     }
@@ -693,7 +753,16 @@ static void irq_handler(NRF_TWIM_Type * p_twim, twim_control_block_t * p_cb)
             nrfy_twim_enable(p_twim);
 
             // Set proper frequency.
-            nrfy_twim_frequency_set(p_twim, p_cb->bus_frequency);
+#if USE_WORKAROUND_FOR_TWIM_FREQ_ANOMALY
+            if (nrf52_errata_219() && p_cb->bus_frequency == NRF_TWIM_FREQ_400K)
+            {
+                nrfy_twim_frequency_set(p_twim, 0x06200000UL);
+            }
+            else
+#endif
+            {
+                nrfy_twim_frequency_set(p_twim, p_cb->bus_frequency);
+            }
             nrfy_twim_tx_list_set(p_twim, NRFX_TWIM_FLAG_TX_POSTINC & p_cb->flags);
             nrfy_twim_rx_list_set(p_twim, NRFX_TWIM_FLAG_RX_POSTINC & p_cb->flags);
             // Start proper transmission.

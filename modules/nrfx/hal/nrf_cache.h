@@ -84,6 +84,41 @@ extern "C" {
 #define NRF_CACHE_HAS_TASK_CLEAN 0
 #endif
 
+#if defined(CACHE_TASKS_ERASE_TASKS_ERASE_Msk) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether the cache ERASE task is supported. */
+#define NRF_CACHE_HAS_TASK_ERASE 1
+#else
+#define NRF_CACHE_HAS_TASK_ERASE 0
+#endif
+
+#if NRF_CACHE_HAS_TASK_ERASE || defined(CACHE_ERASE_ERASE_Erase) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether the cache ERASE is supported. */
+#define NRF_CACHE_HAS_ERASE 1
+#else
+#define NRF_CACHE_HAS_ERASE 0
+#endif
+
+#if defined(CACHE_TASKS_INVALIDATELINE_TASKS_INVALIDATELINE_Msk) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether the cache INVALIDATELINE task is supported. */
+#define NRF_CACHE_HAS_TASK_INVALIDATELINE 1
+#else
+#define NRF_CACHE_HAS_TASK_INVALIDATELINE 0
+#endif
+
+#if defined(CACHE_LINEADDR_ADDR_Msk) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether the cache LINEADDR task is supported. */
+#define NRF_CACHE_HAS_LINEADDR 1
+#else
+#define NRF_CACHE_HAS_LINEADDR 0
+#endif
+
+#if defined(CACHE_WRITELOCK_WRITELOCK_Msk) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether the cache WRITELOCK task is supported. */
+#define NRF_CACHE_HAS_WRITELOCK 1
+#else
+#define NRF_CACHE_HAS_WRITELOCK 0
+#endif
+
 #if defined(CACHE_TASKS_FLUSHCACHE_TASKS_FLUSHCACHE_Msk) || defined(__NRFX_DOXYGEN__)
 /** @brief Symbol indicating whether the FLUSH cache/line tasks are supported. */
 #define NRF_CACHE_HAS_TASK_FLUSH 1
@@ -140,6 +175,13 @@ extern "C" {
 #define NRF_CACHE_HAS_CACHEINFO_SET_WAY_INFO 0
 #endif
 
+#if defined(CACHE_DEBUGLOCK_DEBUGLOCK_Msk) || defined(__NRFX_DOXYGEN__)
+/** @brief Symbol indicating whether cache DEBUGLOCK is supported. */
+#define NRF_CACHE_HAS_DEBUGLOCK 1
+#else
+#define NRF_CACHE_HAS_DEBUGLOCK 0
+#endif
+
 #if NRF_CACHE_HAS_CACHEDATA
 /** @brief Max number of words in CACHEDATA data units. */
 #define NRF_CACHEDATA_DATA_WORDS_IN_UNIT_MAX CACHEDATA_SET_WAY_DU_DATA_MaxCount
@@ -190,8 +232,12 @@ typedef enum
     NRF_CACHE_TASK_RESTORE         = offsetof(NRF_CACHE_Type, TASKS_RESTORE),         /**< Restore the state from a retained memory space. */
 #endif
     NRF_CACHE_TASK_INVALIDATECACHE = offsetof(NRF_CACHE_Type, TASKS_INVALIDATECACHE), /**< Invalidate the whole cache. */
+#if NRF_CACHE_HAS_TASK_INVALIDATELINE
     NRF_CACHE_TASK_INVALIDATELINE  = offsetof(NRF_CACHE_Type, TASKS_INVALIDATELINE),  /**< Invalidate the cache line. */
+#endif
+#if NRF_CACHE_HAS_TASK_ERASE
     NRF_CACHE_TASK_ERASE           = offsetof(NRF_CACHE_Type, TASKS_ERASE),           /**< Erase the whole cache. */
+#endif
 } nrf_cache_task_t;
 #endif
 
@@ -237,19 +283,23 @@ NRF_STATIC_INLINE void nrf_cache_disable(NRF_CACHE_Type * p_reg);
  */
 NRF_STATIC_INLINE bool nrf_cache_enable_check(NRF_CACHE_Type const * p_reg);
 
+#if NRF_CACHE_HAS_TASK_INVALIDATELINE
 /**
  * @brief Function for invalidating the cache content.
  *
  * @param[in] p_reg Pointer to the structure of registers of the peripheral.
  */
 NRF_STATIC_INLINE void nrf_cache_invalidate(NRF_CACHE_Type * p_reg);
+#endif
 
+#if NRF_CACHE_HAS_ERASE
 /**
  * @brief Function for erasing the cache content.
  *
  * @param[in] p_reg Pointer to the structure of registers of the peripheral.
  */
 NRF_STATIC_INLINE void nrf_cache_erase(NRF_CACHE_Type * p_reg);
+#endif
 
 /**
  * @brief Function for checking the status of @ref nrf_cache_erase().
@@ -391,6 +441,7 @@ NRF_STATIC_INLINE void nrf_cache_ramsize_set(NRF_CACHE_Type * p_reg, nrf_cache_r
 NRF_STATIC_INLINE nrf_cache_ramsize_t nrf_cache_ramsize_get(NRF_CACHE_Type const * p_reg);
 #endif
 
+#if NRF_CACHE_HAS_DEBUGLOCK
 /**
  * @brief Function for blocking the cache content access.
  *
@@ -401,7 +452,9 @@ NRF_STATIC_INLINE nrf_cache_ramsize_t nrf_cache_ramsize_get(NRF_CACHE_Type const
  * @param[in] p_reg Pointer to the structure of registers of the peripheral.
  */
 NRF_STATIC_INLINE void nrf_cache_read_lock_enable(NRF_CACHE_Type * p_reg);
+#endif
 
+#if NRF_CACHE_HAS_WRITELOCK
 /**
  * @brief Function for blocking the cache content updates.
  *
@@ -415,6 +468,7 @@ NRF_STATIC_INLINE void nrf_cache_read_lock_enable(NRF_CACHE_Type * p_reg);
  * @param[in] enable True if cache content update lock is to be enabled, false otherwise.
  */
 NRF_STATIC_INLINE void nrf_cache_update_lock_set(NRF_CACHE_Type * p_reg, bool enable);
+#endif
 
 #if NRF_CACHE_HAS_CACHEDATA
 /**
@@ -515,6 +569,7 @@ NRF_STATIC_INLINE bool nrf_cache_is_data_unit_dirty_check(NRF_CACHEINFO_Type con
 #endif
 
 #if NRF_CACHE_HAS_TASKS
+#if NRF_CACHE_HAS_LINEADDR
 /**
  * @brief Function to set the memory address covered by the line to be maintained.
  *
@@ -531,6 +586,7 @@ NRF_STATIC_INLINE void nrf_cache_lineaddr_set(NRF_CACHE_Type * p_reg, uint32_t a
  * @return Cache line adress.
  */
 NRF_STATIC_INLINE uint32_t nrf_cache_lineaddr_get(NRF_CACHE_Type const * p_reg);
+#endif
 
 /**
  * @brief Function for triggering the specified CACHE task.
@@ -589,6 +645,7 @@ NRF_STATIC_INLINE void nrf_cache_invalidate(NRF_CACHE_Type * p_reg)
 #endif
 }
 
+#if NRF_CACHE_HAS_ERASE
 NRF_STATIC_INLINE void nrf_cache_erase(NRF_CACHE_Type * p_reg)
 {
 #if NRF_CACHE_HAS_TASKS
@@ -597,6 +654,7 @@ NRF_STATIC_INLINE void nrf_cache_erase(NRF_CACHE_Type * p_reg)
     p_reg->ERASE = CACHE_ERASE_ERASE_Erase;
 #endif
 }
+#endif
 
 NRF_STATIC_INLINE bool nrf_cache_erase_status_check(NRF_CACHE_Type const * p_reg)
 {
@@ -708,16 +766,20 @@ NRF_STATIC_INLINE nrf_cache_ramsize_t nrf_cache_ramsize_get(NRF_CACHE_Type const
 }
 #endif
 
+#if NRF_CACHE_HAS_DEBUGLOCK
 NRF_STATIC_INLINE void nrf_cache_read_lock_enable(NRF_CACHE_Type * p_reg)
 {
     p_reg->DEBUGLOCK = CACHE_DEBUGLOCK_DEBUGLOCK_Locked;
 }
+#endif
 
+#if NRF_CACHE_HAS_WRITELOCK
 NRF_STATIC_INLINE void nrf_cache_update_lock_set(NRF_CACHE_Type * p_reg, bool enable)
 {
     p_reg->WRITELOCK =
         (enable ? CACHE_WRITELOCK_WRITELOCK_Locked : CACHE_WRITELOCK_WRITELOCK_Unlocked);
 }
+#endif
 
 #if NRF_CACHE_HAS_CACHEDATA
 NRF_STATIC_INLINE uint32_t nrf_cache_data_get(NRF_CACHEDATA_Type const * p_reg,
@@ -873,6 +935,7 @@ NRF_STATIC_INLINE bool nrf_cache_is_data_unit_dirty_check(NRF_CACHEINFO_Type con
 #endif // NRF_CACHE_HAS_CACHEINFO
 
 #if NRF_CACHE_HAS_TASKS
+#if NRF_CACHE_HAS_LINEADDR
 NRF_STATIC_INLINE void nrf_cache_lineaddr_set(NRF_CACHE_Type * p_reg, uint32_t addr)
 {
     p_reg->LINEADDR = addr;
@@ -882,6 +945,7 @@ NRF_STATIC_INLINE uint32_t nrf_cache_lineaddr_get(NRF_CACHE_Type const * p_reg)
 {
     return p_reg->LINEADDR;
 }
+#endif
 
 NRF_STATIC_INLINE void nrf_cache_task_trigger(NRF_CACHE_Type * p_reg, nrf_cache_task_t task)
 {

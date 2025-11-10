@@ -66,7 +66,7 @@ NRFX_STATIC_INLINE uint32_t total_memory_size_get(void)
     return (size * 1024UL);
 }
 
-NRFX_STATIC_INLINE bool is_valid_address(uint32_t addr, bool uicr_allowed)
+NRFX_STATIC_INLINE __UNUSED bool is_valid_address(uint32_t addr, bool uicr_allowed)
 {
     if ((addr - NRFY_RRAMC_RRAM_BASE_ADDRESS) < total_memory_size_get())
     {
@@ -84,7 +84,7 @@ NRFX_STATIC_INLINE bool is_valid_address(uint32_t addr, bool uicr_allowed)
     return false;
 }
 
-NRFX_STATIC_INLINE bool fit_in_memory(uint32_t addr, bool uicr_allowed, uint32_t bytes)
+NRFX_STATIC_INLINE __UNUSED bool fit_in_memory(uint32_t addr, bool uicr_allowed, uint32_t bytes)
 {
     if ((addr - NRFY_RRAMC_RRAM_BASE_ADDRESS + bytes) < total_memory_size_get())
     {
@@ -190,7 +190,7 @@ static nrfx_err_t rramc_configure(nrfx_rramc_config_t const * p_config)
 
     if (m_cb.handler)
     {
-        nrfy_rramc_int_init(NRF_RRAMC, NRF_RRAMC_ALL_INTS_MASK, p_config->irq_priority, false);
+        nrfy_rramc_int_init(NRF_RRAMC, NRF_RRAMC_ALL_INTS_MASK, p_config->irq_priority, true);
     }
     return NRFX_SUCCESS;
 }
@@ -259,6 +259,21 @@ void nrfx_rramc_uninit(void)
 uint32_t nrfx_rramc_memory_size_get(void)
 {
     return total_memory_size_get();
+}
+
+void nrfx_rramc_write_buffer_commit(void)
+{
+    nrfy_rramc_task_trigger(NRF_RRAMC, NRF_RRAMC_TASK_COMMIT_WRITEBUF);
+}
+
+void nrfx_rramc_wake_up(void)
+{
+    nrfy_rramc_task_trigger(NRF_RRAMC, NRF_RRAMC_TASK_WAKEUP);
+}
+
+bool nrfx_rramc_write_buffer_empty_check(void)
+{
+    return nrfy_rramc_empty_buffer_check(NRF_RRAMC);
 }
 
 void nrfx_rramc_irq_handler(void)

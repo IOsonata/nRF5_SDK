@@ -75,9 +75,6 @@ POSSIBILITY OF SUCH DAMAGE.
     #endif
 
     #define EASYVDMA_PRESENT
-    #define VDMADESCRIPTOR_CONFIG_CNT_Pos (0UL)        /*!< Position of CNT field.                                               */
-    #define VDMADESCRIPTOR_CONFIG_CNT_Msk (0xFFFFFFUL << VDMADESCRIPTOR_CONFIG_CNT_Pos) /*!< Bit mask of CNT field.              */
-    #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Pos (24UL) /*!< Position of ATTRIBUTE field.                                         */
 
     #define SAADC_CH_NUM SAADC_CH_MaxCount
     #define SAADC_EASYDMA_MAXCNT_SIZE 15
@@ -144,6 +141,8 @@ POSSIBILITY OF SUCH DAMAGE.
     #define VPR_CLIC_PRIO_COUNT       4
     #define ADDRESS_SLAVE_Pos         (12UL)
     #define ADDRESS_SLAVE_Msk         (0x3FUL << ADDRESS_SLAVE_Pos)
+
+    #define TWIM_FREQUENCY_FREQUENCY_K1000 (0x0FF00000UL)
 
 
 #endif

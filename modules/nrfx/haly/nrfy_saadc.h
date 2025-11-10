@@ -68,6 +68,27 @@ NRFY_STATIC_INLINE void __nrfy_internal_saadc_stop(NRF_SAADC_Type * p_reg, bool 
  * @brief   Hardware access layer with cache and barrier support for managing the SAADC peripheral.
  */
 
+ #if NRF_SAADC_HAS_CAL || defined(__NRFX_DOXYGEN__)
+/** @refhal{NRF_SAADC_HAS_CAL} */
+#define NRFY_SAADC_HAS_CAL 1
+#else
+#define NRFY_SAADC_HAS_CAL 0
+#endif
+
+#if NRF_SAADC_HAS_CALREF || defined(__NRFX_DOXYGEN__)
+/** @refhal{NRF_SAADC_HAS_CALREF} */
+#define NRFY_SAADC_HAS_CALREF 1
+#else
+#define NRFY_SAADC_HAS_CALREF 0
+#endif
+
+#if NRF_SAADC_HAS_LIN_CAL || defined(__NRFX_DOXYGEN__)
+/** @refhal{NRF_SAADC_HAS_LIN_CAL} */
+#define NRFY_SAADC_HAS_LIN_CAL 1
+#else
+#define NRFY_SAADC_HAS_LIN_CAL 0
+#endif
+
 /** @brief Structure describing SAADC sampling buffer. */
 struct nrfy_saadc_buffer_t
 {
@@ -80,6 +101,9 @@ typedef struct
 {
     nrf_saadc_resolution_t resolution;   ///< Sampling resolution.
     nrf_saadc_oversample_t oversampling; ///< Oversampling setting.
+#if NRF_SAADC_HAS_BURST
+    nrf_saadc_burst_t      burst;        ///< Burst mode configuration.
+#endif
 } nrfy_saadc_config_t;
 
 /** @brief SAADC channel input configuration structure. */
@@ -100,6 +124,9 @@ NRFY_STATIC_INLINE void nrfy_saadc_periph_configure(NRF_SAADC_Type *            
 {
     nrf_saadc_resolution_set(p_reg, p_config->resolution);
     nrf_saadc_oversample_set(p_reg, p_config->oversampling);
+#if NRF_SAADC_HAS_BURST
+    nrf_saadc_burst_set(p_reg, p_config->burst);
+#endif
     nrf_barrier_w();
 }
 
@@ -602,14 +629,26 @@ NRFY_STATIC_INLINE void nrfy_saadc_channel_init(NRF_SAADC_Type *                
     nrf_barrier_w();
 }
 
-/** @refhal{nrf_saadc_burst_set} */
-NRFY_STATIC_INLINE void nrfy_saadc_burst_set(NRF_SAADC_Type *  p_reg,
-                                             uint8_t           channel,
-                                             nrf_saadc_burst_t burst)
+#if NRF_SAADC_HAS_CH_BURST
+/** @refhal{nrf_saadc_channel_burst_set} */
+NRFY_STATIC_INLINE void nrfy_saadc_channel_burst_set(NRF_SAADC_Type *  p_reg,
+                                                     uint8_t           channel,
+                                                     nrf_saadc_burst_t burst)
 {
-    nrf_saadc_burst_set(p_reg, channel, burst);
+    nrf_saadc_channel_burst_set(p_reg, channel, burst);
     nrf_barrier_w();
 }
+#endif
+
+#if NRF_SAADC_HAS_BURST
+/** @refhal{nrf_saadc_burst_set} */
+NRFY_STATIC_INLINE void nrfy_saadc_burst_set(NRF_SAADC_Type *  p_reg,
+                                             nrf_saadc_burst_t burst)
+{
+    nrf_saadc_burst_set(p_reg, burst);
+    nrf_barrier_w();
+}
+#endif
 
 /** @refhal{nrf_saadc_value_min_get} */
 NRFY_STATIC_INLINE int16_t nrfy_saadc_value_min_get(nrf_saadc_resolution_t resolution)
@@ -622,6 +661,65 @@ NRFY_STATIC_INLINE int16_t nrfy_saadc_value_max_get(nrf_saadc_resolution_t resol
 {
     return nrf_saadc_value_max_get(resolution);
 }
+
+#if NRFY_SAADC_HAS_CAL
+/** @refhal{nrf_saadc_cal_set} */
+NRFY_STATIC_INLINE void nrfy_saadc_cal_set(NRF_SAADC_Type * p_reg, uint32_t trim)
+{
+    nrf_saadc_cal_set(p_reg, trim);
+    nrf_barrier_w();
+}
+
+/** @refhal{nrf_saadc_cal_get} */
+NRFY_STATIC_INLINE uint32_t nrfy_saadc_cal_get(NRF_SAADC_Type const * p_reg)
+{
+    nrf_barrier_rw();
+    uint32_t trim = nrf_saadc_cal_get(p_reg);
+    nrf_barrier_r();
+    return trim;
+}
+#endif
+
+#if NRFY_SAADC_HAS_CALREF
+/** @refhal{nrf_saadc_calref_set} */
+NRFY_STATIC_INLINE void nrfy_saadc_calref_set(NRF_SAADC_Type * p_reg, uint32_t trim)
+{
+    nrf_saadc_calref_set(p_reg, trim);
+    nrf_barrier_w();
+}
+
+/** @refhal{nrf_saadc_calref_get} */
+NRFY_STATIC_INLINE uint32_t nrfy_saadc_calref_get(NRF_SAADC_Type const * p_reg)
+{
+    nrf_barrier_rw();
+    uint32_t trim = nrf_saadc_calref_get(p_reg);
+    nrf_barrier_r();
+    return trim;
+}
+#endif
+
+#if NRFY_SAADC_HAS_LIN_CAL
+/** @refhal{nrf_saadc_linearity_calibration_coeff_set} */
+NRFY_STATIC_INLINE void nrfy_saadc_linearity_calibration_coeff_set(NRF_SAADC_Type * p_reg,
+                                                                   uint8_t          index,
+                                                                   uint32_t         coeff)
+{
+    nrf_saadc_linearity_calibration_coeff_set(p_reg, index, coeff);
+    nrf_barrier_w();
+}
+
+/** @refhal{nrf_saadc_linearity_calibration_coeff_get} */
+NRFY_STATIC_INLINE
+uint32_t nrfy_saadc_linearity_calibration_coeff_get(NRF_SAADC_Type const * p_reg,
+                                                    uint8_t                index)
+{
+    nrf_barrier_rw();
+    uint32_t trim = nrf_saadc_linearity_calibration_coeff_get(p_reg, index);
+    nrf_barrier_r();
+    return trim;
+}
+
+#endif
 
 /** @} */
 
