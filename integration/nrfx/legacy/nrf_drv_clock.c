@@ -314,7 +314,10 @@ bool nrf_drv_clock_lfclk_is_running(void)
     }
 #endif // SOFTDEVICE_PRESENT
 
-    return nrfx_clock_lfclk_is_running();
+    //return nrfx_clock_lfclk_is_running();
+
+    nrf_clock_lfclk_t clksrc;
+    return nrfx_clock_is_running(NRF_CLOCK_DOMAIN_LFCLK, &clksrc);
 }
 
 void nrf_drv_clock_hfclk_request(nrf_drv_clock_handler_item_t * p_handler_item)
@@ -388,7 +391,10 @@ bool nrf_drv_clock_hfclk_is_running(void)
     }
 #endif // SOFTDEVICE_PRESENT
 
-    return nrfx_clock_hfclk_is_running();
+    //return nrfx_clock_hfclk_is_running();
+
+    nrf_clock_hfclk_t clksrc;
+    return nrfx_clock_is_running(NRF_CLOCK_DOMAIN_HFCLK, &clksrc);
 }
 
 #if CALIBRATION_SUPPORT
