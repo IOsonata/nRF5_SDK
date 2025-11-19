@@ -261,7 +261,7 @@ typedef nrfx_usbd_setup_t nrf_drv_usbd_setup_t;
 static inline ret_code_t nrf_drv_usbd_uninit(void)
 {
     nrfx_usbd_uninit();
-    return NRF_SUCCESS;
+    return NRFX_SUCCESS;
 }
 
 #ifdef __cplusplus
