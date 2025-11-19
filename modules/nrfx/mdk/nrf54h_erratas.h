@@ -39,7 +39,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdbool.h>
 #include "compiler_abstraction.h"
 
-static bool nrf54h_errata_6(void) __UNUSED;
 static bool nrf54h_errata_8(void) __UNUSED;
 static bool nrf54h_errata_12(void) __UNUSED;
 static bool nrf54h_errata_13(void) __UNUSED;
@@ -68,7 +67,6 @@ static bool nrf54h_errata_50(void) __UNUSED;
 static bool nrf54h_errata_51(void) __UNUSED;
 static bool nrf54h_errata_53(void) __UNUSED;
 static bool nrf54h_errata_55(void) __UNUSED;
-static bool nrf54h_errata_56(void) __UNUSED;
 static bool nrf54h_errata_57(void) __UNUSED;
 static bool nrf54h_errata_58(void) __UNUSED;
 static bool nrf54h_errata_62(void) __UNUSED;
@@ -78,7 +76,6 @@ static bool nrf54h_errata_65(void) __UNUSED;
 static bool nrf54h_errata_66(void) __UNUSED;
 static bool nrf54h_errata_67(void) __UNUSED;
 static bool nrf54h_errata_69(void) __UNUSED;
-static bool nrf54h_errata_70(void) __UNUSED;
 static bool nrf54h_errata_72(void) __UNUSED;
 static bool nrf54h_errata_73(void) __UNUSED;
 static bool nrf54h_errata_74(void) __UNUSED;
@@ -89,7 +86,6 @@ static bool nrf54h_errata_78(void) __UNUSED;
 static bool nrf54h_errata_84(void) __UNUSED;
 static bool nrf54h_errata_92(void) __UNUSED;
 static bool nrf54h_errata_93(void) __UNUSED;
-static bool nrf54h_errata_98(void) __UNUSED;
 static bool nrf54h_errata_103(void) __UNUSED;
 static bool nrf54h_errata_104(void) __UNUSED;
 static bool nrf54h_errata_105(void) __UNUSED;
@@ -176,42 +172,9 @@ static bool nrf54h_errata_213(void) __UNUSED;
 static bool nrf54h_errata_216(void) __UNUSED;
 static bool nrf54h_errata_217(void) __UNUSED;
 static bool nrf54h_errata_218(void) __UNUSED;
-
-/* ========= Errata 6 ========= */
-#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-    #define NRF54H_ERRATA_6_PRESENT 1
-#else
-    #define NRF54H_ERRATA_6_PRESENT 0
-#endif
-
-#ifndef NRF54H_ERRATA_6_ENABLE_WORKAROUND
-    #define NRF54H_ERRATA_6_ENABLE_WORKAROUND NRF54H_ERRATA_6_PRESENT
-#endif
-
-static bool nrf54h_errata_6(void)
-{
-    #ifndef NRF54H_SERIES
-        return false;
-    #else
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
-            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
-        #endif
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            if (var1 == 0x16)
-            {
-                switch(var2)
-                {
-                    case 0x02ul:
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-        #endif
-        return false;
-    #endif
-}
+static bool nrf54h_errata_229(void) __UNUSED;
+static bool nrf54h_errata_230(void) __UNUSED;
+static bool nrf54h_errata_231(void) __UNUSED;
 
 /* ========= Errata 8 ========= */
 #if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
@@ -1181,42 +1144,6 @@ static bool nrf54h_errata_55(void)
     #endif
 }
 
-/* ========= Errata 56 ========= */
-#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-    #define NRF54H_ERRATA_56_PRESENT 1
-#else
-    #define NRF54H_ERRATA_56_PRESENT 0
-#endif
-
-#ifndef NRF54H_ERRATA_56_ENABLE_WORKAROUND
-    #define NRF54H_ERRATA_56_ENABLE_WORKAROUND NRF54H_ERRATA_56_PRESENT
-#endif
-
-static bool nrf54h_errata_56(void)
-{
-    #ifndef NRF54H_SERIES
-        return false;
-    #else
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
-            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
-        #endif
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            if (var1 == 0x16)
-            {
-                switch(var2)
-                {
-                    case 0x02ul:
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-        #endif
-        return false;
-    #endif
-}
-
 /* ========= Errata 57 ========= */
 #if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
     #define NRF54H_ERRATA_57_PRESENT 1
@@ -1517,42 +1444,6 @@ static bool nrf54h_errata_67(void)
 #endif
 
 static bool nrf54h_errata_69(void)
-{
-    #ifndef NRF54H_SERIES
-        return false;
-    #else
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
-            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
-        #endif
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            if (var1 == 0x16)
-            {
-                switch(var2)
-                {
-                    case 0x02ul:
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-        #endif
-        return false;
-    #endif
-}
-
-/* ========= Errata 70 ========= */
-#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-    #define NRF54H_ERRATA_70_PRESENT 1
-#else
-    #define NRF54H_ERRATA_70_PRESENT 0
-#endif
-
-#ifndef NRF54H_ERRATA_70_ENABLE_WORKAROUND
-    #define NRF54H_ERRATA_70_ENABLE_WORKAROUND NRF54H_ERRATA_70_PRESENT
-#endif
-
-static bool nrf54h_errata_70(void)
 {
     #ifndef NRF54H_SERIES
         return false;
@@ -1893,42 +1784,6 @@ static bool nrf54h_errata_92(void)
 #endif
 
 static bool nrf54h_errata_93(void)
-{
-    #ifndef NRF54H_SERIES
-        return false;
-    #else
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
-            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
-        #endif
-        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-            if (var1 == 0x16)
-            {
-                switch(var2)
-                {
-                    case 0x02ul:
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-        #endif
-        return false;
-    #endif
-}
-
-/* ========= Errata 98 ========= */
-#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
-    #define NRF54H_ERRATA_98_PRESENT 1
-#else
-    #define NRF54H_ERRATA_98_PRESENT 0
-#endif
-
-#ifndef NRF54H_ERRATA_98_ENABLE_WORKAROUND
-    #define NRF54H_ERRATA_98_ENABLE_WORKAROUND NRF54H_ERRATA_98_PRESENT
-#endif
-
-static bool nrf54h_errata_98(void)
 {
     #ifndef NRF54H_SERIES
         return false;
@@ -4965,6 +4820,114 @@ static bool nrf54h_errata_217(void)
 #endif
 
 static bool nrf54h_errata_218(void)
+{
+    #ifndef NRF54H_SERIES
+        return false;
+    #else
+        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
+            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
+        #endif
+        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+            if (var1 == 0x16)
+            {
+                switch(var2)
+                {
+                    case 0x02ul:
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+        #endif
+        return false;
+    #endif
+}
+
+/* ========= Errata 229 ========= */
+#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+    #define NRF54H_ERRATA_229_PRESENT 1
+#else
+    #define NRF54H_ERRATA_229_PRESENT 0
+#endif
+
+#ifndef NRF54H_ERRATA_229_ENABLE_WORKAROUND
+    #define NRF54H_ERRATA_229_ENABLE_WORKAROUND NRF54H_ERRATA_229_PRESENT
+#endif
+
+static bool nrf54h_errata_229(void)
+{
+    #ifndef NRF54H_SERIES
+        return false;
+    #else
+        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
+            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
+        #endif
+        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+            if (var1 == 0x16)
+            {
+                switch(var2)
+                {
+                    case 0x02ul:
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+        #endif
+        return false;
+    #endif
+}
+
+/* ========= Errata 230 ========= */
+#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+    #define NRF54H_ERRATA_230_PRESENT 1
+#else
+    #define NRF54H_ERRATA_230_PRESENT 0
+#endif
+
+#ifndef NRF54H_ERRATA_230_ENABLE_WORKAROUND
+    #define NRF54H_ERRATA_230_ENABLE_WORKAROUND NRF54H_ERRATA_230_PRESENT
+#endif
+
+static bool nrf54h_errata_230(void)
+{
+    #ifndef NRF54H_SERIES
+        return false;
+    #else
+        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+            uint32_t var1 = *(uint32_t *)0x0FFFE000ul;
+            uint32_t var2 = *(uint32_t *)0x0FFFE004ul;
+        #endif
+        #if defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+            if (var1 == 0x16)
+            {
+                switch(var2)
+                {
+                    case 0x02ul:
+                        return true;
+                    default:
+                        return true;
+                }
+            }
+        #endif
+        return false;
+    #endif
+}
+
+/* ========= Errata 231 ========= */
+#if    defined (NRF54H20_XXAA) || defined (DEVELOP_IN_NRF54H20)
+    #define NRF54H_ERRATA_231_PRESENT 1
+#else
+    #define NRF54H_ERRATA_231_PRESENT 0
+#endif
+
+#ifndef NRF54H_ERRATA_231_ENABLE_WORKAROUND
+    #define NRF54H_ERRATA_231_ENABLE_WORKAROUND NRF54H_ERRATA_231_PRESENT
+#endif
+
+static bool nrf54h_errata_231(void)
 {
     #ifndef NRF54H_SERIES
         return false;

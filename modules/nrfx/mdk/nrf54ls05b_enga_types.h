@@ -2223,7 +2223,7 @@ typedef struct {
 /* CRACENCORE_RNGCONTROL_CONTROL: Control register */
   #define CRACENCORE_RNGCONTROL_CONTROL_ResetValue (0x00040000UL) /*!< Reset value of CONTROL register.                        */
 
-/* ENABLE @Bit 0 : Start/enable the NDRNG. */
+/* ENABLE @Bit 0 : Start the NDRNG. Self-clearing bit. */
   #define CRACENCORE_RNGCONTROL_CONTROL_ENABLE_Pos (0UL) /*!< Position of ENABLE field.                                        */
   #define CRACENCORE_RNGCONTROL_CONTROL_ENABLE_Msk (0x1UL << CRACENCORE_RNGCONTROL_CONTROL_ENABLE_Pos) /*!< Bit mask of ENABLE
                                                                             field.*/
@@ -2336,11 +2336,11 @@ typedef struct {
 /* CRACENCORE_RNGCONTROL_FIFOTHRESHOLD: FIFO threshold register. */
   #define CRACENCORE_RNGCONTROL_FIFOTHRESHOLD_ResetValue (0x00000003UL) /*!< Reset value of FIFOTHRESHOLD register.            */
 
-/* FIFOTHRESHOLD @Bits 0..31 : FIFO level below which the module leaves the idle state to refill the FIFO, expressed in number
-                               of 128bit blocks. */
+/* FIFOTHRESHOLD @Bits 0..2 : FIFO level threshold below which the module leaves the idle state to refill the FIFO. Expressed in
+                              number of 128bit blocks. */
 
   #define CRACENCORE_RNGCONTROL_FIFOTHRESHOLD_FIFOTHRESHOLD_Pos (0UL) /*!< Position of FIFOTHRESHOLD field.                    */
-  #define CRACENCORE_RNGCONTROL_FIFOTHRESHOLD_FIFOTHRESHOLD_Msk (0xFFFFFFFFUL << CRACENCORE_RNGCONTROL_FIFOTHRESHOLD_FIFOTHRESHOLD_Pos)
+  #define CRACENCORE_RNGCONTROL_FIFOTHRESHOLD_FIFOTHRESHOLD_Msk (0x7UL << CRACENCORE_RNGCONTROL_FIFOTHRESHOLD_FIFOTHRESHOLD_Pos)
                                                                             /*!< Bit mask of FIFOTHRESHOLD field.*/
 
 
@@ -2478,10 +2478,10 @@ typedef struct {
 /* CRACENCORE_RNGCONTROL_DISABLEOSC: DisableOsc register. */
   #define CRACENCORE_RNGCONTROL_DISABLEOSC_ResetValue (0x00000000UL) /*!< Reset value of DISABLEOSC register.                  */
 
-/* DISABLEOSC @Bits 0..7 : Disable oscillator rings 0 to 7. */
+/* DISABLEOSC @Bits 0..31 : Disable oscillator rings. */
   #define CRACENCORE_RNGCONTROL_DISABLEOSC_DISABLEOSC_Pos (0UL) /*!< Position of DISABLEOSC field.                             */
-  #define CRACENCORE_RNGCONTROL_DISABLEOSC_DISABLEOSC_Msk (0xFFUL << CRACENCORE_RNGCONTROL_DISABLEOSC_DISABLEOSC_Pos) /*!< Bit
-                                                                            mask of DISABLEOSC field.*/
+  #define CRACENCORE_RNGCONTROL_DISABLEOSC_DISABLEOSC_Msk (0xFFFFFFFFUL << CRACENCORE_RNGCONTROL_DISABLEOSC_DISABLEOSC_Pos) /*!<
+                                                                            Bit mask of DISABLEOSC field.*/
 
 
 /* CRACENCORE_RNGCONTROL_SAMPLINGPERIOD: Number of clock cycles between sampling moments. */
@@ -2531,42 +2531,42 @@ typedef struct {
 /* CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0: AutoCorrTestCutoff register 0 */
   #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_ResetValue (0x007F007FUL) /*!< Reset value of AUTOCORRTESTCUTOFF0 register.*/
 
-/* DLYZEROCUTOFF @Bits 0..15 : Auto-correlation test cut-off value for delay of 0 samples. */
+/* DLYZEROCUTOFF @Bits 0..6 : Auto-correlation test cut-off value for delay of 0 samples. */
   #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYZEROCUTOFF_Pos (0UL) /*!< Position of DLYZEROCUTOFF field.              */
-  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYZEROCUTOFF_Msk (0xFFFFUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYZEROCUTOFF_Pos)
+  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYZEROCUTOFF_Msk (0x7FUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYZEROCUTOFF_Pos)
                                                                             /*!< Bit mask of DLYZEROCUTOFF field.*/
 
-/* DLYONECUTOFF @Bits 16..31 : Auto-correlation test cut-off value for delay of +1 sample. */
+/* DLYONECUTOFF @Bits 16..22 : Auto-correlation test cut-off value for delay of +1 sample. */
   #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYONECUTOFF_Pos (16UL) /*!< Position of DLYONECUTOFF field.               */
-  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYONECUTOFF_Msk (0xFFFFUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYONECUTOFF_Pos)
+  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYONECUTOFF_Msk (0x7FUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF0_DLYONECUTOFF_Pos)
                                                                             /*!< Bit mask of DLYONECUTOFF field.*/
 
 
 /* CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1: AutoCorrTestCutoff register 1 */
   #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_ResetValue (0x007F007FUL) /*!< Reset value of AUTOCORRTESTCUTOFF1 register.*/
 
-/* DLYTWOCUTOFF @Bits 0..15 : Auto-correlation test cut-off value for delay of +2 samples. */
+/* DLYTWOCUTOFF @Bits 0..6 : Auto-correlation test cut-off value for delay of +2 samples. */
   #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTWOCUTOFF_Pos (0UL) /*!< Position of DLYTWOCUTOFF field.                */
-  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTWOCUTOFF_Msk (0xFFFFUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTWOCUTOFF_Pos)
+  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTWOCUTOFF_Msk (0x7FUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTWOCUTOFF_Pos)
                                                                             /*!< Bit mask of DLYTWOCUTOFF field.*/
 
-/* DLYTHREECUTOFF @Bits 16..31 : Auto-correlation test cut-off value for delay of +3 samples. */
+/* DLYTHREECUTOFF @Bits 16..22 : Auto-correlation test cut-off value for delay of +3 samples. */
   #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTHREECUTOFF_Pos (16UL) /*!< Position of DLYTHREECUTOFF field.           */
-  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTHREECUTOFF_Msk (0xFFFFUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTHREECUTOFF_Pos)
+  #define CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTHREECUTOFF_Msk (0x7FUL << CRACENCORE_RNGCONTROL_AUTOCORRTESTCUTOFF1_DLYTHREECUTOFF_Pos)
                                                                             /*!< Bit mask of DLYTHREECUTOFF field.*/
 
 
 /* CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0: CorrTestCutoff register 0 */
   #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_ResetValue (0x007F007FUL) /*!< Reset value of CORRTESTCUTOFF0 register.        */
 
-/* DLYZEROCUTOFF @Bits 0..15 : Correlation test cut-off value for delay of 0 samples. */
+/* DLYZEROCUTOFF @Bits 0..6 : Correlation test cut-off value for delay of 0 samples. */
   #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYZEROCUTOFF_Pos (0UL) /*!< Position of DLYZEROCUTOFF field.                  */
-  #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYZEROCUTOFF_Msk (0xFFFFUL << CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYZEROCUTOFF_Pos)
+  #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYZEROCUTOFF_Msk (0x7FUL << CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYZEROCUTOFF_Pos)
                                                                             /*!< Bit mask of DLYZEROCUTOFF field.*/
 
-/* DLYONECUTOFF @Bits 16..31 : Correlation test cut-off value for delay of +/-1 sample. */
+/* DLYONECUTOFF @Bits 16..22 : Correlation test cut-off value for delay of +/-1 sample. */
   #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYONECUTOFF_Pos (16UL) /*!< Position of DLYONECUTOFF field.                   */
-  #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYONECUTOFF_Msk (0xFFFFUL << CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYONECUTOFF_Pos)
+  #define CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYONECUTOFF_Msk (0x7FUL << CRACENCORE_RNGCONTROL_CORRTESTCUTOFF0_DLYONECUTOFF_Pos)
                                                                             /*!< Bit mask of DLYONECUTOFF field.*/
 
 
@@ -2625,7 +2625,7 @@ typedef struct {
 
 /* ==================================================== Struct CRACENCORE ==================================================== */
 /**
-  * @brief CRACENCORE TRNG registers
+  * @brief CRACENCORE
   */
   typedef struct {                                   /*!< CRACENCORE Structure                                                 */
     __IM uint32_t RESERVED[320];
@@ -2713,12 +2713,11 @@ typedef struct {
 /* CTRLAPPERI_ERASEPROTECT_LOCK: This register locks the ERASEPROTECT.DISABLE register from being written until next reset. */
   #define CTRLAPPERI_ERASEPROTECT_LOCK_ResetValue (0x00000000UL) /*!< Reset value of LOCK register.                            */
 
-/* LOCK @Bit 0 : Lock ERASEPROTECT.DISABLE register from being written until next reset. */
+/* LOCK @Bit 0 : Writing any value will lock the ERASEPROTECT.DISABLE register from being written until next reset. */
   #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Pos (0UL) /*!< Position of LOCK field.                                             */
   #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Msk (0x1UL << CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Pos) /*!< Bit mask of LOCK field.  */
-  #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Min (0x0UL) /*!< Min enumerator value of LOCK field.                               */
+  #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Min (0x1UL) /*!< Min enumerator value of LOCK field.                               */
   #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Max (0x1UL) /*!< Max enumerator value of LOCK field.                               */
-  #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Unlocked (0x0UL) /*!< Register ERASEPROTECT.DISABLE is writeable.                  */
   #define CTRLAPPERI_ERASEPROTECT_LOCK_LOCK_Locked (0x1UL) /*!< Register ERASEPROTECT.DISABLE is read-only.                    */
 
 
@@ -4726,8 +4725,10 @@ typedef struct {
 /* PART @Bits 0..31 : Part code */
   #define FICR_INFO_PART_PART_Pos (0UL)              /*!< Position of PART field.                                              */
   #define FICR_INFO_PART_PART_Msk (0xFFFFFFFFUL << FICR_INFO_PART_PART_Pos) /*!< Bit mask of PART field.                       */
-  #define FICR_INFO_PART_PART_Min (0xFFFFFFFFUL)     /*!< Min enumerator value of PART field.                                  */
+  #define FICR_INFO_PART_PART_Min (0x054BE10AUL)     /*!< Min enumerator value of PART field.                                  */
   #define FICR_INFO_PART_PART_Max (0xFFFFFFFFUL)     /*!< Max enumerator value of PART field.                                  */
+  #define FICR_INFO_PART_PART_N54LS05A (0x054BE10AUL) /*!< nRF54LV10A                                                          */
+  #define FICR_INFO_PART_PART_N54LS05B (0x054BE10BUL) /*!< nRF54LV10B                                                          */
   #define FICR_INFO_PART_PART_Unspecified (0xFFFFFFFFUL) /*!< Unspecified                                                      */
 
 
@@ -4804,114 +4805,6 @@ typedef struct {
   #define FICR_TRIMCNF_DATA_Data_Msk (0xFFFFFFFFUL << FICR_TRIMCNF_DATA_Data_Pos) /*!< Bit mask of Data field.                 */
 
 
-
-/* ===================================================== Struct FICR_NFC ===================================================== */
-/**
-  * @brief NFC [FICR_NFC] (unspecified)
-  */
-typedef struct {
-  __IM  uint32_t  TAGHEADER0;                        /*!< (@ 0x00000000) Default header for NFC Tag. Software can read these
-                                                                         values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST and
-                                                                         NFCID1_LAST.*/
-  __IM  uint32_t  TAGHEADER1;                        /*!< (@ 0x00000004) Default header for NFC Tag. Software can read these
-                                                                         values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST and
-                                                                         NFCID1_LAST.*/
-  __IM  uint32_t  TAGHEADER2;                        /*!< (@ 0x00000008) Default header for NFC Tag. Software can read these
-                                                                         values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST and
-                                                                         NFCID1_LAST.*/
-  __IM  uint32_t  TAGHEADER3;                        /*!< (@ 0x0000000C) Default header for NFC Tag. Software can read these
-                                                                         values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST and
-                                                                         NFCID1_LAST.*/
-} NRF_FICR_NFC_Type;                                 /*!< Size = 16 (0x010)                                                    */
-
-/* FICR_NFC_TAGHEADER0: Default header for NFC Tag. Software can read these values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST
-                         and NFCID1_LAST. */
-
-  #define FICR_NFC_TAGHEADER0_ResetValue (0xFFFFFF5FUL) /*!< Reset value of TAGHEADER0 register.                               */
-
-/* MFGID @Bits 0..7 : Default Manufacturer ID: Nordic Semiconductor ASA has ICM 0x5F */
-  #define FICR_NFC_TAGHEADER0_MFGID_Pos (0UL)        /*!< Position of MFGID field.                                             */
-  #define FICR_NFC_TAGHEADER0_MFGID_Msk (0xFFUL << FICR_NFC_TAGHEADER0_MFGID_Pos) /*!< Bit mask of MFGID field.                */
-
-/* UD1 @Bits 8..15 : Unique identifier byte 1 */
-  #define FICR_NFC_TAGHEADER0_UD1_Pos (8UL)          /*!< Position of UD1 field.                                               */
-  #define FICR_NFC_TAGHEADER0_UD1_Msk (0xFFUL << FICR_NFC_TAGHEADER0_UD1_Pos) /*!< Bit mask of UD1 field.                      */
-
-/* UD2 @Bits 16..23 : Unique identifier byte 2 */
-  #define FICR_NFC_TAGHEADER0_UD2_Pos (16UL)         /*!< Position of UD2 field.                                               */
-  #define FICR_NFC_TAGHEADER0_UD2_Msk (0xFFUL << FICR_NFC_TAGHEADER0_UD2_Pos) /*!< Bit mask of UD2 field.                      */
-
-/* UD3 @Bits 24..31 : Unique identifier byte 3 */
-  #define FICR_NFC_TAGHEADER0_UD3_Pos (24UL)         /*!< Position of UD3 field.                                               */
-  #define FICR_NFC_TAGHEADER0_UD3_Msk (0xFFUL << FICR_NFC_TAGHEADER0_UD3_Pos) /*!< Bit mask of UD3 field.                      */
-
-
-/* FICR_NFC_TAGHEADER1: Default header for NFC Tag. Software can read these values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST
-                         and NFCID1_LAST. */
-
-  #define FICR_NFC_TAGHEADER1_ResetValue (0xFFFFFFFFUL) /*!< Reset value of TAGHEADER1 register.                               */
-
-/* UD4 @Bits 0..7 : Unique identifier byte 4 */
-  #define FICR_NFC_TAGHEADER1_UD4_Pos (0UL)          /*!< Position of UD4 field.                                               */
-  #define FICR_NFC_TAGHEADER1_UD4_Msk (0xFFUL << FICR_NFC_TAGHEADER1_UD4_Pos) /*!< Bit mask of UD4 field.                      */
-
-/* UD5 @Bits 8..15 : Unique identifier byte 5 */
-  #define FICR_NFC_TAGHEADER1_UD5_Pos (8UL)          /*!< Position of UD5 field.                                               */
-  #define FICR_NFC_TAGHEADER1_UD5_Msk (0xFFUL << FICR_NFC_TAGHEADER1_UD5_Pos) /*!< Bit mask of UD5 field.                      */
-
-/* UD6 @Bits 16..23 : Unique identifier byte 6 */
-  #define FICR_NFC_TAGHEADER1_UD6_Pos (16UL)         /*!< Position of UD6 field.                                               */
-  #define FICR_NFC_TAGHEADER1_UD6_Msk (0xFFUL << FICR_NFC_TAGHEADER1_UD6_Pos) /*!< Bit mask of UD6 field.                      */
-
-/* UD7 @Bits 24..31 : Unique identifier byte 7 */
-  #define FICR_NFC_TAGHEADER1_UD7_Pos (24UL)         /*!< Position of UD7 field.                                               */
-  #define FICR_NFC_TAGHEADER1_UD7_Msk (0xFFUL << FICR_NFC_TAGHEADER1_UD7_Pos) /*!< Bit mask of UD7 field.                      */
-
-
-/* FICR_NFC_TAGHEADER2: Default header for NFC Tag. Software can read these values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST
-                         and NFCID1_LAST. */
-
-  #define FICR_NFC_TAGHEADER2_ResetValue (0xFFFFFFFFUL) /*!< Reset value of TAGHEADER2 register.                               */
-
-/* UD8 @Bits 0..7 : Unique identifier byte 8 */
-  #define FICR_NFC_TAGHEADER2_UD8_Pos (0UL)          /*!< Position of UD8 field.                                               */
-  #define FICR_NFC_TAGHEADER2_UD8_Msk (0xFFUL << FICR_NFC_TAGHEADER2_UD8_Pos) /*!< Bit mask of UD8 field.                      */
-
-/* UD9 @Bits 8..15 : Unique identifier byte 9 */
-  #define FICR_NFC_TAGHEADER2_UD9_Pos (8UL)          /*!< Position of UD9 field.                                               */
-  #define FICR_NFC_TAGHEADER2_UD9_Msk (0xFFUL << FICR_NFC_TAGHEADER2_UD9_Pos) /*!< Bit mask of UD9 field.                      */
-
-/* UD10 @Bits 16..23 : Unique identifier byte 10 */
-  #define FICR_NFC_TAGHEADER2_UD10_Pos (16UL)        /*!< Position of UD10 field.                                              */
-  #define FICR_NFC_TAGHEADER2_UD10_Msk (0xFFUL << FICR_NFC_TAGHEADER2_UD10_Pos) /*!< Bit mask of UD10 field.                   */
-
-/* UD11 @Bits 24..31 : Unique identifier byte 11 */
-  #define FICR_NFC_TAGHEADER2_UD11_Pos (24UL)        /*!< Position of UD11 field.                                              */
-  #define FICR_NFC_TAGHEADER2_UD11_Msk (0xFFUL << FICR_NFC_TAGHEADER2_UD11_Pos) /*!< Bit mask of UD11 field.                   */
-
-
-/* FICR_NFC_TAGHEADER3: Default header for NFC Tag. Software can read these values to populate NFCID1_3RD_LAST, NFCID1_2ND_LAST
-                         and NFCID1_LAST. */
-
-  #define FICR_NFC_TAGHEADER3_ResetValue (0xFFFFFFFFUL) /*!< Reset value of TAGHEADER3 register.                               */
-
-/* UD12 @Bits 0..7 : Unique identifier byte 12 */
-  #define FICR_NFC_TAGHEADER3_UD12_Pos (0UL)         /*!< Position of UD12 field.                                              */
-  #define FICR_NFC_TAGHEADER3_UD12_Msk (0xFFUL << FICR_NFC_TAGHEADER3_UD12_Pos) /*!< Bit mask of UD12 field.                   */
-
-/* UD13 @Bits 8..15 : Unique identifier byte 13 */
-  #define FICR_NFC_TAGHEADER3_UD13_Pos (8UL)         /*!< Position of UD13 field.                                              */
-  #define FICR_NFC_TAGHEADER3_UD13_Msk (0xFFUL << FICR_NFC_TAGHEADER3_UD13_Pos) /*!< Bit mask of UD13 field.                   */
-
-/* UD14 @Bits 16..23 : Unique identifier byte 14 */
-  #define FICR_NFC_TAGHEADER3_UD14_Pos (16UL)        /*!< Position of UD14 field.                                              */
-  #define FICR_NFC_TAGHEADER3_UD14_Msk (0xFFUL << FICR_NFC_TAGHEADER3_UD14_Pos) /*!< Bit mask of UD14 field.                   */
-
-/* UD15 @Bits 24..31 : Unique identifier byte 15 */
-  #define FICR_NFC_TAGHEADER3_UD15_Pos (24UL)        /*!< Position of UD15 field.                                              */
-  #define FICR_NFC_TAGHEADER3_UD15_Msk (0xFFUL << FICR_NFC_TAGHEADER3_UD15_Pos) /*!< Bit mask of UD15 field.                   */
-
-
 /* ======================================================= Struct FICR ======================================================= */
 /**
   * @brief Factory Information Configuration Registers
@@ -4926,8 +4819,7 @@ typedef struct {
     __IM uint32_t DEVICEADDR[2];                     /*!< (@ 0x000003A4) Device address n                                      */
     __IM uint32_t RESERVED2[21];
     __IOM NRF_FICR_TRIMCNF_Type TRIMCNF[64];         /*!< (@ 0x00000400) (unspecified)                                         */
-    __IOM NRF_FICR_NFC_Type NFC;                     /*!< (@ 0x00000600) (unspecified)                                         */
-    __IM uint32_t RESERVED3[4];
+    __IM uint32_t RESERVED3[8];
     __IM uint32_t XOSC32MTRIM;                       /*!< (@ 0x00000620) XOSC32M capacitor selection trim values               */
     __IM uint32_t XOSC32KTRIM;                       /*!< (@ 0x00000624) XOSC32K capacitor selection trim values               */
   } NRF_FICR_Type;                                   /*!< Size = 1576 (0x628)                                                  */
@@ -5009,6 +4901,30 @@ typedef struct {
 /* =========================================================================================================================== */
 
 #if !defined(__ASSEMBLER__) && !defined(__ASSEMBLY__) /*!< Ignore C structs for assembly code.                                 */
+
+/* =================================================== Struct GPIO_PORTCNF =================================================== */
+/**
+  * @brief PORTCNF [GPIO_PORTCNF] (unspecified)
+  */
+typedef struct {
+  __IOM uint32_t  WEAKPU;                            /*!< (@ 0x00000000) Control global weak pull-ups on the selected set of
+                                                                         GPIO pins*/
+} NRF_GPIO_PORTCNF_Type;                             /*!< Size = 4 (0x004)                                                     */
+
+/* GPIO_PORTCNF_WEAKPU: Control global weak pull-ups on the selected set of GPIO pins */
+  #define GPIO_PORTCNF_WEAKPU_ResetValue (0x00000000UL) /*!< Reset value of WEAKPU register.                                   */
+
+/* PULLUP @Bits 0..1 : Control pull-up. */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_Pos (0UL)       /*!< Position of PULLUP field.                                            */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_Msk (0x3UL << GPIO_PORTCNF_WEAKPU_PULLUP_Pos) /*!< Bit mask of PULLUP field.              */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_Min (0x0UL)     /*!< Min enumerator value of PULLUP field.                                */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_Max (0x3UL)     /*!< Max enumerator value of PULLUP field.                                */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_Disabled (0x0UL) /*!< Pull-up is disabled.                                                */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_PU0 (0x1UL)     /*!< Enable pull-up 0.                                                    */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_PU1 (0x2UL)     /*!< Enable pull-up 1.                                                    */
+  #define GPIO_PORTCNF_WEAKPU_PULLUP_PU2 (0x3UL)     /*!< Enable pull-up 2.                                                    */
+
+
 /* ======================================================= Struct GPIO ======================================================= */
 /**
   * @brief GPIO Port
@@ -5026,7 +4942,9 @@ typedef struct {
                                                                          the criteria set in the PIN_CNF[n].SENSE registers*/
     __IOM uint32_t DETECTMODE;                       /*!< (@ 0x00000024) Select between default DETECT signal behavior and
                                                                          LDETECT mode*/
-    __IM uint32_t RESERVED1[22];
+    __IM uint32_t RESERVED1[2];
+    __IOM NRF_GPIO_PORTCNF_Type PORTCNF;             /*!< (@ 0x00000030) (unspecified)                                         */
+    __IM uint32_t RESERVED2[19];
     __IOM uint32_t PIN_CNF[32];                      /*!< (@ 0x00000080) Pin n configuration of GPIO pin                       */
   } NRF_GPIO_Type;                                   /*!< Size = 256 (0x100)                                                   */
 
@@ -11479,9 +11397,23 @@ typedef struct {
   * @brief XOSC32KI [OSCILLATORS_XOSC32KI] 32.768 kHz oscillator control
   */
 typedef struct {
-  __IM  uint32_t  RESERVED;
+  __IOM uint32_t  BYPASS;                            /*!< (@ 0x00000000) Enable or disable bypass of LFCLK crystal oscillator
+                                                                         with external clock source*/
   __IOM uint32_t  INTCAP;                            /*!< (@ 0x00000004) Programmable capacitance of XL1 and XL2               */
 } NRF_OSCILLATORS_XOSC32KI_Type;                     /*!< Size = 8 (0x008)                                                     */
+
+/* OSCILLATORS_XOSC32KI_BYPASS: Enable or disable bypass of LFCLK crystal oscillator with external clock source */
+  #define OSCILLATORS_XOSC32KI_BYPASS_ResetValue (0x00000000UL) /*!< Reset value of BYPASS register.                           */
+
+/* BYPASS @Bit 0 : Enable or disable bypass of LFCLK crystal oscillator with external clock source */
+  #define OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Pos (0UL) /*!< Position of BYPASS field.                                          */
+  #define OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Msk (0x1UL << OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Pos) /*!< Bit mask of BYPASS
+                                                                            field.*/
+  #define OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Min (0x0UL) /*!< Min enumerator value of BYPASS field.                            */
+  #define OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Max (0x1UL) /*!< Max enumerator value of BYPASS field.                            */
+  #define OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Disabled (0x0UL) /*!< Disable (use crystal)                                       */
+  #define OSCILLATORS_XOSC32KI_BYPASS_BYPASS_Enabled (0x1UL) /*!< Enable (use rail-to-rail external source)                    */
+
 
 /* OSCILLATORS_XOSC32KI_INTCAP: Programmable capacitance of XL1 and XL2 */
   #define OSCILLATORS_XOSC32KI_INTCAP_ResetValue (0x00000017UL) /*!< Reset value of INTCAP register.                           */
@@ -12453,8 +12385,8 @@ typedef struct {
 
   #define PWM_SEQ_REFRESH_CNT_Pos (0UL)              /*!< Position of CNT field.                                               */
   #define PWM_SEQ_REFRESH_CNT_Msk (0xFFFFFFUL << PWM_SEQ_REFRESH_CNT_Pos) /*!< Bit mask of CNT field.                          */
-  #define PWM_SEQ_REFRESH_CNT_Min (0x0UL)            /*!< Min enumerator value of CNT field.                                   */
-  #define PWM_SEQ_REFRESH_CNT_Max (0x0UL)            /*!< Max enumerator value of CNT field.                                   */
+  #define PWM_SEQ_REFRESH_CNT_Min (0x000000UL)       /*!< Min enumerator value of CNT field.                                   */
+  #define PWM_SEQ_REFRESH_CNT_Max (0x000000UL)       /*!< Max enumerator value of CNT field.                                   */
   #define PWM_SEQ_REFRESH_CNT_Continuous (0x000000UL) /*!< Update every PWM period                                             */
 
 
@@ -13743,8 +13675,8 @@ typedef struct {
 /* CNT @Bits 0..15 : Number of playbacks of pattern cycles */
   #define PWM_LOOP_CNT_Pos (0UL)                     /*!< Position of CNT field.                                               */
   #define PWM_LOOP_CNT_Msk (0xFFFFUL << PWM_LOOP_CNT_Pos) /*!< Bit mask of CNT field.                                          */
-  #define PWM_LOOP_CNT_Min (0x0UL)                   /*!< Min enumerator value of CNT field.                                   */
-  #define PWM_LOOP_CNT_Max (0x0UL)                   /*!< Max enumerator value of CNT field.                                   */
+  #define PWM_LOOP_CNT_Min (0x0000UL)                /*!< Min enumerator value of CNT field.                                   */
+  #define PWM_LOOP_CNT_Max (0x0000UL)                /*!< Max enumerator value of CNT field.                                   */
   #define PWM_LOOP_CNT_Disabled (0x0000UL)           /*!< Looping disabled (stop at the end of the sequence)                   */
 
 
@@ -14523,6 +14455,127 @@ typedef struct {
 
 #if !defined(__ASSEMBLER__) && !defined(__ASSEMBLY__) /*!< Ignore C structs for assembly code.                                 */
 
+/* ================================================== Struct RADIO_AUXDATA =================================================== */
+/**
+  * @brief AUXDATA [RADIO_AUXDATA] (unspecified)
+  */
+typedef struct {
+  __IOM uint32_t  CNF[2];                            /*!< (@ 0x00000000) AUXDATA configuration                                 */
+} NRF_RADIO_AUXDATA_Type;                            /*!< Size = 8 (0x008)                                                     */
+
+/* RADIO_AUXDATA_CNF: AUXDATA configuration */
+  #define RADIO_AUXDATA_CNF_MaxCount (2UL)           /*!< Max size of CNF[2] array.                                            */
+  #define RADIO_AUXDATA_CNF_MaxIndex (1UL)           /*!< Max index of CNF[2] array.                                           */
+  #define RADIO_AUXDATA_CNF_MinIndex (0UL)           /*!< Min index of CNF[2] array.                                           */
+  #define RADIO_AUXDATA_CNF_ResetValue (0x00000000UL) /*!< Reset value of CNF[2] register.                                     */
+
+/* ACQMODE @Bits 0..4 : Acquisition mode (data from RADIO written to memory) */
+  #define RADIO_AUXDATA_CNF_ACQMODE_Pos (0UL)        /*!< Position of ACQMODE field.                                           */
+  #define RADIO_AUXDATA_CNF_ACQMODE_Msk (0x1FUL << RADIO_AUXDATA_CNF_ACQMODE_Pos) /*!< Bit mask of ACQMODE field.              */
+  #define RADIO_AUXDATA_CNF_ACQMODE_Min (0x07UL)     /*!< Min enumerator value of ACQMODE field.                               */
+  #define RADIO_AUXDATA_CNF_ACQMODE_Max (0x07UL)     /*!< Max enumerator value of ACQMODE field.                               */
+  #define RADIO_AUXDATA_CNF_ACQMODE_Rtt (0x07UL)     /*!< Baseband Channel Sounding RTT Data                                   */
+
+/* DIR @Bit 31 : Data acquisition or injection */
+  #define RADIO_AUXDATA_CNF_DIR_Pos (31UL)           /*!< Position of DIR field.                                               */
+  #define RADIO_AUXDATA_CNF_DIR_Msk (0x1UL << RADIO_AUXDATA_CNF_DIR_Pos) /*!< Bit mask of DIR field.                           */
+  #define RADIO_AUXDATA_CNF_DIR_Min (0x0UL)          /*!< Min enumerator value of DIR field.                                   */
+  #define RADIO_AUXDATA_CNF_DIR_Max (0x1UL)          /*!< Max enumerator value of DIR field.                                   */
+  #define RADIO_AUXDATA_CNF_DIR_Acq (0x0UL)          /*!< Peripheral to memory                                                 */
+  #define RADIO_AUXDATA_CNF_DIR_Inj (0x1UL)          /*!< Memory to peripheral                                                 */
+
+
+
+/* ================================================= Struct RADIO_AUXDATADMA ================================================= */
+/**
+  * @brief AUXDATADMA [RADIO_AUXDATADMA] (unspecified)
+  */
+typedef struct {
+  __IOM uint32_t  ENABLE;                            /*!< (@ 0x00000000) Enable or disable data acquisition                    */
+  __IOM uint32_t  PTR;                               /*!< (@ 0x00000004) DMA pointer                                           */
+  __IOM uint32_t  MAXCNT;                            /*!< (@ 0x00000008) Maximum number of 32-bit words to transfer            */
+  __IM  uint32_t  AMOUNT;                            /*!< (@ 0x0000000C) Number of 32-bit words transferred in the last
+                                                                         transaction*/
+} NRF_RADIO_AUXDATADMA_Type;                         /*!< Size = 16 (0x010)                                                    */
+  #define RADIO_AUXDATADMA_MaxCount (2UL)            /*!< Size of AUXDATADMA[2] array.                                         */
+  #define RADIO_AUXDATADMA_MaxIndex (1UL)            /*!< Max index of AUXDATADMA[2] array.                                    */
+  #define RADIO_AUXDATADMA_MinIndex (0UL)            /*!< Min index of AUXDATADMA[2] array.                                    */
+
+/* RADIO_AUXDATADMA_ENABLE: Enable or disable data acquisition */
+  #define RADIO_AUXDATADMA_ENABLE_ResetValue (0x00000000UL) /*!< Reset value of ENABLE register.                               */
+
+/* ENABLE @Bit 0 : Enable or disable data acquisition */
+  #define RADIO_AUXDATADMA_ENABLE_ENABLE_Pos (0UL)   /*!< Position of ENABLE field.                                            */
+  #define RADIO_AUXDATADMA_ENABLE_ENABLE_Msk (0x1UL << RADIO_AUXDATADMA_ENABLE_ENABLE_Pos) /*!< Bit mask of ENABLE field.      */
+  #define RADIO_AUXDATADMA_ENABLE_ENABLE_Min (0x0UL) /*!< Min enumerator value of ENABLE field.                                */
+  #define RADIO_AUXDATADMA_ENABLE_ENABLE_Max (0x1UL) /*!< Max enumerator value of ENABLE field.                                */
+  #define RADIO_AUXDATADMA_ENABLE_ENABLE_Disabled (0x0UL) /*!< Data acquisition is disabled                                    */
+  #define RADIO_AUXDATADMA_ENABLE_ENABLE_Enabled (0x1UL) /*!< Data acquisition is enabled                                      */
+
+
+/* RADIO_AUXDATADMA_PTR: DMA pointer */
+  #define RADIO_AUXDATADMA_PTR_ResetValue (0x00000000UL) /*!< Reset value of PTR register.                                     */
+
+/* PTR @Bits 0..31 : Data pointer */
+  #define RADIO_AUXDATADMA_PTR_PTR_Pos (0UL)         /*!< Position of PTR field.                                               */
+  #define RADIO_AUXDATADMA_PTR_PTR_Msk (0xFFFFFFFFUL << RADIO_AUXDATADMA_PTR_PTR_Pos) /*!< Bit mask of PTR field.              */
+
+
+/* RADIO_AUXDATADMA_MAXCNT: Maximum number of 32-bit words to transfer */
+  #define RADIO_AUXDATADMA_MAXCNT_ResetValue (0x00000040UL) /*!< Reset value of MAXCNT register.                               */
+
+/* MAXCNT @Bits 0..13 : Maximum number of 32-bit words to transfer */
+  #define RADIO_AUXDATADMA_MAXCNT_MAXCNT_Pos (0UL)   /*!< Position of MAXCNT field.                                            */
+  #define RADIO_AUXDATADMA_MAXCNT_MAXCNT_Msk (0x3FFFUL << RADIO_AUXDATADMA_MAXCNT_MAXCNT_Pos) /*!< Bit mask of MAXCNT field.   */
+
+
+/* RADIO_AUXDATADMA_AMOUNT: Number of 32-bit words transferred in the last transaction */
+  #define RADIO_AUXDATADMA_AMOUNT_ResetValue (0x00000000UL) /*!< Reset value of AMOUNT register.                               */
+
+/* AMOUNT @Bits 0..13 : Number of 32-bit words transferred in the last transaction */
+  #define RADIO_AUXDATADMA_AMOUNT_AMOUNT_Pos (0UL)   /*!< Position of AMOUNT field.                                            */
+  #define RADIO_AUXDATADMA_AMOUNT_AMOUNT_Msk (0x3FFFUL << RADIO_AUXDATADMA_AMOUNT_AMOUNT_Pos) /*!< Bit mask of AMOUNT field.   */
+
+
+
+/* =================================================== Struct RADIO_RXGAIN =================================================== */
+/**
+  * @brief RXGAIN [RADIO_RXGAIN] (unspecified)
+  */
+typedef struct {
+  __IM  uint32_t  RESERVED;
+  __IOM uint32_t  CONFIG;                            /*!< (@ 0x00000004) Override configuration of receiver gain control loop  */
+} NRF_RADIO_RXGAIN_Type;                             /*!< Size = 8 (0x008)                                                     */
+
+/* RADIO_RXGAIN_CONFIG: Override configuration of receiver gain control loop */
+  #define RADIO_RXGAIN_CONFIG_ResetValue (0x801230C3UL) /*!< Reset value of CONFIG register.                                   */
+
+/* AGCAAFOVERRIDE @Bits 17..20 : Override value for AAF */
+  #define RADIO_RXGAIN_CONFIG_AGCAAFOVERRIDE_Pos (17UL) /*!< Position of AGCAAFOVERRIDE field.                                 */
+  #define RADIO_RXGAIN_CONFIG_AGCAAFOVERRIDE_Msk (0xFUL << RADIO_RXGAIN_CONFIG_AGCAAFOVERRIDE_Pos) /*!< Bit mask of
+                                                                            AGCAAFOVERRIDE field.*/
+
+/* AGCMIXOVERRIDE @Bit 21 : Override value for MIX */
+  #define RADIO_RXGAIN_CONFIG_AGCMIXOVERRIDE_Pos (21UL) /*!< Position of AGCMIXOVERRIDE field.                                 */
+  #define RADIO_RXGAIN_CONFIG_AGCMIXOVERRIDE_Msk (0x1UL << RADIO_RXGAIN_CONFIG_AGCMIXOVERRIDE_Pos) /*!< Bit mask of
+                                                                            AGCMIXOVERRIDE field.*/
+
+/* AGCLNAOVERRIDE @Bits 22..23 : Override value for LNA */
+  #define RADIO_RXGAIN_CONFIG_AGCLNAOVERRIDE_Pos (22UL) /*!< Position of AGCLNAOVERRIDE field.                                 */
+  #define RADIO_RXGAIN_CONFIG_AGCLNAOVERRIDE_Msk (0x3UL << RADIO_RXGAIN_CONFIG_AGCLNAOVERRIDE_Pos) /*!< Bit mask of
+                                                                            AGCLNAOVERRIDE field.*/
+
+/* AGCOVERRIDEGAIN @Bit 28 : Enable AGC override */
+  #define RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_Pos (28UL) /*!< Position of AGCOVERRIDEGAIN field.                               */
+  #define RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_Msk (0x1UL << RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_Pos) /*!< Bit mask of
+                                                                            AGCOVERRIDEGAIN field.*/
+  #define RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_Min (0x0UL) /*!< Min enumerator value of AGCOVERRIDEGAIN field.                  */
+  #define RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_Max (0x1UL) /*!< Max enumerator value of AGCOVERRIDEGAIN field.                  */
+  #define RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_NoOverride (0x0UL) /*!< AGC takes control over all gains                         */
+  #define RADIO_RXGAIN_CONFIG_AGCOVERRIDEGAIN_Override (0x1UL) /*!< Manual control of AAF, MIX, and LNA gain settings          */
+
+
+
 /* ==================================================== Struct RADIO_PSEL ==================================================== */
 /**
   * @brief PSEL [RADIO_PSEL] (unspecified)
@@ -14614,11 +14667,7 @@ typedef struct {
   __IOM uint32_t  NUMSAMPLES;                        /*!< (@ 0x00000004) Number of input samples at 2MHz sample rate           */
   __IOM uint32_t  NEXTFREQUENCY;                     /*!< (@ 0x00000008) The value of FREQUENCY that will be used in the next
                                                                          step*/
-  __IOM uint32_t  FFOIN;                             /*!< (@ 0x0000000C) Override value of FFO (Fractional Frequency Offset) if
-                                                                         not to be based on the frequency estimate derived from
-                                                                         CnAcc (autocorrelation of the scaled input signal)
-                                                                         value*/
-  __IOM uint32_t  FFOSOURCE;                         /*!< (@ 0x00000010) Source of FFO                                         */
+  __IM  uint32_t  RESERVED[2];
   __IOM uint32_t  FAEPEER;                           /*!< (@ 0x00000014) FAEPEER (Frequency Actuation Error) of peer if known.
                                                                          Used during Mode 0 steps.*/
   __IOM uint32_t  PHASESHIFT;                        /*!< (@ 0x00000018) Parameter used in TPM, provided by software           */
@@ -14628,19 +14677,12 @@ typedef struct {
                                                                          converted to PCT16*/
   __IM  uint32_t  IQRAWMEAN;                         /*!< (@ 0x00000028) Mean of IQ values                                     */
   __IM  uint32_t  MAGSTD;                            /*!< (@ 0x0000002C) Magnitude standard deviation approximation            */
-  __IM  uint32_t  CNACC;                             /*!< (@ 0x00000030) Output of the autocorrelation of the accumulated IQ
-                                                                         signal*/
+  __IM  uint32_t  RESERVED1;
   __IM  uint32_t  FFOEST;                            /*!< (@ 0x00000034) FFO estimate                                          */
   __IOM uint32_t  DOWNSAMPLE;                        /*!< (@ 0x00000038) Turn on/off down sample of input IQ-signals           */
-  __IM  uint32_t  FINETUNENEXT;                      /*!< (@ 0x0000003C) Number of full ADPLL finetune steps                   */
-  __IM  uint32_t  CFOPHASE;                          /*!< (@ 0x00000040) Cordic output of CnAcc                                */
+  __IM  uint32_t  RESERVED2[2];
   __IM  uint32_t  FREQOFFSET;                        /*!< (@ 0x00000044) Frequency offset estimate                             */
-  __IM  uint32_t  PCT11;                             /*!< (@ 0x00000048) Mean magnitude and mean phase converted to IQ. IQ
-                                                                         values limited to [-1024,1023].*/
-  __IM  uint32_t  LFAENEXT;                          /*!< (@ 0x0000004C) Quantization error between ADPLL frequency and the
-                                                                         desired value of FFO * RF Frequency. Values limited to
-                                                                         [-64,63] with units 7.6294 Hz.*/
-} NRF_RADIO_CSTONES_Type;                            /*!< Size = 80 (0x050)                                                    */
+} NRF_RADIO_CSTONES_Type;                            /*!< Size = 72 (0x048)                                                    */
 
 /* RADIO_CSTONES_MODE: Selects the mode(s) that are activated on the start signal */
   #define RADIO_CSTONES_MODE_ResetValue (0x00000003UL) /*!< Reset value of MODE register.                                      */
@@ -14678,29 +14720,6 @@ typedef struct {
   #define RADIO_CSTONES_NEXTFREQUENCY_NEXTFREQUENCY_Pos (0UL) /*!< Position of NEXTFREQUENCY field.                            */
   #define RADIO_CSTONES_NEXTFREQUENCY_NEXTFREQUENCY_Msk (0x7FUL << RADIO_CSTONES_NEXTFREQUENCY_NEXTFREQUENCY_Pos) /*!< Bit mask
                                                                             of NEXTFREQUENCY field.*/
-
-
-/* RADIO_CSTONES_FFOIN: Override value of FFO (Fractional Frequency Offset) if not to be based on the frequency estimate derived
-                         from CnAcc (autocorrelation of the scaled input signal) value */
-
-  #define RADIO_CSTONES_FFOIN_ResetValue (0x00000000UL) /*!< Reset value of FFOIN register.                                    */
-
-/* FFFIN @Bits 0..11 : Units 62.5 ppb. Max range +/-100 ppm plus margin. */
-  #define RADIO_CSTONES_FFOIN_FFFIN_Pos (0UL)        /*!< Position of FFFIN field.                                             */
-  #define RADIO_CSTONES_FFOIN_FFFIN_Msk (0xFFFUL << RADIO_CSTONES_FFOIN_FFFIN_Pos) /*!< Bit mask of FFFIN field.               */
-
-
-/* RADIO_CSTONES_FFOSOURCE: Source of FFO */
-  #define RADIO_CSTONES_FFOSOURCE_ResetValue (0x00000001UL) /*!< Reset value of FFOSOURCE register.                            */
-
-/* FFOSOURCE @Bit 0 : Use external or internal FFOSOURCE */
-  #define RADIO_CSTONES_FFOSOURCE_FFOSOURCE_Pos (0UL) /*!< Position of FFOSOURCE field.                                        */
-  #define RADIO_CSTONES_FFOSOURCE_FFOSOURCE_Msk (0x1UL << RADIO_CSTONES_FFOSOURCE_FFOSOURCE_Pos) /*!< Bit mask of FFOSOURCE
-                                                                            field.*/
-  #define RADIO_CSTONES_FFOSOURCE_FFOSOURCE_Min (0x0UL) /*!< Min enumerator value of FFOSOURCE field.                          */
-  #define RADIO_CSTONES_FFOSOURCE_FFOSOURCE_Max (0x1UL) /*!< Max enumerator value of FFOSOURCE field.                          */
-  #define RADIO_CSTONES_FFOSOURCE_FFOSOURCE_External (0x0UL) /*!< Use FFOIN                                                    */
-  #define RADIO_CSTONES_FFOSOURCE_FFOSOURCE_Internal (0x1UL) /*!< Calc FFO from CnAcc                                          */
 
 
 /* RADIO_CSTONES_FAEPEER: FAEPEER (Frequency Actuation Error) of peer if known. Used during Mode 0 steps. */
@@ -14775,18 +14794,6 @@ typedef struct {
   #define RADIO_CSTONES_MAGSTD_MAGSTD_Msk (0xFFFFUL << RADIO_CSTONES_MAGSTD_MAGSTD_Pos) /*!< Bit mask of MAGSTD field.         */
 
 
-/* RADIO_CSTONES_CNACC: Output of the autocorrelation of the accumulated IQ signal */
-  #define RADIO_CSTONES_CNACC_ResetValue (0x00000000UL) /*!< Reset value of CNACC register.                                    */
-
-/* CNACCI @Bits 0..15 : (unspecified) */
-  #define RADIO_CSTONES_CNACC_CNACCI_Pos (0UL)       /*!< Position of CNACCI field.                                            */
-  #define RADIO_CSTONES_CNACC_CNACCI_Msk (0xFFFFUL << RADIO_CSTONES_CNACC_CNACCI_Pos) /*!< Bit mask of CNACCI field.           */
-
-/* CNACCQ @Bits 16..31 : (unspecified) */
-  #define RADIO_CSTONES_CNACC_CNACCQ_Pos (16UL)      /*!< Position of CNACCQ field.                                            */
-  #define RADIO_CSTONES_CNACC_CNACCQ_Msk (0xFFFFUL << RADIO_CSTONES_CNACC_CNACCQ_Pos) /*!< Bit mask of CNACCQ field.           */
-
-
 /* RADIO_CSTONES_FFOEST: FFO estimate */
   #define RADIO_CSTONES_FFOEST_ResetValue (0x00000000UL) /*!< Reset value of FFOEST register.                                  */
 
@@ -14814,24 +14821,7 @@ typedef struct {
   #define RADIO_CSTONES_DOWNSAMPLE_RATE_Max (0x1UL)  /*!< Max enumerator value of RATE field.                                  */
   #define RADIO_CSTONES_DOWNSAMPLE_RATE_BLE1M (0x0UL) /*!< Radio mode BLE1M is used                                            */
   #define RADIO_CSTONES_DOWNSAMPLE_RATE_BLE2m (0x1UL) /*!< Radio mode BLE2M is used                                            */
-
-
-/* RADIO_CSTONES_FINETUNENEXT: Number of full ADPLL finetune steps */
-  #define RADIO_CSTONES_FINETUNENEXT_ResetValue (0x00000000UL) /*!< Reset value of FINETUNENEXT register.                      */
-
-/* FINETUNENEXT @Bits 0..12 : Units of 488.28125 Hz */
-  #define RADIO_CSTONES_FINETUNENEXT_FINETUNENEXT_Pos (0UL) /*!< Position of FINETUNENEXT field.                               */
-  #define RADIO_CSTONES_FINETUNENEXT_FINETUNENEXT_Msk (0x1FFFUL << RADIO_CSTONES_FINETUNENEXT_FINETUNENEXT_Pos) /*!< Bit mask of
-                                                                            FINETUNENEXT field.*/
-
-
-/* RADIO_CSTONES_CFOPHASE: Cordic output of CnAcc */
-  #define RADIO_CSTONES_CFOPHASE_ResetValue (0x00000000UL) /*!< Reset value of CFOPHASE register.                              */
-
-/* CFOPHASE @Bits 0..15 : (unspecified) */
-  #define RADIO_CSTONES_CFOPHASE_CFOPHASE_Pos (0UL)  /*!< Position of CFOPHASE field.                                          */
-  #define RADIO_CSTONES_CFOPHASE_CFOPHASE_Msk (0xFFFFUL << RADIO_CSTONES_CFOPHASE_CFOPHASE_Pos) /*!< Bit mask of CFOPHASE
-                                                                            field.*/
+  #define RADIO_CSTONES_DOWNSAMPLE_RATE_BLE2M (0x1UL) /*!< Radio mode BLE2M is used                                            */
 
 
 /* RADIO_CSTONES_FREQOFFSET: Frequency offset estimate */
@@ -14841,28 +14831,6 @@ typedef struct {
   #define RADIO_CSTONES_FREQOFFSET_FREQOFFSET_Pos (0UL) /*!< Position of FREQOFFSET field.                                     */
   #define RADIO_CSTONES_FREQOFFSET_FREQOFFSET_Msk (0x3FFFUL << RADIO_CSTONES_FREQOFFSET_FREQOFFSET_Pos) /*!< Bit mask of
                                                                             FREQOFFSET field.*/
-
-
-/* RADIO_CSTONES_PCT11: Mean magnitude and mean phase converted to IQ. IQ values limited to [-1024,1023]. */
-  #define RADIO_CSTONES_PCT11_ResetValue (0x00000000UL) /*!< Reset value of PCT11 register.                                    */
-
-/* PCT11I @Bits 0..10 : Inphase */
-  #define RADIO_CSTONES_PCT11_PCT11I_Pos (0UL)       /*!< Position of PCT11I field.                                            */
-  #define RADIO_CSTONES_PCT11_PCT11I_Msk (0x7FFUL << RADIO_CSTONES_PCT11_PCT11I_Pos) /*!< Bit mask of PCT11I field.            */
-
-/* PCT11Q @Bits 11..21 : Quadrature */
-  #define RADIO_CSTONES_PCT11_PCT11Q_Pos (11UL)      /*!< Position of PCT11Q field.                                            */
-  #define RADIO_CSTONES_PCT11_PCT11Q_Msk (0x7FFUL << RADIO_CSTONES_PCT11_PCT11Q_Pos) /*!< Bit mask of PCT11Q field.            */
-
-
-/* RADIO_CSTONES_LFAENEXT: Quantization error between ADPLL frequency and the desired value of FFO * RF Frequency. Values
-                            limited to [-64,63] with units 7.6294 Hz. */
-
-  #define RADIO_CSTONES_LFAENEXT_ResetValue (0x00000000UL) /*!< Reset value of LFAENEXT register.                              */
-
-/* LFAENEXT @Bits 0..6 : Inphase */
-  #define RADIO_CSTONES_LFAENEXT_LFAENEXT_Pos (0UL)  /*!< Position of LFAENEXT field.                                          */
-  #define RADIO_CSTONES_LFAENEXT_LFAENEXT_Msk (0x7FUL << RADIO_CSTONES_LFAENEXT_LFAENEXT_Pos) /*!< Bit mask of LFAENEXT field. */
 
 
 
@@ -14969,11 +14937,17 @@ typedef struct {
     __OM uint32_t TASKS_CCASTART;                    /*!< (@ 0x00000028) Start the clear channel assessment used in IEEE
                                                                          802.15.4 mode*/
     __OM uint32_t TASKS_CCASTOP;                     /*!< (@ 0x0000002C) Stop the clear channel assessment                     */
-    __IM uint32_t RESERVED[29];
+    __IM uint32_t RESERVED[2];
+    __OM uint32_t TASKS_AUXDATADMASTART;             /*!< (@ 0x00000038) Start DMA transaction of acquisition                  */
+    __OM uint32_t TASKS_AUXDATADMASTOP;              /*!< (@ 0x0000003C) Stop ongoing DMA transaction of acquisition           */
+    __IM uint32_t RESERVED1[11];
+    __OM uint32_t TASKS_PLLEN;                       /*!< (@ 0x0000006C) Enable RADIO in PLL mode (standby for either TX or RX)*/
+    __IM uint32_t RESERVED2[12];
+    __OM uint32_t TASKS_CSTONESSTART;                /*!< (@ 0x000000A0) Start tone processing for channel sounding            */
     __OM uint32_t TASKS_SOFTRESET;                   /*!< (@ 0x000000A4) Reset all public registers, but with these exceptions:
                                                                          DMA registers and EVENT/INTEN/SUBSCRIBE/PUBLISH
                                                                          registers. Only to be used in DISABLED state.*/
-    __IM uint32_t RESERVED1[22];
+    __IM uint32_t RESERVED3[22];
     __IOM uint32_t SUBSCRIBE_TXEN;                   /*!< (@ 0x00000100) Subscribe configuration for task TXEN                 */
     __IOM uint32_t SUBSCRIBE_RXEN;                   /*!< (@ 0x00000104) Subscribe configuration for task RXEN                 */
     __IOM uint32_t SUBSCRIBE_START;                  /*!< (@ 0x00000108) Subscribe configuration for task START                */
@@ -14986,9 +14960,15 @@ typedef struct {
     __IOM uint32_t SUBSCRIBE_EDSTOP;                 /*!< (@ 0x00000124) Subscribe configuration for task EDSTOP               */
     __IOM uint32_t SUBSCRIBE_CCASTART;               /*!< (@ 0x00000128) Subscribe configuration for task CCASTART             */
     __IOM uint32_t SUBSCRIBE_CCASTOP;                /*!< (@ 0x0000012C) Subscribe configuration for task CCASTOP              */
-    __IM uint32_t RESERVED2[29];
+    __IM uint32_t RESERVED4[2];
+    __IOM uint32_t SUBSCRIBE_AUXDATADMASTART;        /*!< (@ 0x00000138) Subscribe configuration for task AUXDATADMASTART      */
+    __IOM uint32_t SUBSCRIBE_AUXDATADMASTOP;         /*!< (@ 0x0000013C) Subscribe configuration for task AUXDATADMASTOP       */
+    __IM uint32_t RESERVED5[11];
+    __IOM uint32_t SUBSCRIBE_PLLEN;                  /*!< (@ 0x0000016C) Subscribe configuration for task PLLEN                */
+    __IM uint32_t RESERVED6[12];
+    __IOM uint32_t SUBSCRIBE_CSTONESSTART;           /*!< (@ 0x000001A0) Subscribe configuration for task CSTONESSTART         */
     __IOM uint32_t SUBSCRIBE_SOFTRESET;              /*!< (@ 0x000001A4) Subscribe configuration for task SOFTRESET            */
-    __IM uint32_t RESERVED3[22];
+    __IM uint32_t RESERVED7[22];
     __IOM uint32_t EVENTS_READY;                     /*!< (@ 0x00000200) RADIO has ramped up and is ready to be started        */
     __IOM uint32_t EVENTS_TXREADY;                   /*!< (@ 0x00000204) RADIO has ramped up and is ready to be started TX path*/
     __IOM uint32_t EVENTS_RXREADY;                   /*!< (@ 0x00000208) RADIO has ramped up and is ready to be started RX path*/
@@ -15004,7 +14984,7 @@ typedef struct {
                                                                          packet*/
     __IOM uint32_t EVENTS_CRCOK;                     /*!< (@ 0x0000022C) Packet received with CRC ok                           */
     __IOM uint32_t EVENTS_CRCERROR;                  /*!< (@ 0x00000230) Packet received with CRC error                        */
-    __IM uint32_t RESERVED4;
+    __IM uint32_t RESERVED8;
     __IOM uint32_t EVENTS_BCMATCH;                   /*!< (@ 0x00000238) Bit counter reached bit count value                   */
     __IOM uint32_t EVENTS_EDEND;                     /*!< (@ 0x0000023C) Sampling of energy detection complete (a new ED sample
                                                                          is ready for readout from the RADIO.EDSAMPLE register)*/
@@ -15017,7 +14997,15 @@ typedef struct {
     __IOM uint32_t EVENTS_MHRMATCH;                  /*!< (@ 0x00000254) MAC header match found                                */
     __IOM uint32_t EVENTS_SYNC;                      /*!< (@ 0x00000258) Initial sync detected                                 */
     __IOM uint32_t EVENTS_CTEPRESENT;                /*!< (@ 0x0000025C) CTEInfo byte is received                              */
-    __IM uint32_t RESERVED5[40];
+    __IM uint32_t RESERVED9[20];
+    __IOM uint32_t EVENTS_PLLREADY;                  /*!< (@ 0x000002B0) PLL has settled and RADIO is ready to be enabled in
+                                                                         either TX or RX mode*/
+    __IM uint32_t RESERVED10[2];
+    __IOM uint32_t EVENTS_RXADDRESS;                 /*!< (@ 0x000002BC) Address received                                      */
+    __IOM uint32_t EVENTS_AUXDATADMAEND;             /*!< (@ 0x000002C0) AUXDATA DMA end                                       */
+    __IM uint32_t RESERVED11;
+    __IOM uint32_t EVENTS_CSTONESEND;                /*!< (@ 0x000002C8) The channel sounding tone processing is complete      */
+    __IM uint32_t RESERVED12[13];
     __IOM uint32_t PUBLISH_READY;                    /*!< (@ 0x00000300) Publish configuration for event READY                 */
     __IOM uint32_t PUBLISH_TXREADY;                  /*!< (@ 0x00000304) Publish configuration for event TXREADY               */
     __IOM uint32_t PUBLISH_RXREADY;                  /*!< (@ 0x00000308) Publish configuration for event RXREADY               */
@@ -15031,7 +15019,7 @@ typedef struct {
     __IOM uint32_t PUBLISH_DEVMISS;                  /*!< (@ 0x00000328) Publish configuration for event DEVMISS               */
     __IOM uint32_t PUBLISH_CRCOK;                    /*!< (@ 0x0000032C) Publish configuration for event CRCOK                 */
     __IOM uint32_t PUBLISH_CRCERROR;                 /*!< (@ 0x00000330) Publish configuration for event CRCERROR              */
-    __IM uint32_t RESERVED6;
+    __IM uint32_t RESERVED13;
     __IOM uint32_t PUBLISH_BCMATCH;                  /*!< (@ 0x00000338) Publish configuration for event BCMATCH               */
     __IOM uint32_t PUBLISH_EDEND;                    /*!< (@ 0x0000033C) Publish configuration for event EDEND                 */
     __IOM uint32_t PUBLISH_EDSTOPPED;                /*!< (@ 0x00000340) Publish configuration for event EDSTOPPED             */
@@ -15042,58 +15030,78 @@ typedef struct {
     __IOM uint32_t PUBLISH_MHRMATCH;                 /*!< (@ 0x00000354) Publish configuration for event MHRMATCH              */
     __IOM uint32_t PUBLISH_SYNC;                     /*!< (@ 0x00000358) Publish configuration for event SYNC                  */
     __IOM uint32_t PUBLISH_CTEPRESENT;               /*!< (@ 0x0000035C) Publish configuration for event CTEPRESENT            */
-    __IM uint32_t RESERVED7[40];
+    __IM uint32_t RESERVED14[20];
+    __IOM uint32_t PUBLISH_PLLREADY;                 /*!< (@ 0x000003B0) Publish configuration for event PLLREADY              */
+    __IM uint32_t RESERVED15[2];
+    __IOM uint32_t PUBLISH_RXADDRESS;                /*!< (@ 0x000003BC) Publish configuration for event RXADDRESS             */
+    __IOM uint32_t PUBLISH_AUXDATADMAEND;            /*!< (@ 0x000003C0) Publish configuration for event AUXDATADMAEND         */
+    __IM uint32_t RESERVED16;
+    __IOM uint32_t PUBLISH_CSTONESEND;               /*!< (@ 0x000003C8) Publish configuration for event CSTONESEND            */
+    __IM uint32_t RESERVED17[13];
     __IOM uint32_t SHORTS;                           /*!< (@ 0x00000400) Shortcuts between local events and tasks              */
-    __IM uint32_t RESERVED8[33];
+    __IM uint32_t RESERVED18[33];
     __IOM uint32_t INTENSET00;                       /*!< (@ 0x00000488) Enable interrupt                                      */
-    __IM uint32_t RESERVED9;
+    __IOM uint32_t INTENSET01;                       /*!< (@ 0x0000048C) Enable interrupt                                      */
     __IOM uint32_t INTENCLR00;                       /*!< (@ 0x00000490) Disable interrupt                                     */
-    __IM uint32_t RESERVED10[5];
+    __IOM uint32_t INTENCLR01;                       /*!< (@ 0x00000494) Disable interrupt                                     */
+    __IM uint32_t RESERVED19[4];
     __IOM uint32_t INTENSET10;                       /*!< (@ 0x000004A8) Enable interrupt                                      */
-    __IM uint32_t RESERVED11;
+    __IOM uint32_t INTENSET11;                       /*!< (@ 0x000004AC) Enable interrupt                                      */
     __IOM uint32_t INTENCLR10;                       /*!< (@ 0x000004B0) Disable interrupt                                     */
-    __IM uint32_t RESERVED12[19];
+    __IOM uint32_t INTENCLR11;                       /*!< (@ 0x000004B4) Disable interrupt                                     */
+    __IM uint32_t RESERVED20[18];
     __IOM uint32_t MODE;                             /*!< (@ 0x00000500) Data rate and modulation                              */
-    __IM uint32_t RESERVED13[7];
+    __IM uint32_t RESERVED21[5];
+    __IOM uint32_t PHYENDTXDELAY;                    /*!< (@ 0x00000518) Configurable delay of PHYEND event for TX             */
+    __IM uint32_t RESERVED22;
     __IM uint32_t STATE;                             /*!< (@ 0x00000520) Current radio state                                   */
-    __IM uint32_t RESERVED14[3];
+    __IM uint32_t RESERVED23[3];
     __IOM uint32_t EDCTRL;                           /*!< (@ 0x00000530) IEEE 802.15.4 energy detect control                   */
     __IM uint32_t EDSAMPLE;                          /*!< (@ 0x00000534) IEEE 802.15.4 energy detect level                     */
     __IOM uint32_t CCACTRL;                          /*!< (@ 0x00000538) IEEE 802.15.4 clear channel assessment control        */
-    __IM uint32_t RESERVED15;
+    __IM uint32_t RESERVED24;
     __IOM uint32_t DATAWHITE;                        /*!< (@ 0x00000540) Data whitening configuration                          */
-    __IM uint32_t RESERVED16[112];
+    __IM uint32_t RESERVED25;
+    __IOM NRF_RADIO_AUXDATA_Type AUXDATA;            /*!< (@ 0x00000548) (unspecified)                                         */
+    __IOM NRF_RADIO_AUXDATADMA_Type AUXDATADMA[2];   /*!< (@ 0x00000550) (unspecified)                                         */
+    __IM uint32_t RESERVED26[101];
     __IOM uint32_t TIMING;                           /*!< (@ 0x00000704) Timing                                                */
     __IOM uint32_t FREQUENCY;                        /*!< (@ 0x00000708) Frequency                                             */
-    __IM uint32_t RESERVED17;
+    __IM uint32_t RESERVED27;
     __IOM uint32_t TXPOWER;                          /*!< (@ 0x00000710) Output power                                          */
     __IOM uint32_t TIFS;                             /*!< (@ 0x00000714) Interframe spacing in us                              */
     __IM uint32_t RSSISAMPLE;                        /*!< (@ 0x00000718) RSSI sample                                           */
-    __IM uint32_t RESERVED18[58];
+    __IM uint32_t RESERVED28[45];
+    __IOM NRF_RADIO_RXGAIN_Type RXGAIN;              /*!< (@ 0x000007D0) (unspecified)                                         */
+    __IM uint32_t RESERVED29[11];
     __IOM uint32_t FREQFINETUNE;                     /*!< (@ 0x00000804) Fine tuning of the RF frequency                       */
-    __IM uint32_t RESERVED19[64];
+    __IM uint32_t RESERVED30[64];
     __IOM uint32_t FECONFIG;                         /*!< (@ 0x00000908) Config register                                       */
-    __IM uint32_t RESERVED20[253];
+    __IM uint32_t RESERVED31[125];
+    __IM uint32_t CFO_STAT;                          /*!< (@ 0x00000B00) Carrier freq. offset estimate                         */
+    __IM uint32_t RESERVED32[15];
+    __IOM uint32_t DBCCORR;                          /*!< (@ 0x00000B40) Correlator thresholds                                 */
+    __IM uint32_t RESERVED33[111];
     __IOM uint32_t DFEMODE;                          /*!< (@ 0x00000D00) Whether to use Angle-of-Arrival (AOA) or
                                                                          Angle-of-Departure (AOD)*/
     __IM uint32_t DFESTATUS;                         /*!< (@ 0x00000D04) DFE status information                                */
-    __IM uint32_t RESERVED21[2];
+    __IM uint32_t RESERVED34[2];
     __IOM uint32_t DFECTRL1;                         /*!< (@ 0x00000D10) Various configuration for Direction finding           */
     __IOM uint32_t DFECTRL2;                         /*!< (@ 0x00000D14) Start offset for Direction finding                    */
-    __IM uint32_t RESERVED22[4];
+    __IM uint32_t RESERVED35[4];
     __IOM uint32_t SWITCHPATTERN;                    /*!< (@ 0x00000D28) GPIO patterns to be used for each antenna             */
     __OM uint32_t CLEARPATTERN;                      /*!< (@ 0x00000D2C) Clear the GPIO pattern array for antenna control      */
     __IOM NRF_RADIO_PSEL_Type PSEL;                  /*!< (@ 0x00000D30) (unspecified)                                         */
-    __IM uint32_t RESERVED23;
+    __IM uint32_t RESERVED36;
     __IOM NRF_RADIO_DFEPACKET_Type DFEPACKET;        /*!< (@ 0x00000D50) DFE packet EasyDMA channel                            */
-    __IM uint32_t RESERVED24[43];
+    __IM uint32_t RESERVED37[43];
     __IM uint32_t CRCSTATUS;                         /*!< (@ 0x00000E0C) CRC status                                            */
     __IM uint32_t RXMATCH;                           /*!< (@ 0x00000E10) Received address                                      */
     __IM uint32_t RXCRC;                             /*!< (@ 0x00000E14) CRC field of previously received packet               */
     __IM uint32_t DAI;                               /*!< (@ 0x00000E18) Device address match index                            */
     __IM uint32_t PDUSTAT;                           /*!< (@ 0x00000E1C) Payload status                                        */
     __IOM uint32_t PCNF0;                            /*!< (@ 0x00000E20) Packet configuration register 0                       */
-    __IM uint32_t RESERVED25;
+    __IM uint32_t RESERVED38;
     __IOM uint32_t PCNF1;                            /*!< (@ 0x00000E28) Packet configuration register 1                       */
     __IOM uint32_t BASE0;                            /*!< (@ 0x00000E2C) Base address 0                                        */
     __IOM uint32_t BASE1;                            /*!< (@ 0x00000E30) Base address 1                                        */
@@ -15108,17 +15116,18 @@ typedef struct {
     __IOM uint32_t DAP[8];                           /*!< (@ 0x00000E70) Device address prefix n                               */
     __IOM uint32_t DACNF;                            /*!< (@ 0x00000E90) Device address match configuration                    */
     __IOM uint32_t BCC;                              /*!< (@ 0x00000E94) Bit counter compare                                   */
-    __IM uint32_t RESERVED26[3];
+    __IM uint32_t RESERVED39[3];
     __IM uint32_t CTESTATUS;                         /*!< (@ 0x00000EA4) CTEInfo parsed from received packet                   */
-    __IM uint32_t RESERVED27[3];
+    __IM uint32_t RESERVED40[3];
     __IOM uint32_t MHRMATCHCONF;                     /*!< (@ 0x00000EB4) Search pattern configuration                          */
     __IOM uint32_t MHRMATCHMASK;                     /*!< (@ 0x00000EB8) Pattern mask                                          */
-    __IOM uint32_t SFD;                              /*!< (@ 0x00000EBC) IEEE 802.15.4 start of frame delimiter                */
+    __IM uint32_t RESERVED41;
     __IOM uint32_t CTEINLINECONF;                    /*!< (@ 0x00000EC0) Configuration for CTE inline mode                     */
-    __IM uint32_t RESERVED28[3];
+    __IM uint32_t RESERVED42[3];
     __IOM uint32_t PACKETPTR;                        /*!< (@ 0x00000ED0) Packet pointer                                        */
-    __IM uint32_t RESERVED29[75];
+    __IM uint32_t RESERVED43[75];
     __IOM NRF_RADIO_CSTONES_Type CSTONES;            /*!< (@ 0x00001000) (unspecified)                                         */
+    __IM uint32_t RESERVED44[2];
     __IOM NRF_RADIO_RTT_Type RTT;                    /*!< (@ 0x00001050) (unspecified)                                         */
   } NRF_RADIO_Type;                                  /*!< Size = 4196 (0x1064)                                                 */
 
@@ -15260,6 +15269,55 @@ typedef struct {
   #define RADIO_TASKS_CCASTOP_TASKS_CCASTOP_Min (0x1UL) /*!< Min enumerator value of TASKS_CCASTOP field.                      */
   #define RADIO_TASKS_CCASTOP_TASKS_CCASTOP_Max (0x1UL) /*!< Max enumerator value of TASKS_CCASTOP field.                      */
   #define RADIO_TASKS_CCASTOP_TASKS_CCASTOP_Trigger (0x1UL) /*!< Trigger task                                                  */
+
+
+/* RADIO_TASKS_AUXDATADMASTART: Start DMA transaction of acquisition */
+  #define RADIO_TASKS_AUXDATADMASTART_ResetValue (0x00000000UL) /*!< Reset value of TASKS_AUXDATADMASTART register.            */
+
+/* TASKS_AUXDATADMASTART @Bit 0 : Start DMA transaction of acquisition */
+  #define RADIO_TASKS_AUXDATADMASTART_TASKS_AUXDATADMASTART_Pos (0UL) /*!< Position of TASKS_AUXDATADMASTART field.            */
+  #define RADIO_TASKS_AUXDATADMASTART_TASKS_AUXDATADMASTART_Msk (0x1UL << RADIO_TASKS_AUXDATADMASTART_TASKS_AUXDATADMASTART_Pos)
+                                                                            /*!< Bit mask of TASKS_AUXDATADMASTART field.*/
+  #define RADIO_TASKS_AUXDATADMASTART_TASKS_AUXDATADMASTART_Min (0x1UL) /*!< Min enumerator value of TASKS_AUXDATADMASTART
+                                                                            field.*/
+  #define RADIO_TASKS_AUXDATADMASTART_TASKS_AUXDATADMASTART_Max (0x1UL) /*!< Max enumerator value of TASKS_AUXDATADMASTART
+                                                                            field.*/
+  #define RADIO_TASKS_AUXDATADMASTART_TASKS_AUXDATADMASTART_Trigger (0x1UL) /*!< Trigger task                                  */
+
+
+/* RADIO_TASKS_AUXDATADMASTOP: Stop ongoing DMA transaction of acquisition */
+  #define RADIO_TASKS_AUXDATADMASTOP_ResetValue (0x00000000UL) /*!< Reset value of TASKS_AUXDATADMASTOP register.              */
+
+/* TASKS_AUXDATADMASTOP @Bit 0 : Stop ongoing DMA transaction of acquisition */
+  #define RADIO_TASKS_AUXDATADMASTOP_TASKS_AUXDATADMASTOP_Pos (0UL) /*!< Position of TASKS_AUXDATADMASTOP field.               */
+  #define RADIO_TASKS_AUXDATADMASTOP_TASKS_AUXDATADMASTOP_Msk (0x1UL << RADIO_TASKS_AUXDATADMASTOP_TASKS_AUXDATADMASTOP_Pos)
+                                                                            /*!< Bit mask of TASKS_AUXDATADMASTOP field.*/
+  #define RADIO_TASKS_AUXDATADMASTOP_TASKS_AUXDATADMASTOP_Min (0x1UL) /*!< Min enumerator value of TASKS_AUXDATADMASTOP field. */
+  #define RADIO_TASKS_AUXDATADMASTOP_TASKS_AUXDATADMASTOP_Max (0x1UL) /*!< Max enumerator value of TASKS_AUXDATADMASTOP field. */
+  #define RADIO_TASKS_AUXDATADMASTOP_TASKS_AUXDATADMASTOP_Trigger (0x1UL) /*!< Trigger task                                    */
+
+
+/* RADIO_TASKS_PLLEN: Enable RADIO in PLL mode (standby for either TX or RX) */
+  #define RADIO_TASKS_PLLEN_ResetValue (0x00000000UL) /*!< Reset value of TASKS_PLLEN register.                                */
+
+/* TASKS_PLLEN @Bit 0 : Enable RADIO in PLL mode (standby for either TX or RX) */
+  #define RADIO_TASKS_PLLEN_TASKS_PLLEN_Pos (0UL)    /*!< Position of TASKS_PLLEN field.                                       */
+  #define RADIO_TASKS_PLLEN_TASKS_PLLEN_Msk (0x1UL << RADIO_TASKS_PLLEN_TASKS_PLLEN_Pos) /*!< Bit mask of TASKS_PLLEN field.   */
+  #define RADIO_TASKS_PLLEN_TASKS_PLLEN_Min (0x1UL)  /*!< Min enumerator value of TASKS_PLLEN field.                           */
+  #define RADIO_TASKS_PLLEN_TASKS_PLLEN_Max (0x1UL)  /*!< Max enumerator value of TASKS_PLLEN field.                           */
+  #define RADIO_TASKS_PLLEN_TASKS_PLLEN_Trigger (0x1UL) /*!< Trigger task                                                      */
+
+
+/* RADIO_TASKS_CSTONESSTART: Start tone processing for channel sounding */
+  #define RADIO_TASKS_CSTONESSTART_ResetValue (0x00000000UL) /*!< Reset value of TASKS_CSTONESSTART register.                  */
+
+/* TASKS_CSTONESSTART @Bit 0 : Start tone processing for channel sounding */
+  #define RADIO_TASKS_CSTONESSTART_TASKS_CSTONESSTART_Pos (0UL) /*!< Position of TASKS_CSTONESSTART field.                     */
+  #define RADIO_TASKS_CSTONESSTART_TASKS_CSTONESSTART_Msk (0x1UL << RADIO_TASKS_CSTONESSTART_TASKS_CSTONESSTART_Pos) /*!< Bit
+                                                                            mask of TASKS_CSTONESSTART field.*/
+  #define RADIO_TASKS_CSTONESSTART_TASKS_CSTONESSTART_Min (0x1UL) /*!< Min enumerator value of TASKS_CSTONESSTART field.       */
+  #define RADIO_TASKS_CSTONESSTART_TASKS_CSTONESSTART_Max (0x1UL) /*!< Max enumerator value of TASKS_CSTONESSTART field.       */
+  #define RADIO_TASKS_CSTONESSTART_TASKS_CSTONESSTART_Trigger (0x1UL) /*!< Trigger task                                        */
 
 
 /* RADIO_TASKS_SOFTRESET: Reset all public registers, but with these exceptions: DMA registers and EVENT/INTEN/SUBSCRIBE/PUBLISH
@@ -15492,6 +15550,81 @@ typedef struct {
   #define RADIO_SUBSCRIBE_CCASTOP_EN_Max (0x1UL)     /*!< Max enumerator value of EN field.                                    */
   #define RADIO_SUBSCRIBE_CCASTOP_EN_Disabled (0x0UL) /*!< Disable subscription                                                */
   #define RADIO_SUBSCRIBE_CCASTOP_EN_Enabled (0x1UL) /*!< Enable subscription                                                  */
+
+
+/* RADIO_SUBSCRIBE_AUXDATADMASTART: Subscribe configuration for task AUXDATADMASTART */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_ResetValue (0x00000000UL) /*!< Reset value of SUBSCRIBE_AUXDATADMASTART register.    */
+
+/* CHIDX @Bits 0..7 : DPPI channel that task AUXDATADMASTART will subscribe to */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_CHIDX_Pos (0UL) /*!< Position of CHIDX field.                                        */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_CHIDX_Msk (0xFFUL << RADIO_SUBSCRIBE_AUXDATADMASTART_CHIDX_Pos) /*!< Bit mask of CHIDX
+                                                                            field.*/
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_CHIDX_Min (0x00UL) /*!< Min value of CHIDX field.                                    */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_CHIDX_Max (0xFFUL) /*!< Max size of CHIDX field.                                     */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Pos (31UL) /*!< Position of EN field.                                             */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Msk (0x1UL << RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Pos) /*!< Bit mask of EN field.  */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Min (0x0UL) /*!< Min enumerator value of EN field.                                */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Max (0x1UL) /*!< Max enumerator value of EN field.                                */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Disabled (0x0UL) /*!< Disable subscription                                        */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTART_EN_Enabled (0x1UL) /*!< Enable subscription                                          */
+
+
+/* RADIO_SUBSCRIBE_AUXDATADMASTOP: Subscribe configuration for task AUXDATADMASTOP */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_ResetValue (0x00000000UL) /*!< Reset value of SUBSCRIBE_AUXDATADMASTOP register.      */
+
+/* CHIDX @Bits 0..7 : DPPI channel that task AUXDATADMASTOP will subscribe to */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_CHIDX_Pos (0UL) /*!< Position of CHIDX field.                                         */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_CHIDX_Msk (0xFFUL << RADIO_SUBSCRIBE_AUXDATADMASTOP_CHIDX_Pos) /*!< Bit mask of CHIDX
+                                                                            field.*/
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_CHIDX_Min (0x00UL) /*!< Min value of CHIDX field.                                     */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_CHIDX_Max (0xFFUL) /*!< Max size of CHIDX field.                                      */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Pos (31UL) /*!< Position of EN field.                                              */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Msk (0x1UL << RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Pos) /*!< Bit mask of EN field.    */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Min (0x0UL) /*!< Min enumerator value of EN field.                                 */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Max (0x1UL) /*!< Max enumerator value of EN field.                                 */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Disabled (0x0UL) /*!< Disable subscription                                         */
+  #define RADIO_SUBSCRIBE_AUXDATADMASTOP_EN_Enabled (0x1UL) /*!< Enable subscription                                           */
+
+
+/* RADIO_SUBSCRIBE_PLLEN: Subscribe configuration for task PLLEN */
+  #define RADIO_SUBSCRIBE_PLLEN_ResetValue (0x00000000UL) /*!< Reset value of SUBSCRIBE_PLLEN register.                        */
+
+/* CHIDX @Bits 0..7 : DPPI channel that task PLLEN will subscribe to */
+  #define RADIO_SUBSCRIBE_PLLEN_CHIDX_Pos (0UL)      /*!< Position of CHIDX field.                                             */
+  #define RADIO_SUBSCRIBE_PLLEN_CHIDX_Msk (0xFFUL << RADIO_SUBSCRIBE_PLLEN_CHIDX_Pos) /*!< Bit mask of CHIDX field.            */
+  #define RADIO_SUBSCRIBE_PLLEN_CHIDX_Min (0x00UL)   /*!< Min value of CHIDX field.                                            */
+  #define RADIO_SUBSCRIBE_PLLEN_CHIDX_Max (0xFFUL)   /*!< Max size of CHIDX field.                                             */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_SUBSCRIBE_PLLEN_EN_Pos (31UL)        /*!< Position of EN field.                                                */
+  #define RADIO_SUBSCRIBE_PLLEN_EN_Msk (0x1UL << RADIO_SUBSCRIBE_PLLEN_EN_Pos) /*!< Bit mask of EN field.                      */
+  #define RADIO_SUBSCRIBE_PLLEN_EN_Min (0x0UL)       /*!< Min enumerator value of EN field.                                    */
+  #define RADIO_SUBSCRIBE_PLLEN_EN_Max (0x1UL)       /*!< Max enumerator value of EN field.                                    */
+  #define RADIO_SUBSCRIBE_PLLEN_EN_Disabled (0x0UL)  /*!< Disable subscription                                                 */
+  #define RADIO_SUBSCRIBE_PLLEN_EN_Enabled (0x1UL)   /*!< Enable subscription                                                  */
+
+
+/* RADIO_SUBSCRIBE_CSTONESSTART: Subscribe configuration for task CSTONESSTART */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_ResetValue (0x00000000UL) /*!< Reset value of SUBSCRIBE_CSTONESSTART register.          */
+
+/* CHIDX @Bits 0..7 : DPPI channel that task CSTONESSTART will subscribe to */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_CHIDX_Pos (0UL) /*!< Position of CHIDX field.                                           */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_CHIDX_Msk (0xFFUL << RADIO_SUBSCRIBE_CSTONESSTART_CHIDX_Pos) /*!< Bit mask of CHIDX
+                                                                            field.*/
+  #define RADIO_SUBSCRIBE_CSTONESSTART_CHIDX_Min (0x00UL) /*!< Min value of CHIDX field.                                       */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_CHIDX_Max (0xFFUL) /*!< Max size of CHIDX field.                                        */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_EN_Pos (31UL) /*!< Position of EN field.                                                */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_EN_Msk (0x1UL << RADIO_SUBSCRIBE_CSTONESSTART_EN_Pos) /*!< Bit mask of EN field.        */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_EN_Min (0x0UL) /*!< Min enumerator value of EN field.                                   */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_EN_Max (0x1UL) /*!< Max enumerator value of EN field.                                   */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_EN_Disabled (0x0UL) /*!< Disable subscription                                           */
+  #define RADIO_SUBSCRIBE_CSTONESSTART_EN_Enabled (0x1UL) /*!< Enable subscription                                             */
 
 
 /* RADIO_SUBSCRIBE_SOFTRESET: Subscribe configuration for task SOFTRESET */
@@ -15811,6 +15944,58 @@ typedef struct {
   #define RADIO_EVENTS_CTEPRESENT_EVENTS_CTEPRESENT_Max (0x1UL) /*!< Max enumerator value of EVENTS_CTEPRESENT field.          */
   #define RADIO_EVENTS_CTEPRESENT_EVENTS_CTEPRESENT_NotGenerated (0x0UL) /*!< Event not generated                              */
   #define RADIO_EVENTS_CTEPRESENT_EVENTS_CTEPRESENT_Generated (0x1UL) /*!< Event generated                                     */
+
+
+/* RADIO_EVENTS_PLLREADY: PLL has settled and RADIO is ready to be enabled in either TX or RX mode */
+  #define RADIO_EVENTS_PLLREADY_ResetValue (0x00000000UL) /*!< Reset value of EVENTS_PLLREADY register.                        */
+
+/* EVENTS_PLLREADY @Bit 0 : PLL has settled and RADIO is ready to be enabled in either TX or RX mode */
+  #define RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_Pos (0UL) /*!< Position of EVENTS_PLLREADY field.                              */
+  #define RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_Msk (0x1UL << RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_Pos) /*!< Bit mask of
+                                                                            EVENTS_PLLREADY field.*/
+  #define RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_Min (0x0UL) /*!< Min enumerator value of EVENTS_PLLREADY field.                */
+  #define RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_Max (0x1UL) /*!< Max enumerator value of EVENTS_PLLREADY field.                */
+  #define RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_NotGenerated (0x0UL) /*!< Event not generated                                  */
+  #define RADIO_EVENTS_PLLREADY_EVENTS_PLLREADY_Generated (0x1UL) /*!< Event generated                                         */
+
+
+/* RADIO_EVENTS_RXADDRESS: Address received */
+  #define RADIO_EVENTS_RXADDRESS_ResetValue (0x00000000UL) /*!< Reset value of EVENTS_RXADDRESS register.                      */
+
+/* EVENTS_RXADDRESS @Bit 0 : Address received */
+  #define RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_Pos (0UL) /*!< Position of EVENTS_RXADDRESS field.                           */
+  #define RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_Msk (0x1UL << RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_Pos) /*!< Bit mask of
+                                                                            EVENTS_RXADDRESS field.*/
+  #define RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_Min (0x0UL) /*!< Min enumerator value of EVENTS_RXADDRESS field.             */
+  #define RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_Max (0x1UL) /*!< Max enumerator value of EVENTS_RXADDRESS field.             */
+  #define RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_NotGenerated (0x0UL) /*!< Event not generated                                */
+  #define RADIO_EVENTS_RXADDRESS_EVENTS_RXADDRESS_Generated (0x1UL) /*!< Event generated                                       */
+
+
+/* RADIO_EVENTS_AUXDATADMAEND: AUXDATA DMA end */
+  #define RADIO_EVENTS_AUXDATADMAEND_ResetValue (0x00000000UL) /*!< Reset value of EVENTS_AUXDATADMAEND register.              */
+
+/* EVENTS_AUXDATADMAEND @Bit 0 : AUXDATA DMA end */
+  #define RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_Pos (0UL) /*!< Position of EVENTS_AUXDATADMAEND field.               */
+  #define RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_Msk (0x1UL << RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_Pos)
+                                                                            /*!< Bit mask of EVENTS_AUXDATADMAEND field.*/
+  #define RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_Min (0x0UL) /*!< Min enumerator value of EVENTS_AUXDATADMAEND field. */
+  #define RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_Max (0x1UL) /*!< Max enumerator value of EVENTS_AUXDATADMAEND field. */
+  #define RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_NotGenerated (0x0UL) /*!< Event not generated                        */
+  #define RADIO_EVENTS_AUXDATADMAEND_EVENTS_AUXDATADMAEND_Generated (0x1UL) /*!< Event generated                               */
+
+
+/* RADIO_EVENTS_CSTONESEND: The channel sounding tone processing is complete */
+  #define RADIO_EVENTS_CSTONESEND_ResetValue (0x00000000UL) /*!< Reset value of EVENTS_CSTONESEND register.                    */
+
+/* EVENTS_CSTONESEND @Bit 0 : The channel sounding tone processing is complete */
+  #define RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_Pos (0UL) /*!< Position of EVENTS_CSTONESEND field.                        */
+  #define RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_Msk (0x1UL << RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_Pos) /*!< Bit mask
+                                                                            of EVENTS_CSTONESEND field.*/
+  #define RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_Min (0x0UL) /*!< Min enumerator value of EVENTS_CSTONESEND field.          */
+  #define RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_Max (0x1UL) /*!< Max enumerator value of EVENTS_CSTONESEND field.          */
+  #define RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_NotGenerated (0x0UL) /*!< Event not generated                              */
+  #define RADIO_EVENTS_CSTONESEND_EVENTS_CSTONESEND_Generated (0x1UL) /*!< Event generated                                     */
 
 
 /* RADIO_PUBLISH_READY: Publish configuration for event READY */
@@ -16227,6 +16412,78 @@ typedef struct {
   #define RADIO_PUBLISH_CTEPRESENT_EN_Enabled (0x1UL) /*!< Enable publishing                                                   */
 
 
+/* RADIO_PUBLISH_PLLREADY: Publish configuration for event PLLREADY */
+  #define RADIO_PUBLISH_PLLREADY_ResetValue (0x00000000UL) /*!< Reset value of PUBLISH_PLLREADY register.                      */
+
+/* CHIDX @Bits 0..7 : DPPI channel that event PLLREADY will publish to */
+  #define RADIO_PUBLISH_PLLREADY_CHIDX_Pos (0UL)     /*!< Position of CHIDX field.                                             */
+  #define RADIO_PUBLISH_PLLREADY_CHIDX_Msk (0xFFUL << RADIO_PUBLISH_PLLREADY_CHIDX_Pos) /*!< Bit mask of CHIDX field.          */
+  #define RADIO_PUBLISH_PLLREADY_CHIDX_Min (0x00UL)  /*!< Min value of CHIDX field.                                            */
+  #define RADIO_PUBLISH_PLLREADY_CHIDX_Max (0xFFUL)  /*!< Max size of CHIDX field.                                             */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_PUBLISH_PLLREADY_EN_Pos (31UL)       /*!< Position of EN field.                                                */
+  #define RADIO_PUBLISH_PLLREADY_EN_Msk (0x1UL << RADIO_PUBLISH_PLLREADY_EN_Pos) /*!< Bit mask of EN field.                    */
+  #define RADIO_PUBLISH_PLLREADY_EN_Min (0x0UL)      /*!< Min enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_PLLREADY_EN_Max (0x1UL)      /*!< Max enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_PLLREADY_EN_Disabled (0x0UL) /*!< Disable publishing                                                   */
+  #define RADIO_PUBLISH_PLLREADY_EN_Enabled (0x1UL)  /*!< Enable publishing                                                    */
+
+
+/* RADIO_PUBLISH_RXADDRESS: Publish configuration for event RXADDRESS */
+  #define RADIO_PUBLISH_RXADDRESS_ResetValue (0x00000000UL) /*!< Reset value of PUBLISH_RXADDRESS register.                    */
+
+/* CHIDX @Bits 0..7 : DPPI channel that event RXADDRESS will publish to */
+  #define RADIO_PUBLISH_RXADDRESS_CHIDX_Pos (0UL)    /*!< Position of CHIDX field.                                             */
+  #define RADIO_PUBLISH_RXADDRESS_CHIDX_Msk (0xFFUL << RADIO_PUBLISH_RXADDRESS_CHIDX_Pos) /*!< Bit mask of CHIDX field.        */
+  #define RADIO_PUBLISH_RXADDRESS_CHIDX_Min (0x00UL) /*!< Min value of CHIDX field.                                            */
+  #define RADIO_PUBLISH_RXADDRESS_CHIDX_Max (0xFFUL) /*!< Max size of CHIDX field.                                             */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_PUBLISH_RXADDRESS_EN_Pos (31UL)      /*!< Position of EN field.                                                */
+  #define RADIO_PUBLISH_RXADDRESS_EN_Msk (0x1UL << RADIO_PUBLISH_RXADDRESS_EN_Pos) /*!< Bit mask of EN field.                  */
+  #define RADIO_PUBLISH_RXADDRESS_EN_Min (0x0UL)     /*!< Min enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_RXADDRESS_EN_Max (0x1UL)     /*!< Max enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_RXADDRESS_EN_Disabled (0x0UL) /*!< Disable publishing                                                  */
+  #define RADIO_PUBLISH_RXADDRESS_EN_Enabled (0x1UL) /*!< Enable publishing                                                    */
+
+
+/* RADIO_PUBLISH_AUXDATADMAEND: Publish configuration for event AUXDATADMAEND */
+  #define RADIO_PUBLISH_AUXDATADMAEND_ResetValue (0x00000000UL) /*!< Reset value of PUBLISH_AUXDATADMAEND register.            */
+
+/* CHIDX @Bits 0..7 : DPPI channel that event AUXDATADMAEND will publish to */
+  #define RADIO_PUBLISH_AUXDATADMAEND_CHIDX_Pos (0UL) /*!< Position of CHIDX field.                                            */
+  #define RADIO_PUBLISH_AUXDATADMAEND_CHIDX_Msk (0xFFUL << RADIO_PUBLISH_AUXDATADMAEND_CHIDX_Pos) /*!< Bit mask of CHIDX field.*/
+  #define RADIO_PUBLISH_AUXDATADMAEND_CHIDX_Min (0x00UL) /*!< Min value of CHIDX field.                                        */
+  #define RADIO_PUBLISH_AUXDATADMAEND_CHIDX_Max (0xFFUL) /*!< Max size of CHIDX field.                                         */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_PUBLISH_AUXDATADMAEND_EN_Pos (31UL)  /*!< Position of EN field.                                                */
+  #define RADIO_PUBLISH_AUXDATADMAEND_EN_Msk (0x1UL << RADIO_PUBLISH_AUXDATADMAEND_EN_Pos) /*!< Bit mask of EN field.          */
+  #define RADIO_PUBLISH_AUXDATADMAEND_EN_Min (0x0UL) /*!< Min enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_AUXDATADMAEND_EN_Max (0x1UL) /*!< Max enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_AUXDATADMAEND_EN_Disabled (0x0UL) /*!< Disable publishing                                              */
+  #define RADIO_PUBLISH_AUXDATADMAEND_EN_Enabled (0x1UL) /*!< Enable publishing                                                */
+
+
+/* RADIO_PUBLISH_CSTONESEND: Publish configuration for event CSTONESEND */
+  #define RADIO_PUBLISH_CSTONESEND_ResetValue (0x00000000UL) /*!< Reset value of PUBLISH_CSTONESEND register.                  */
+
+/* CHIDX @Bits 0..7 : DPPI channel that event CSTONESEND will publish to */
+  #define RADIO_PUBLISH_CSTONESEND_CHIDX_Pos (0UL)   /*!< Position of CHIDX field.                                             */
+  #define RADIO_PUBLISH_CSTONESEND_CHIDX_Msk (0xFFUL << RADIO_PUBLISH_CSTONESEND_CHIDX_Pos) /*!< Bit mask of CHIDX field.      */
+  #define RADIO_PUBLISH_CSTONESEND_CHIDX_Min (0x00UL) /*!< Min value of CHIDX field.                                           */
+  #define RADIO_PUBLISH_CSTONESEND_CHIDX_Max (0xFFUL) /*!< Max size of CHIDX field.                                            */
+
+/* EN @Bit 31 : (unspecified) */
+  #define RADIO_PUBLISH_CSTONESEND_EN_Pos (31UL)     /*!< Position of EN field.                                                */
+  #define RADIO_PUBLISH_CSTONESEND_EN_Msk (0x1UL << RADIO_PUBLISH_CSTONESEND_EN_Pos) /*!< Bit mask of EN field.                */
+  #define RADIO_PUBLISH_CSTONESEND_EN_Min (0x0UL)    /*!< Min enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_CSTONESEND_EN_Max (0x1UL)    /*!< Max enumerator value of EN field.                                    */
+  #define RADIO_PUBLISH_CSTONESEND_EN_Disabled (0x0UL) /*!< Disable publishing                                                 */
+  #define RADIO_PUBLISH_CSTONESEND_EN_Enabled (0x1UL) /*!< Enable publishing                                                   */
+
+
 /* RADIO_SHORTS: Shortcuts between local events and tasks */
   #define RADIO_SHORTS_ResetValue (0x00000000UL)     /*!< Reset value of SHORTS register.                                      */
 
@@ -16581,6 +16838,47 @@ typedef struct {
   #define RADIO_INTENSET00_CTEPRESENT_Enabled (0x1UL) /*!< Read: Enabled                                                       */
 
 
+/* RADIO_INTENSET01: Enable interrupt */
+  #define RADIO_INTENSET01_ResetValue (0x00000000UL) /*!< Reset value of INTENSET01 register.                                  */
+
+/* PLLREADY @Bit 12 : Write '1' to enable interrupt for event PLLREADY */
+  #define RADIO_INTENSET01_PLLREADY_Pos (12UL)       /*!< Position of PLLREADY field.                                          */
+  #define RADIO_INTENSET01_PLLREADY_Msk (0x1UL << RADIO_INTENSET01_PLLREADY_Pos) /*!< Bit mask of PLLREADY field.              */
+  #define RADIO_INTENSET01_PLLREADY_Min (0x0UL)      /*!< Min enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENSET01_PLLREADY_Max (0x1UL)      /*!< Max enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENSET01_PLLREADY_Set (0x1UL)      /*!< Enable                                                               */
+  #define RADIO_INTENSET01_PLLREADY_Disabled (0x0UL) /*!< Read: Disabled                                                       */
+  #define RADIO_INTENSET01_PLLREADY_Enabled (0x1UL)  /*!< Read: Enabled                                                        */
+
+/* RXADDRESS @Bit 15 : Write '1' to enable interrupt for event RXADDRESS */
+  #define RADIO_INTENSET01_RXADDRESS_Pos (15UL)      /*!< Position of RXADDRESS field.                                         */
+  #define RADIO_INTENSET01_RXADDRESS_Msk (0x1UL << RADIO_INTENSET01_RXADDRESS_Pos) /*!< Bit mask of RXADDRESS field.           */
+  #define RADIO_INTENSET01_RXADDRESS_Min (0x0UL)     /*!< Min enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENSET01_RXADDRESS_Max (0x1UL)     /*!< Max enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENSET01_RXADDRESS_Set (0x1UL)     /*!< Enable                                                               */
+  #define RADIO_INTENSET01_RXADDRESS_Disabled (0x0UL) /*!< Read: Disabled                                                      */
+  #define RADIO_INTENSET01_RXADDRESS_Enabled (0x1UL) /*!< Read: Enabled                                                        */
+
+/* AUXDATADMAEND @Bit 16 : Write '1' to enable interrupt for event AUXDATADMAEND */
+  #define RADIO_INTENSET01_AUXDATADMAEND_Pos (16UL)  /*!< Position of AUXDATADMAEND field.                                     */
+  #define RADIO_INTENSET01_AUXDATADMAEND_Msk (0x1UL << RADIO_INTENSET01_AUXDATADMAEND_Pos) /*!< Bit mask of AUXDATADMAEND
+                                                                            field.*/
+  #define RADIO_INTENSET01_AUXDATADMAEND_Min (0x0UL) /*!< Min enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENSET01_AUXDATADMAEND_Max (0x1UL) /*!< Max enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENSET01_AUXDATADMAEND_Set (0x1UL) /*!< Enable                                                               */
+  #define RADIO_INTENSET01_AUXDATADMAEND_Disabled (0x0UL) /*!< Read: Disabled                                                  */
+  #define RADIO_INTENSET01_AUXDATADMAEND_Enabled (0x1UL) /*!< Read: Enabled                                                    */
+
+/* CSTONESEND @Bit 18 : Write '1' to enable interrupt for event CSTONESEND */
+  #define RADIO_INTENSET01_CSTONESEND_Pos (18UL)     /*!< Position of CSTONESEND field.                                        */
+  #define RADIO_INTENSET01_CSTONESEND_Msk (0x1UL << RADIO_INTENSET01_CSTONESEND_Pos) /*!< Bit mask of CSTONESEND field.        */
+  #define RADIO_INTENSET01_CSTONESEND_Min (0x0UL)    /*!< Min enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENSET01_CSTONESEND_Max (0x1UL)    /*!< Max enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENSET01_CSTONESEND_Set (0x1UL)    /*!< Enable                                                               */
+  #define RADIO_INTENSET01_CSTONESEND_Disabled (0x0UL) /*!< Read: Disabled                                                     */
+  #define RADIO_INTENSET01_CSTONESEND_Enabled (0x1UL) /*!< Read: Enabled                                                       */
+
+
 /* RADIO_INTENCLR00: Disable interrupt */
   #define RADIO_INTENCLR00_ResetValue (0x00000000UL) /*!< Reset value of INTENCLR00 register.                                  */
 
@@ -16790,6 +17088,47 @@ typedef struct {
   #define RADIO_INTENCLR00_CTEPRESENT_Clear (0x1UL)  /*!< Disable                                                              */
   #define RADIO_INTENCLR00_CTEPRESENT_Disabled (0x0UL) /*!< Read: Disabled                                                     */
   #define RADIO_INTENCLR00_CTEPRESENT_Enabled (0x1UL) /*!< Read: Enabled                                                       */
+
+
+/* RADIO_INTENCLR01: Disable interrupt */
+  #define RADIO_INTENCLR01_ResetValue (0x00000000UL) /*!< Reset value of INTENCLR01 register.                                  */
+
+/* PLLREADY @Bit 12 : Write '1' to disable interrupt for event PLLREADY */
+  #define RADIO_INTENCLR01_PLLREADY_Pos (12UL)       /*!< Position of PLLREADY field.                                          */
+  #define RADIO_INTENCLR01_PLLREADY_Msk (0x1UL << RADIO_INTENCLR01_PLLREADY_Pos) /*!< Bit mask of PLLREADY field.              */
+  #define RADIO_INTENCLR01_PLLREADY_Min (0x0UL)      /*!< Min enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENCLR01_PLLREADY_Max (0x1UL)      /*!< Max enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENCLR01_PLLREADY_Clear (0x1UL)    /*!< Disable                                                              */
+  #define RADIO_INTENCLR01_PLLREADY_Disabled (0x0UL) /*!< Read: Disabled                                                       */
+  #define RADIO_INTENCLR01_PLLREADY_Enabled (0x1UL)  /*!< Read: Enabled                                                        */
+
+/* RXADDRESS @Bit 15 : Write '1' to disable interrupt for event RXADDRESS */
+  #define RADIO_INTENCLR01_RXADDRESS_Pos (15UL)      /*!< Position of RXADDRESS field.                                         */
+  #define RADIO_INTENCLR01_RXADDRESS_Msk (0x1UL << RADIO_INTENCLR01_RXADDRESS_Pos) /*!< Bit mask of RXADDRESS field.           */
+  #define RADIO_INTENCLR01_RXADDRESS_Min (0x0UL)     /*!< Min enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENCLR01_RXADDRESS_Max (0x1UL)     /*!< Max enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENCLR01_RXADDRESS_Clear (0x1UL)   /*!< Disable                                                              */
+  #define RADIO_INTENCLR01_RXADDRESS_Disabled (0x0UL) /*!< Read: Disabled                                                      */
+  #define RADIO_INTENCLR01_RXADDRESS_Enabled (0x1UL) /*!< Read: Enabled                                                        */
+
+/* AUXDATADMAEND @Bit 16 : Write '1' to disable interrupt for event AUXDATADMAEND */
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Pos (16UL)  /*!< Position of AUXDATADMAEND field.                                     */
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Msk (0x1UL << RADIO_INTENCLR01_AUXDATADMAEND_Pos) /*!< Bit mask of AUXDATADMAEND
+                                                                            field.*/
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Min (0x0UL) /*!< Min enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Max (0x1UL) /*!< Max enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Clear (0x1UL) /*!< Disable                                                            */
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Disabled (0x0UL) /*!< Read: Disabled                                                  */
+  #define RADIO_INTENCLR01_AUXDATADMAEND_Enabled (0x1UL) /*!< Read: Enabled                                                    */
+
+/* CSTONESEND @Bit 18 : Write '1' to disable interrupt for event CSTONESEND */
+  #define RADIO_INTENCLR01_CSTONESEND_Pos (18UL)     /*!< Position of CSTONESEND field.                                        */
+  #define RADIO_INTENCLR01_CSTONESEND_Msk (0x1UL << RADIO_INTENCLR01_CSTONESEND_Pos) /*!< Bit mask of CSTONESEND field.        */
+  #define RADIO_INTENCLR01_CSTONESEND_Min (0x0UL)    /*!< Min enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENCLR01_CSTONESEND_Max (0x1UL)    /*!< Max enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENCLR01_CSTONESEND_Clear (0x1UL)  /*!< Disable                                                              */
+  #define RADIO_INTENCLR01_CSTONESEND_Disabled (0x0UL) /*!< Read: Disabled                                                     */
+  #define RADIO_INTENCLR01_CSTONESEND_Enabled (0x1UL) /*!< Read: Enabled                                                       */
 
 
 /* RADIO_INTENSET10: Enable interrupt */
@@ -17003,6 +17342,47 @@ typedef struct {
   #define RADIO_INTENSET10_CTEPRESENT_Enabled (0x1UL) /*!< Read: Enabled                                                       */
 
 
+/* RADIO_INTENSET11: Enable interrupt */
+  #define RADIO_INTENSET11_ResetValue (0x00000000UL) /*!< Reset value of INTENSET11 register.                                  */
+
+/* PLLREADY @Bit 12 : Write '1' to enable interrupt for event PLLREADY */
+  #define RADIO_INTENSET11_PLLREADY_Pos (12UL)       /*!< Position of PLLREADY field.                                          */
+  #define RADIO_INTENSET11_PLLREADY_Msk (0x1UL << RADIO_INTENSET11_PLLREADY_Pos) /*!< Bit mask of PLLREADY field.              */
+  #define RADIO_INTENSET11_PLLREADY_Min (0x0UL)      /*!< Min enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENSET11_PLLREADY_Max (0x1UL)      /*!< Max enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENSET11_PLLREADY_Set (0x1UL)      /*!< Enable                                                               */
+  #define RADIO_INTENSET11_PLLREADY_Disabled (0x0UL) /*!< Read: Disabled                                                       */
+  #define RADIO_INTENSET11_PLLREADY_Enabled (0x1UL)  /*!< Read: Enabled                                                        */
+
+/* RXADDRESS @Bit 15 : Write '1' to enable interrupt for event RXADDRESS */
+  #define RADIO_INTENSET11_RXADDRESS_Pos (15UL)      /*!< Position of RXADDRESS field.                                         */
+  #define RADIO_INTENSET11_RXADDRESS_Msk (0x1UL << RADIO_INTENSET11_RXADDRESS_Pos) /*!< Bit mask of RXADDRESS field.           */
+  #define RADIO_INTENSET11_RXADDRESS_Min (0x0UL)     /*!< Min enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENSET11_RXADDRESS_Max (0x1UL)     /*!< Max enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENSET11_RXADDRESS_Set (0x1UL)     /*!< Enable                                                               */
+  #define RADIO_INTENSET11_RXADDRESS_Disabled (0x0UL) /*!< Read: Disabled                                                      */
+  #define RADIO_INTENSET11_RXADDRESS_Enabled (0x1UL) /*!< Read: Enabled                                                        */
+
+/* AUXDATADMAEND @Bit 16 : Write '1' to enable interrupt for event AUXDATADMAEND */
+  #define RADIO_INTENSET11_AUXDATADMAEND_Pos (16UL)  /*!< Position of AUXDATADMAEND field.                                     */
+  #define RADIO_INTENSET11_AUXDATADMAEND_Msk (0x1UL << RADIO_INTENSET11_AUXDATADMAEND_Pos) /*!< Bit mask of AUXDATADMAEND
+                                                                            field.*/
+  #define RADIO_INTENSET11_AUXDATADMAEND_Min (0x0UL) /*!< Min enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENSET11_AUXDATADMAEND_Max (0x1UL) /*!< Max enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENSET11_AUXDATADMAEND_Set (0x1UL) /*!< Enable                                                               */
+  #define RADIO_INTENSET11_AUXDATADMAEND_Disabled (0x0UL) /*!< Read: Disabled                                                  */
+  #define RADIO_INTENSET11_AUXDATADMAEND_Enabled (0x1UL) /*!< Read: Enabled                                                    */
+
+/* CSTONESEND @Bit 18 : Write '1' to enable interrupt for event CSTONESEND */
+  #define RADIO_INTENSET11_CSTONESEND_Pos (18UL)     /*!< Position of CSTONESEND field.                                        */
+  #define RADIO_INTENSET11_CSTONESEND_Msk (0x1UL << RADIO_INTENSET11_CSTONESEND_Pos) /*!< Bit mask of CSTONESEND field.        */
+  #define RADIO_INTENSET11_CSTONESEND_Min (0x0UL)    /*!< Min enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENSET11_CSTONESEND_Max (0x1UL)    /*!< Max enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENSET11_CSTONESEND_Set (0x1UL)    /*!< Enable                                                               */
+  #define RADIO_INTENSET11_CSTONESEND_Disabled (0x0UL) /*!< Read: Disabled                                                     */
+  #define RADIO_INTENSET11_CSTONESEND_Enabled (0x1UL) /*!< Read: Enabled                                                       */
+
+
 /* RADIO_INTENCLR10: Disable interrupt */
   #define RADIO_INTENCLR10_ResetValue (0x00000000UL) /*!< Reset value of INTENCLR10 register.                                  */
 
@@ -17214,6 +17594,47 @@ typedef struct {
   #define RADIO_INTENCLR10_CTEPRESENT_Enabled (0x1UL) /*!< Read: Enabled                                                       */
 
 
+/* RADIO_INTENCLR11: Disable interrupt */
+  #define RADIO_INTENCLR11_ResetValue (0x00000000UL) /*!< Reset value of INTENCLR11 register.                                  */
+
+/* PLLREADY @Bit 12 : Write '1' to disable interrupt for event PLLREADY */
+  #define RADIO_INTENCLR11_PLLREADY_Pos (12UL)       /*!< Position of PLLREADY field.                                          */
+  #define RADIO_INTENCLR11_PLLREADY_Msk (0x1UL << RADIO_INTENCLR11_PLLREADY_Pos) /*!< Bit mask of PLLREADY field.              */
+  #define RADIO_INTENCLR11_PLLREADY_Min (0x0UL)      /*!< Min enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENCLR11_PLLREADY_Max (0x1UL)      /*!< Max enumerator value of PLLREADY field.                              */
+  #define RADIO_INTENCLR11_PLLREADY_Clear (0x1UL)    /*!< Disable                                                              */
+  #define RADIO_INTENCLR11_PLLREADY_Disabled (0x0UL) /*!< Read: Disabled                                                       */
+  #define RADIO_INTENCLR11_PLLREADY_Enabled (0x1UL)  /*!< Read: Enabled                                                        */
+
+/* RXADDRESS @Bit 15 : Write '1' to disable interrupt for event RXADDRESS */
+  #define RADIO_INTENCLR11_RXADDRESS_Pos (15UL)      /*!< Position of RXADDRESS field.                                         */
+  #define RADIO_INTENCLR11_RXADDRESS_Msk (0x1UL << RADIO_INTENCLR11_RXADDRESS_Pos) /*!< Bit mask of RXADDRESS field.           */
+  #define RADIO_INTENCLR11_RXADDRESS_Min (0x0UL)     /*!< Min enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENCLR11_RXADDRESS_Max (0x1UL)     /*!< Max enumerator value of RXADDRESS field.                             */
+  #define RADIO_INTENCLR11_RXADDRESS_Clear (0x1UL)   /*!< Disable                                                              */
+  #define RADIO_INTENCLR11_RXADDRESS_Disabled (0x0UL) /*!< Read: Disabled                                                      */
+  #define RADIO_INTENCLR11_RXADDRESS_Enabled (0x1UL) /*!< Read: Enabled                                                        */
+
+/* AUXDATADMAEND @Bit 16 : Write '1' to disable interrupt for event AUXDATADMAEND */
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Pos (16UL)  /*!< Position of AUXDATADMAEND field.                                     */
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Msk (0x1UL << RADIO_INTENCLR11_AUXDATADMAEND_Pos) /*!< Bit mask of AUXDATADMAEND
+                                                                            field.*/
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Min (0x0UL) /*!< Min enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Max (0x1UL) /*!< Max enumerator value of AUXDATADMAEND field.                         */
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Clear (0x1UL) /*!< Disable                                                            */
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Disabled (0x0UL) /*!< Read: Disabled                                                  */
+  #define RADIO_INTENCLR11_AUXDATADMAEND_Enabled (0x1UL) /*!< Read: Enabled                                                    */
+
+/* CSTONESEND @Bit 18 : Write '1' to disable interrupt for event CSTONESEND */
+  #define RADIO_INTENCLR11_CSTONESEND_Pos (18UL)     /*!< Position of CSTONESEND field.                                        */
+  #define RADIO_INTENCLR11_CSTONESEND_Msk (0x1UL << RADIO_INTENCLR11_CSTONESEND_Pos) /*!< Bit mask of CSTONESEND field.        */
+  #define RADIO_INTENCLR11_CSTONESEND_Min (0x0UL)    /*!< Min enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENCLR11_CSTONESEND_Max (0x1UL)    /*!< Max enumerator value of CSTONESEND field.                            */
+  #define RADIO_INTENCLR11_CSTONESEND_Clear (0x1UL)  /*!< Disable                                                              */
+  #define RADIO_INTENCLR11_CSTONESEND_Disabled (0x0UL) /*!< Read: Disabled                                                     */
+  #define RADIO_INTENCLR11_CSTONESEND_Enabled (0x1UL) /*!< Read: Enabled                                                       */
+
+
 /* RADIO_MODE: Data rate and modulation */
   #define RADIO_MODE_ResetValue (0x00000000UL)       /*!< Reset value of MODE register.                                        */
 
@@ -17231,6 +17652,30 @@ typedef struct {
   #define RADIO_MODE_MODE_Nrf_4Mbit_0BT6 (0x9UL)     /*!< 4 Mbps Nordic proprietary radio mode (BT=0.6/h=0.5)                  */
   #define RADIO_MODE_MODE_Nrf_4Mbit_0BT4 (0xAUL)     /*!< 4 Mbps Nordic proprietary radio mode (BT=0.4/h=0.5)                  */
   #define RADIO_MODE_MODE_Ieee802154_250Kbit (0xFUL) /*!< IEEE 802.15.4-2006 250 kbps                                          */
+
+
+/* RADIO_PHYENDTXDELAY: Configurable delay of PHYEND event for TX */
+  #define RADIO_PHYENDTXDELAY_ResetValue (0x00000421UL) /*!< Reset value of PHYENDTXDELAY register.                            */
+
+/* RATE4M @Bits 0..2 : For modes with 4 Mbps on-air bit rate, unit is 2 bit periods (Nrf_4Mbit0_5 and Nrf_4Mbit0_25 modes) */
+  #define RADIO_PHYENDTXDELAY_RATE4M_Pos (0UL)       /*!< Position of RATE4M field.                                            */
+  #define RADIO_PHYENDTXDELAY_RATE4M_Msk (0x7UL << RADIO_PHYENDTXDELAY_RATE4M_Pos) /*!< Bit mask of RATE4M field.              */
+
+/* RATE2M @Bits 4..6 : For modes with 2 Mbps on-air bit rate, unit is 1 bit period (Nrf_2Mbit, Ble_2Mbit, and Ieee802154_250Kbit
+                       modes) */
+
+  #define RADIO_PHYENDTXDELAY_RATE2M_Pos (4UL)       /*!< Position of RATE2M field.                                            */
+  #define RADIO_PHYENDTXDELAY_RATE2M_Msk (0x7UL << RADIO_PHYENDTXDELAY_RATE2M_Pos) /*!< Bit mask of RATE2M field.              */
+
+/* RATE1M @Bits 8..10 : For modes with 1 Mbps on-air bit rate, unit is 1/2 bit period (Nrf_1Mbit, Ble_1Mbit, Ble_LR125Kbit, and
+                        Ble_LR500Kbit modes) */
+
+  #define RADIO_PHYENDTXDELAY_RATE1M_Pos (8UL)       /*!< Position of RATE1M field.                                            */
+  #define RADIO_PHYENDTXDELAY_RATE1M_Msk (0x7UL << RADIO_PHYENDTXDELAY_RATE1M_Pos) /*!< Bit mask of RATE1M field.              */
+
+/* RATE250K @Bits 12..14 : For modes with 250 kbps on-air bit rate, unit is 1/8 bit period (Nrf_250Kbit mode) */
+  #define RADIO_PHYENDTXDELAY_RATE250K_Pos (12UL)    /*!< Position of RATE250K field.                                          */
+  #define RADIO_PHYENDTXDELAY_RATE250K_Msk (0x7UL << RADIO_PHYENDTXDELAY_RATE250K_Pos) /*!< Bit mask of RATE250K field.        */
 
 
 /* RADIO_STATE: Current radio state */
@@ -17355,7 +17800,7 @@ typedef struct {
 /* TXPOWER @Bits 0..10 : RADIO output power */
   #define RADIO_TXPOWER_TXPOWER_Pos (0UL)            /*!< Position of TXPOWER field.                                           */
   #define RADIO_TXPOWER_TXPOWER_Msk (0x7FFUL << RADIO_TXPOWER_TXPOWER_Pos) /*!< Bit mask of TXPOWER field.                     */
-  #define RADIO_TXPOWER_TXPOWER_Min (0x0UL)          /*!< Min enumerator value of TXPOWER field.                               */
+  #define RADIO_TXPOWER_TXPOWER_Min (0x000UL)        /*!< Min enumerator value of TXPOWER field.                               */
   #define RADIO_TXPOWER_TXPOWER_Max (0x130UL)        /*!< Max enumerator value of TXPOWER field.                               */
   #define RADIO_TXPOWER_TXPOWER_MaxdBm (0x03FUL)     /*!< +8 dBm                                                               */
   #define RADIO_TXPOWER_TXPOWER_Pos8dBm (0x03FUL)    /*!< +8 dBm                                                               */
@@ -17414,12 +17859,12 @@ typedef struct {
 /* RADIO_FREQFINETUNE: Fine tuning of the RF frequency */
   #define RADIO_FREQFINETUNE_ResetValue (0x00000000UL) /*!< Reset value of FREQFINETUNE register.                              */
 
-/* FSFREQFINETUNE @Bits 0..12 : Twos-complement number for fine-tuning the frequency. The step size is 488.28125 Hz, giving a
-                                range from -1 MHz to (one step short of) +1 MHz. */
+/* FREQFINETUNE @Bits 0..12 : Twos-complement number for fine-tuning the frequency. The step size is 488.28125 Hz, giving a
+                              range from -1 MHz to (one step short of) +1 MHz. */
 
-  #define RADIO_FREQFINETUNE_FSFREQFINETUNE_Pos (0UL) /*!< Position of FSFREQFINETUNE field.                                   */
-  #define RADIO_FREQFINETUNE_FSFREQFINETUNE_Msk (0x1FFFUL << RADIO_FREQFINETUNE_FSFREQFINETUNE_Pos) /*!< Bit mask of
-                                                                            FSFREQFINETUNE field.*/
+  #define RADIO_FREQFINETUNE_FREQFINETUNE_Pos (0UL)  /*!< Position of FREQFINETUNE field.                                      */
+  #define RADIO_FREQFINETUNE_FREQFINETUNE_Msk (0x1FFFUL << RADIO_FREQFINETUNE_FREQFINETUNE_Pos) /*!< Bit mask of FREQFINETUNE
+                                                                            field.*/
 
 
 /* RADIO_FECONFIG: Config register */
@@ -17432,6 +17877,26 @@ typedef struct {
   #define RADIO_FECONFIG_SCALERMODE_Max (0x1UL)      /*!< Max enumerator value of SCALERMODE field.                            */
   #define RADIO_FECONFIG_SCALERMODE_Disabled (0x0UL) /*!< Classic log based scaling mode.                                      */
   #define RADIO_FECONFIG_SCALERMODE_Enabled (0x1UL)  /*!< LUT based scaling mode.                                              */
+
+
+/* RADIO_CFO_STAT: Carrier freq. offset estimate */
+  #define RADIO_CFO_STAT_ResetValue (0x00000000UL)   /*!< Reset value of CFO_STAT register.                                    */
+
+/* SYNCOK @Bit 12 : SYNC ok */
+  #define RADIO_CFO_STAT_SYNCOK_Pos (12UL)           /*!< Position of SYNCOK field.                                            */
+  #define RADIO_CFO_STAT_SYNCOK_Msk (0x1UL << RADIO_CFO_STAT_SYNCOK_Pos) /*!< Bit mask of SYNCOK field.                        */
+  #define RADIO_CFO_STAT_SYNCOK_Min (0x0UL)          /*!< Min enumerator value of SYNCOK field.                                */
+  #define RADIO_CFO_STAT_SYNCOK_Max (0x1UL)          /*!< Max enumerator value of SYNCOK field.                                */
+  #define RADIO_CFO_STAT_SYNCOK_SyncNotOK (0x0UL)    /*!< (unspecified)                                                        */
+  #define RADIO_CFO_STAT_SYNCOK_SyncOk (0x1UL)       /*!< (unspecified)                                                        */
+
+
+/* RADIO_DBCCORR: Correlator thresholds */
+  #define RADIO_DBCCORR_ResetValue (0x1FFFFF90UL)    /*!< Reset value of DBCCORR register.                                     */
+
+/* TH @Bits 0..7 : Correlation threshold */
+  #define RADIO_DBCCORR_TH_Pos (0UL)                 /*!< Position of TH field.                                                */
+  #define RADIO_DBCCORR_TH_Msk (0xFFUL << RADIO_DBCCORR_TH_Pos) /*!< Bit mask of TH field.                                     */
 
 
 /* RADIO_DFEMODE: Whether to use Angle-of-Arrival (AOA) or Angle-of-Departure (AOD) */
@@ -17622,14 +18087,6 @@ typedef struct {
   #define RADIO_PDUSTAT_PDUSTAT_LessThan (0x0UL)     /*!< Payload less than PCNF1.MAXLEN                                       */
   #define RADIO_PDUSTAT_PDUSTAT_GreaterThan (0x1UL)  /*!< Payload greater than PCNF1.MAXLEN                                    */
 
-/* CISTAT @Bits 1..2 : Status on what rate packet is received with in Long Range */
-  #define RADIO_PDUSTAT_CISTAT_Pos (1UL)             /*!< Position of CISTAT field.                                            */
-  #define RADIO_PDUSTAT_CISTAT_Msk (0x3UL << RADIO_PDUSTAT_CISTAT_Pos) /*!< Bit mask of CISTAT field.                          */
-  #define RADIO_PDUSTAT_CISTAT_Min (0x0UL)           /*!< Min enumerator value of CISTAT field.                                */
-  #define RADIO_PDUSTAT_CISTAT_Max (0x1UL)           /*!< Max enumerator value of CISTAT field.                                */
-  #define RADIO_PDUSTAT_CISTAT_LR125kbit (0x0UL)     /*!< Frame is received at 125 kbps                                        */
-  #define RADIO_PDUSTAT_CISTAT_LR500kbit (0x1UL)     /*!< Frame is received at 500 kbps                                        */
-
 
 /* RADIO_PCNF0: Packet configuration register 0 */
   #define RADIO_PCNF0_ResetValue (0x00000000UL)      /*!< Reset value of PCNF0 register.                                       */
@@ -17654,19 +18111,13 @@ typedef struct {
   #define RADIO_PCNF0_S1INCL_Automatic (0x0UL)       /*!< Include S1 field in RAM only if S1LEN > 0                            */
   #define RADIO_PCNF0_S1INCL_Include (0x1UL)         /*!< Always include S1 field in RAM independent of S1LEN                  */
 
-/* CILEN @Bits 22..23 : Length of code indicator - long range */
-  #define RADIO_PCNF0_CILEN_Pos (22UL)               /*!< Position of CILEN field.                                             */
-  #define RADIO_PCNF0_CILEN_Msk (0x3UL << RADIO_PCNF0_CILEN_Pos) /*!< Bit mask of CILEN field.                                 */
-
 /* PLEN @Bits 24..25 : Length of preamble on air. Decision point: TASKS_START task */
   #define RADIO_PCNF0_PLEN_Pos (24UL)                /*!< Position of PLEN field.                                              */
   #define RADIO_PCNF0_PLEN_Msk (0x3UL << RADIO_PCNF0_PLEN_Pos) /*!< Bit mask of PLEN field.                                    */
   #define RADIO_PCNF0_PLEN_Min (0x0UL)               /*!< Min enumerator value of PLEN field.                                  */
-  #define RADIO_PCNF0_PLEN_Max (0x3UL)               /*!< Max enumerator value of PLEN field.                                  */
+  #define RADIO_PCNF0_PLEN_Max (0x1UL)               /*!< Max enumerator value of PLEN field.                                  */
   #define RADIO_PCNF0_PLEN_8bit (0x0UL)              /*!< 8-bit preamble                                                       */
   #define RADIO_PCNF0_PLEN_16bit (0x1UL)             /*!< 16-bit preamble                                                      */
-  #define RADIO_PCNF0_PLEN_32bitZero (0x2UL)         /*!< 32-bit zero preamble - used for IEEE 802.15.4                        */
-  #define RADIO_PCNF0_PLEN_LongRange (0x3UL)         /*!< Preamble - used for BLE long range                                   */
 
 /* CRCINC @Bit 26 : Indicates if LENGTH field contains CRC or not */
   #define RADIO_PCNF0_CRCINC_Pos (26UL)              /*!< Position of CRCINC field.                                            */
@@ -17675,10 +18126,6 @@ typedef struct {
   #define RADIO_PCNF0_CRCINC_Max (0x1UL)             /*!< Max enumerator value of CRCINC field.                                */
   #define RADIO_PCNF0_CRCINC_Exclude (0x0UL)         /*!< LENGTH does not contain CRC                                          */
   #define RADIO_PCNF0_CRCINC_Include (0x1UL)         /*!< LENGTH includes CRC                                                  */
-
-/* TERMLEN @Bits 29..30 : Length of TERM field in Long Range operation */
-  #define RADIO_PCNF0_TERMLEN_Pos (29UL)             /*!< Position of TERMLEN field.                                           */
-  #define RADIO_PCNF0_TERMLEN_Msk (0x3UL << RADIO_PCNF0_TERMLEN_Pos) /*!< Bit mask of TERMLEN field.                           */
 
 
 /* RADIO_PCNF1: Packet configuration register 1 */
@@ -18067,14 +18514,6 @@ typedef struct {
                                                                             MHRMATCHMASK field.*/
 
 
-/* RADIO_SFD: IEEE 802.15.4 start of frame delimiter */
-  #define RADIO_SFD_ResetValue (0x000000A7UL)        /*!< Reset value of SFD register.                                         */
-
-/* SFD @Bits 0..7 : IEEE 802.15.4 start of frame delimiter. Note: the least significant 4 bits of the SFD cannot all be zeros. */
-  #define RADIO_SFD_SFD_Pos (0UL)                    /*!< Position of SFD field.                                               */
-  #define RADIO_SFD_SFD_Msk (0xFFUL << RADIO_SFD_SFD_Pos) /*!< Bit mask of SFD field.                                          */
-
-
 /* RADIO_CTEINLINECONF: Configuration for CTE inline mode */
   #define RADIO_CTEINLINECONF_ResetValue (0x00002800UL) /*!< Reset value of CTEINLINECONF register.                            */
 
@@ -18172,11 +18611,11 @@ typedef struct {
   * @brief VREGMAIN [REGULATORS_VREGMAIN] Register interface for main voltage regulator.
   */
 typedef struct {
-  __IOM uint32_t  DCDCEN;                            /*!< (@ 0x00000000) Enable DC/DC converter for better power efficiency    */
+  __IOM uint32_t  DCDCEN;                            /*!< (@ 0x00000000) Enable DC/DC converter                                */
   __IM  uint32_t  INDUCTORDET;                       /*!< (@ 0x00000004) VREGMAIN inductor detection                           */
 } NRF_REGULATORS_VREGMAIN_Type;                      /*!< Size = 8 (0x008)                                                     */
 
-/* REGULATORS_VREGMAIN_DCDCEN: Enable DC/DC converter for better power efficiency */
+/* REGULATORS_VREGMAIN_DCDCEN: Enable DC/DC converter */
   #define REGULATORS_VREGMAIN_DCDCEN_ResetValue (0x00000000UL) /*!< Reset value of DCDCEN register.                            */
 
 /* VAL @Bit 0 : Enable DC/DC buck converter */
@@ -18184,7 +18623,7 @@ typedef struct {
   #define REGULATORS_VREGMAIN_DCDCEN_VAL_Msk (0x1UL << REGULATORS_VREGMAIN_DCDCEN_VAL_Pos) /*!< Bit mask of VAL field.         */
   #define REGULATORS_VREGMAIN_DCDCEN_VAL_Min (0x0UL) /*!< Min enumerator value of VAL field.                                   */
   #define REGULATORS_VREGMAIN_DCDCEN_VAL_Max (0x1UL) /*!< Max enumerator value of VAL field.                                   */
-  #define REGULATORS_VREGMAIN_DCDCEN_VAL_Disabled (0x0UL) /*!< Disable DC/DC converter and use LDO                             */
+  #define REGULATORS_VREGMAIN_DCDCEN_VAL_Disabled (0x0UL) /*!< Disable DC/DC buck converter                                    */
   #define REGULATORS_VREGMAIN_DCDCEN_VAL_Enabled (0x1UL) /*!< Enable DC/DC converter                                           */
 
 
@@ -18395,14 +18834,6 @@ typedef struct {
   #define RESET_RESETREAS_GRTC_NotDetected (0x0UL)   /*!< Not detected                                                         */
   #define RESET_RESETREAS_GRTC_Detected (0x1UL)      /*!< Detected                                                             */
 
-/* NFC @Bit 12 : Reset after wakeup from System OFF mode due to NFC field being detected */
-  #define RESET_RESETREAS_NFC_Pos (12UL)             /*!< Position of NFC field.                                               */
-  #define RESET_RESETREAS_NFC_Msk (0x1UL << RESET_RESETREAS_NFC_Pos) /*!< Bit mask of NFC field.                               */
-  #define RESET_RESETREAS_NFC_Min (0x0UL)            /*!< Min enumerator value of NFC field.                                   */
-  #define RESET_RESETREAS_NFC_Max (0x1UL)            /*!< Max enumerator value of NFC field.                                   */
-  #define RESET_RESETREAS_NFC_NotDetected (0x0UL)    /*!< Not detected                                                         */
-  #define RESET_RESETREAS_NFC_Detected (0x1UL)       /*!< Detected                                                             */
-
 /* SECTAMPER @Bit 13 : Reset due to illegal tampering of the device */
   #define RESET_RESETREAS_SECTAMPER_Pos (13UL)       /*!< Position of SECTAMPER field.                                         */
   #define RESET_RESETREAS_SECTAMPER_Msk (0x1UL << RESET_RESETREAS_SECTAMPER_Pos) /*!< Bit mask of SECTAMPER field.             */
@@ -18512,11 +18943,10 @@ typedef struct {
   * @brief ERASE [RRAMC_ERASE] (unspecified)
   */
 typedef struct {
-  __IOM uint32_t  ERASEALL;                          /*!< (@ 0x00000000) Erase RRAM, including UICR All information in SICR,
-                                                                         including keys, are also erased*/
+  __IOM uint32_t  ERASEALL;                          /*!< (@ 0x00000000) Erase RRAM, including UICR                            */
 } NRF_RRAMC_ERASE_Type;                              /*!< Size = 4 (0x004)                                                     */
 
-/* RRAMC_ERASE_ERASEALL: Erase RRAM, including UICR All information in SICR, including keys, are also erased */
+/* RRAMC_ERASE_ERASEALL: Erase RRAM, including UICR */
   #define RRAMC_ERASE_ERASEALL_ResetValue (0x00000000UL) /*!< Reset value of ERASEALL register.                                */
 
 /* ERASE @Bit 0 : Erase RRAM */
@@ -18578,21 +19008,6 @@ typedef struct {
   #define RRAMC_REGION_CONFIG_EXECUTE_Max (0x1UL)    /*!< Max enumerator value of EXECUTE field.                               */
   #define RRAMC_REGION_CONFIG_EXECUTE_NotAllowed (0x0UL) /*!< Execute access to override region [n] is not allowed             */
   #define RRAMC_REGION_CONFIG_EXECUTE_Allowed (0x1UL) /*!< Execute access to override region [n] is allowed                    */
-
-/* SECURE @Bit 3 : Secure access */
-  #define RRAMC_REGION_CONFIG_SECURE_Pos (3UL)       /*!< Position of SECURE field.                                            */
-  #define RRAMC_REGION_CONFIG_SECURE_Msk (0x1UL << RRAMC_REGION_CONFIG_SECURE_Pos) /*!< Bit mask of SECURE field.              */
-  #define RRAMC_REGION_CONFIG_SECURE_Min (0x0UL)     /*!< Min enumerator value of SECURE field.                                */
-  #define RRAMC_REGION_CONFIG_SECURE_Max (0x1UL)     /*!< Max enumerator value of SECURE field.                                */
-  #define RRAMC_REGION_CONFIG_SECURE_NonSecure (0x0UL) /*!< Both Secure and non-Secure access to override region [n] is allowed*/
-  #define RRAMC_REGION_CONFIG_SECURE_Secure (0x1UL)  /*!< Only secure access to override region [n] is allowed                 */
-
-/* OWNER @Bits 4..7 : Owner ID */
-  #define RRAMC_REGION_CONFIG_OWNER_Pos (4UL)        /*!< Position of OWNER field.                                             */
-  #define RRAMC_REGION_CONFIG_OWNER_Msk (0xFUL << RRAMC_REGION_CONFIG_OWNER_Pos) /*!< Bit mask of OWNER field.                 */
-  #define RRAMC_REGION_CONFIG_OWNER_Min (0x0UL)      /*!< Min enumerator value of OWNER field.                                 */
-  #define RRAMC_REGION_CONFIG_OWNER_Max (0x0UL)      /*!< Max enumerator value of OWNER field.                                 */
-  #define RRAMC_REGION_CONFIG_OWNER_NotEnforced (0x0UL) /*!< Owner ID protection is not enforced                               */
 
 /* WRITEONCE @Bit 12 : Write-once */
   #define RRAMC_REGION_CONFIG_WRITEONCE_Pos (12UL)   /*!< Position of WRITEONCE field.                                         */
@@ -19061,9 +19476,9 @@ typedef struct {
   __IOM uint32_t  LIMITH;                            /*!< (@ 0x00000000) Last results is equal or above CH[n].LIMIT.HIGH       */
   __IOM uint32_t  LIMITL;                            /*!< (@ 0x00000004) Last results is equal or below CH[n].LIMIT.LOW        */
 } NRF_SAADC_EVENTS_CH_Type;                          /*!< Size = 8 (0x008)                                                     */
-  #define SAADC_EVENTS_CH_MaxCount (8UL)             /*!< Size of EVENTS_CH[8] array.                                          */
-  #define SAADC_EVENTS_CH_MaxIndex (7UL)             /*!< Max index of EVENTS_CH[8] array.                                     */
-  #define SAADC_EVENTS_CH_MinIndex (0UL)             /*!< Min index of EVENTS_CH[8] array.                                     */
+  #define SAADC_EVENTS_CH_MaxCount (4UL)             /*!< Size of EVENTS_CH[4] array.                                          */
+  #define SAADC_EVENTS_CH_MaxIndex (3UL)             /*!< Max index of EVENTS_CH[4] array.                                     */
+  #define SAADC_EVENTS_CH_MinIndex (0UL)             /*!< Min index of EVENTS_CH[4] array.                                     */
 
 /* SAADC_EVENTS_CH_LIMITH: Last results is equal or above CH[n].LIMIT.HIGH */
   #define SAADC_EVENTS_CH_LIMITH_ResetValue (0x00000000UL) /*!< Reset value of LIMITH register.                                */
@@ -19098,9 +19513,9 @@ typedef struct {
   __IOM uint32_t  LIMITH;                            /*!< (@ 0x00000000) Publish configuration for event CH[n].LIMITH          */
   __IOM uint32_t  LIMITL;                            /*!< (@ 0x00000004) Publish configuration for event CH[n].LIMITL          */
 } NRF_SAADC_PUBLISH_CH_Type;                         /*!< Size = 8 (0x008)                                                     */
-  #define SAADC_PUBLISH_CH_MaxCount (8UL)            /*!< Size of PUBLISH_CH[8] array.                                         */
-  #define SAADC_PUBLISH_CH_MaxIndex (7UL)            /*!< Max index of PUBLISH_CH[8] array.                                    */
-  #define SAADC_PUBLISH_CH_MinIndex (0UL)            /*!< Min index of PUBLISH_CH[8] array.                                    */
+  #define SAADC_PUBLISH_CH_MaxCount (4UL)            /*!< Size of PUBLISH_CH[4] array.                                         */
+  #define SAADC_PUBLISH_CH_MaxIndex (3UL)            /*!< Max index of PUBLISH_CH[4] array.                                    */
+  #define SAADC_PUBLISH_CH_MinIndex (0UL)            /*!< Min index of PUBLISH_CH[4] array.                                    */
 
 /* SAADC_PUBLISH_CH_LIMITH: Publish configuration for event CH[n].LIMITH */
   #define SAADC_PUBLISH_CH_LIMITH_ResetValue (0x00000000UL) /*!< Reset value of LIMITH register.                               */
@@ -19144,16 +19559,16 @@ typedef struct {
   * @brief CH [SAADC_CH] (unspecified)
   */
 typedef struct {
-  __IOM uint32_t  PSELP;                             /*!< (@ 0x00000000) Input positive pin selection for CH[n]                */
-  __IOM uint32_t  PSELN;                             /*!< (@ 0x00000004) Input negative pin selection for CH[n]                */
-  __IOM uint32_t  CONFIG;                            /*!< (@ 0x00000008) Input configuration for CH[n]                         */
+  __IOM uint32_t  PSELP;                             /*!< (@ 0x00000000) Input positive pin selection for CH[m]                */
+  __IOM uint32_t  PSELN;                             /*!< (@ 0x00000004) Input negative pin selection for CH[m]                */
+  __IOM uint32_t  CONFIG;                            /*!< (@ 0x00000008) Input configuration for CH[m]                         */
   __IOM uint32_t  LIMIT;                             /*!< (@ 0x0000000C) High/low limits for event monitoring a channel        */
 } NRF_SAADC_CH_Type;                                 /*!< Size = 16 (0x010)                                                    */
-  #define SAADC_CH_MaxCount (8UL)                    /*!< Size of CH[8] array.                                                 */
-  #define SAADC_CH_MaxIndex (7UL)                    /*!< Max index of CH[8] array.                                            */
-  #define SAADC_CH_MinIndex (0UL)                    /*!< Min index of CH[8] array.                                            */
+  #define SAADC_CH_MaxCount (4UL)                    /*!< Size of CH[4] array.                                                 */
+  #define SAADC_CH_MaxIndex (3UL)                    /*!< Max index of CH[4] array.                                            */
+  #define SAADC_CH_MinIndex (0UL)                    /*!< Min index of CH[4] array.                                            */
 
-/* SAADC_CH_PSELP: Input positive pin selection for CH[n] */
+/* SAADC_CH_PSELP: Input positive pin selection for CH[m] */
   #define SAADC_CH_PSELP_ResetValue (0x00000000UL)   /*!< Reset value of PSELP register.                                       */
 
 /* PIN @Bits 0..4 : GPIO pin selection. */
@@ -19164,12 +19579,13 @@ typedef struct {
   #define SAADC_CH_PSELP_PORT_Pos (8UL)              /*!< Position of PORT field.                                              */
   #define SAADC_CH_PSELP_PORT_Msk (0xFUL << SAADC_CH_PSELP_PORT_Pos) /*!< Bit mask of PORT field.                              */
 
-/* INTERNAL @Bits 12..14 : Internal input selection for analog positive input when CH[n].PSELP.CONNECT = Internal */
+/* INTERNAL @Bits 12..14 : Internal input selection for analog positive input when CH[m].PSELP.CONNECT = Internal */
   #define SAADC_CH_PSELP_INTERNAL_Pos (12UL)         /*!< Position of INTERNAL field.                                          */
   #define SAADC_CH_PSELP_INTERNAL_Msk (0x7UL << SAADC_CH_PSELP_INTERNAL_Pos) /*!< Bit mask of INTERNAL field.                  */
-  #define SAADC_CH_PSELP_INTERNAL_Min (0x1UL)        /*!< Min enumerator value of INTERNAL field.                              */
+  #define SAADC_CH_PSELP_INTERNAL_Min (0x0UL)        /*!< Min enumerator value of INTERNAL field.                              */
   #define SAADC_CH_PSELP_INTERNAL_Max (0x4UL)        /*!< Max enumerator value of INTERNAL field.                              */
-  #define SAADC_CH_PSELP_INTERNAL_VddL (0x1UL)       /*!< Connected to VDDL                                                    */
+  #define SAADC_CH_PSELP_INTERNAL_Dvdd (0x0UL)       /*!< Connected to the internal 0.9 V digital supply rail                  */
+  #define SAADC_CH_PSELP_INTERNAL_Vdd (0x2UL)        /*!< Connected to VDD                                                     */
   #define SAADC_CH_PSELP_INTERNAL_Vss (0x4UL)        /*!< (unspecified)                                                        */
 
 /* CONNECT @Bits 30..31 : Connection */
@@ -19182,7 +19598,7 @@ typedef struct {
   #define SAADC_CH_PSELP_CONNECT_Internal (0x2UL)    /*!< Selects internal inputs.                                             */
 
 
-/* SAADC_CH_PSELN: Input negative pin selection for CH[n] */
+/* SAADC_CH_PSELN: Input negative pin selection for CH[m] */
   #define SAADC_CH_PSELN_ResetValue (0x00000000UL)   /*!< Reset value of PSELN register.                                       */
 
 /* PIN @Bits 0..4 : GPIO pin selection. */
@@ -19193,13 +19609,12 @@ typedef struct {
   #define SAADC_CH_PSELN_PORT_Pos (8UL)              /*!< Position of PORT field.                                              */
   #define SAADC_CH_PSELN_PORT_Msk (0xFUL << SAADC_CH_PSELN_PORT_Pos) /*!< Bit mask of PORT field.                              */
 
-/* INTERNAL @Bits 12..14 : Internal input selection for Analog negative input when CH[n].PSELN.CONNECT = Internal */
+/* INTERNAL @Bits 12..14 : Internal input selection for Analog negative input when CH[m].PSELN.CONNECT = Internal */
   #define SAADC_CH_PSELN_INTERNAL_Pos (12UL)         /*!< Position of INTERNAL field.                                          */
   #define SAADC_CH_PSELN_INTERNAL_Msk (0x7UL << SAADC_CH_PSELN_INTERNAL_Pos) /*!< Bit mask of INTERNAL field.                  */
   #define SAADC_CH_PSELN_INTERNAL_Min (0x0UL)        /*!< Min enumerator value of INTERNAL field.                              */
   #define SAADC_CH_PSELN_INTERNAL_Max (0x4UL)        /*!< Max enumerator value of INTERNAL field.                              */
   #define SAADC_CH_PSELN_INTERNAL_Dvdd (0x0UL)       /*!< Connected to the internal 0.9 V digital supply rail                  */
-  #define SAADC_CH_PSELN_INTERNAL_VddL (0x1UL)       /*!< Connected to VDDL                                                    */
   #define SAADC_CH_PSELN_INTERNAL_Vdd (0x2UL)        /*!< Connected to VDD                                                     */
   #define SAADC_CH_PSELN_INTERNAL_Vss (0x4UL)        /*!< (unspecified)                                                        */
 
@@ -19207,12 +19622,13 @@ typedef struct {
   #define SAADC_CH_PSELN_CONNECT_Pos (30UL)          /*!< Position of CONNECT field.                                           */
   #define SAADC_CH_PSELN_CONNECT_Msk (0x3UL << SAADC_CH_PSELN_CONNECT_Pos) /*!< Bit mask of CONNECT field.                     */
   #define SAADC_CH_PSELN_CONNECT_Min (0x0UL)         /*!< Min enumerator value of CONNECT field.                               */
-  #define SAADC_CH_PSELN_CONNECT_Max (0x1UL)         /*!< Max enumerator value of CONNECT field.                               */
+  #define SAADC_CH_PSELN_CONNECT_Max (0x2UL)         /*!< Max enumerator value of CONNECT field.                               */
   #define SAADC_CH_PSELN_CONNECT_NC (0x0UL)          /*!< Not connected                                                        */
   #define SAADC_CH_PSELN_CONNECT_AnalogInput (0x1UL) /*!< Select analog input                                                  */
+  #define SAADC_CH_PSELN_CONNECT_Internal (0x2UL)    /*!< Selects internal inputs.                                             */
 
 
-/* SAADC_CH_CONFIG: Input configuration for CH[n] */
+/* SAADC_CH_CONFIG: Input configuration for CH[m] */
   #define SAADC_CH_CONFIG_ResetValue (0x00020000UL)  /*!< Reset value of CONFIG register.                                      */
 
 /* CHOPPING @Bit 0 : Enable chopping */
@@ -19223,18 +19639,25 @@ typedef struct {
   #define SAADC_CH_CONFIG_CHOPPING_Disabled (0x0UL)  /*!< Chopping is disabled                                                 */
   #define SAADC_CH_CONFIG_CHOPPING_Enabled (0x1UL)   /*!< Chopping is enabled                                                  */
 
-/* VREFPLPFDISABLE @Bit 1 : Disable internal reference low pass filter */
+/* VREFPLPFDISABLE @Bit 1 : Disable the internal low pass filter for the reference voltage */
   #define SAADC_CH_CONFIG_VREFPLPFDISABLE_Pos (1UL)  /*!< Position of VREFPLPFDISABLE field.                                   */
   #define SAADC_CH_CONFIG_VREFPLPFDISABLE_Msk (0x1UL << SAADC_CH_CONFIG_VREFPLPFDISABLE_Pos) /*!< Bit mask of VREFPLPFDISABLE
                                                                             field.*/
+  #define SAADC_CH_CONFIG_VREFPLPFDISABLE_Min (0x0UL) /*!< Min enumerator value of VREFPLPFDISABLE field.                      */
+  #define SAADC_CH_CONFIG_VREFPLPFDISABLE_Max (0x1UL) /*!< Max enumerator value of VREFPLPFDISABLE field.                      */
+  #define SAADC_CH_CONFIG_VREFPLPFDISABLE_Disabled (0x1UL) /*!< The internal low pass filter for the reference voltage is
+                                                                disabled (reference voltage is unfiltered and has faster
+                                                                settling time)*/
+  #define SAADC_CH_CONFIG_VREFPLPFDISABLE_Enabled (0x0UL) /*!< The internal low pass filter for the reference voltage is enabled
+                                                               (reference voltage is filtered)*/
 
-/* HIGHSPEED @Bit 4 : Use bootstrapped switches to enable high speed on input */
+/* HIGHSPEED @Bit 4 : Enable high speed inputs for the ADC, allowing the highest sampling bandwidth */
   #define SAADC_CH_CONFIG_HIGHSPEED_Pos (4UL)        /*!< Position of HIGHSPEED field.                                         */
   #define SAADC_CH_CONFIG_HIGHSPEED_Msk (0x1UL << SAADC_CH_CONFIG_HIGHSPEED_Pos) /*!< Bit mask of HIGHSPEED field.             */
   #define SAADC_CH_CONFIG_HIGHSPEED_Min (0x0UL)      /*!< Min enumerator value of HIGHSPEED field.                             */
   #define SAADC_CH_CONFIG_HIGHSPEED_Max (0x1UL)      /*!< Max enumerator value of HIGHSPEED field.                             */
-  #define SAADC_CH_CONFIG_HIGHSPEED_Disabled (0x0UL) /*!< High speed is disabled                                               */
-  #define SAADC_CH_CONFIG_HIGHSPEED_Enabled (0x1UL)  /*!< High speed is enabled                                                */
+  #define SAADC_CH_CONFIG_HIGHSPEED_Disabled (0x0UL) /*!< High speed inputs are disabled                                       */
+  #define SAADC_CH_CONFIG_HIGHSPEED_Enabled (0x1UL)  /*!< High speed inputs are enabled                                        */
 
 /* REFSEL @Bits 12..14 : Reference control */
   #define SAADC_CH_CONFIG_REFSEL_Pos (12UL)          /*!< Position of REFSEL field.                                            */
@@ -19243,7 +19666,6 @@ typedef struct {
   #define SAADC_CH_CONFIG_REFSEL_Max (0x3UL)         /*!< Max enumerator value of REFSEL field.                                */
   #define SAADC_CH_CONFIG_REFSEL_Internal (0x0UL)    /*!< Internal 1.024 V reference                                           */
   #define SAADC_CH_CONFIG_REFSEL_External (0x1UL)    /*!< External reference voltage                                           */
-  #define SAADC_CH_CONFIG_REFSEL_VddL (0x2UL)        /*!< Reference given at VDDL                                              */
   #define SAADC_CH_CONFIG_REFSEL_Vdd (0x3UL)         /*!< Reference given at VDD                                               */
 
 /* MODE @Bit 15 : Enable differential mode */
@@ -19356,16 +19778,16 @@ typedef struct {
     __IOM uint32_t EVENTS_RESULTDONE;                /*!< (@ 0x0000010C) A result is ready to get transferred to RAM.          */
     __IOM uint32_t EVENTS_CALIBRATEDONE;             /*!< (@ 0x00000110) Calibration is complete                               */
     __IOM uint32_t EVENTS_STOPPED;                   /*!< (@ 0x00000114) The ADC has stopped                                   */
-    __IOM NRF_SAADC_EVENTS_CH_Type EVENTS_CH[8];     /*!< (@ 0x00000118) Peripheral events.                                    */
-    __IM uint32_t RESERVED2[10];
+    __IOM NRF_SAADC_EVENTS_CH_Type EVENTS_CH[4];     /*!< (@ 0x00000118) Peripheral events.                                    */
+    __IM uint32_t RESERVED2[18];
     __IOM uint32_t PUBLISH_STARTED;                  /*!< (@ 0x00000180) Publish configuration for event STARTED               */
     __IOM uint32_t PUBLISH_END;                      /*!< (@ 0x00000184) Publish configuration for event END                   */
     __IOM uint32_t PUBLISH_DONE;                     /*!< (@ 0x00000188) Publish configuration for event DONE                  */
     __IOM uint32_t PUBLISH_RESULTDONE;               /*!< (@ 0x0000018C) Publish configuration for event RESULTDONE            */
     __IOM uint32_t PUBLISH_CALIBRATEDONE;            /*!< (@ 0x00000190) Publish configuration for event CALIBRATEDONE         */
     __IOM uint32_t PUBLISH_STOPPED;                  /*!< (@ 0x00000194) Publish configuration for event STOPPED               */
-    __IOM NRF_SAADC_PUBLISH_CH_Type PUBLISH_CH[8];   /*!< (@ 0x00000198) Publish configuration for events                      */
-    __IM uint32_t RESERVED3[74];
+    __IOM NRF_SAADC_PUBLISH_CH_Type PUBLISH_CH[4];   /*!< (@ 0x00000198) Publish configuration for events                      */
+    __IM uint32_t RESERVED3[82];
     __IOM uint32_t INTEN;                            /*!< (@ 0x00000300) Enable or disable interrupt                           */
     __IOM uint32_t INTENSET;                         /*!< (@ 0x00000304) Enable interrupt                                      */
     __IOM uint32_t INTENCLR;                         /*!< (@ 0x00000308) Disable interrupt                                     */
@@ -19374,8 +19796,8 @@ typedef struct {
     __IM uint32_t RESERVED5[63];
     __IOM uint32_t ENABLE;                           /*!< (@ 0x00000500) Enable or disable ADC                                 */
     __IM uint32_t RESERVED6[3];
-    __IOM NRF_SAADC_CH_Type CH[8];                   /*!< (@ 0x00000510) (unspecified)                                         */
-    __IM uint32_t RESERVED7[22];
+    __IOM NRF_SAADC_CH_Type CH[4];                   /*!< (@ 0x00000510) (unspecified)                                         */
+    __IM uint32_t RESERVED7[38];
     __IOM uint32_t BURST;                            /*!< (@ 0x000005E8) Enable burst mode                                     */
     __IM uint32_t RESERVED8;
     __IOM uint32_t RESOLUTION;                       /*!< (@ 0x000005F0) Resolution configuration                              */
@@ -19816,70 +20238,6 @@ typedef struct {
   #define SAADC_INTEN_CH3LIMITL_Disabled (0x0UL)     /*!< Disable                                                              */
   #define SAADC_INTEN_CH3LIMITL_Enabled (0x1UL)      /*!< Enable                                                               */
 
-/* CH4LIMITH @Bit 14 : Enable or disable interrupt for event CH4LIMITH */
-  #define SAADC_INTEN_CH4LIMITH_Pos (14UL)           /*!< Position of CH4LIMITH field.                                         */
-  #define SAADC_INTEN_CH4LIMITH_Msk (0x1UL << SAADC_INTEN_CH4LIMITH_Pos) /*!< Bit mask of CH4LIMITH field.                     */
-  #define SAADC_INTEN_CH4LIMITH_Min (0x0UL)          /*!< Min enumerator value of CH4LIMITH field.                             */
-  #define SAADC_INTEN_CH4LIMITH_Max (0x1UL)          /*!< Max enumerator value of CH4LIMITH field.                             */
-  #define SAADC_INTEN_CH4LIMITH_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH4LIMITH_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH4LIMITL @Bit 15 : Enable or disable interrupt for event CH4LIMITL */
-  #define SAADC_INTEN_CH4LIMITL_Pos (15UL)           /*!< Position of CH4LIMITL field.                                         */
-  #define SAADC_INTEN_CH4LIMITL_Msk (0x1UL << SAADC_INTEN_CH4LIMITL_Pos) /*!< Bit mask of CH4LIMITL field.                     */
-  #define SAADC_INTEN_CH4LIMITL_Min (0x0UL)          /*!< Min enumerator value of CH4LIMITL field.                             */
-  #define SAADC_INTEN_CH4LIMITL_Max (0x1UL)          /*!< Max enumerator value of CH4LIMITL field.                             */
-  #define SAADC_INTEN_CH4LIMITL_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH4LIMITL_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH5LIMITH @Bit 16 : Enable or disable interrupt for event CH5LIMITH */
-  #define SAADC_INTEN_CH5LIMITH_Pos (16UL)           /*!< Position of CH5LIMITH field.                                         */
-  #define SAADC_INTEN_CH5LIMITH_Msk (0x1UL << SAADC_INTEN_CH5LIMITH_Pos) /*!< Bit mask of CH5LIMITH field.                     */
-  #define SAADC_INTEN_CH5LIMITH_Min (0x0UL)          /*!< Min enumerator value of CH5LIMITH field.                             */
-  #define SAADC_INTEN_CH5LIMITH_Max (0x1UL)          /*!< Max enumerator value of CH5LIMITH field.                             */
-  #define SAADC_INTEN_CH5LIMITH_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH5LIMITH_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH5LIMITL @Bit 17 : Enable or disable interrupt for event CH5LIMITL */
-  #define SAADC_INTEN_CH5LIMITL_Pos (17UL)           /*!< Position of CH5LIMITL field.                                         */
-  #define SAADC_INTEN_CH5LIMITL_Msk (0x1UL << SAADC_INTEN_CH5LIMITL_Pos) /*!< Bit mask of CH5LIMITL field.                     */
-  #define SAADC_INTEN_CH5LIMITL_Min (0x0UL)          /*!< Min enumerator value of CH5LIMITL field.                             */
-  #define SAADC_INTEN_CH5LIMITL_Max (0x1UL)          /*!< Max enumerator value of CH5LIMITL field.                             */
-  #define SAADC_INTEN_CH5LIMITL_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH5LIMITL_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH6LIMITH @Bit 18 : Enable or disable interrupt for event CH6LIMITH */
-  #define SAADC_INTEN_CH6LIMITH_Pos (18UL)           /*!< Position of CH6LIMITH field.                                         */
-  #define SAADC_INTEN_CH6LIMITH_Msk (0x1UL << SAADC_INTEN_CH6LIMITH_Pos) /*!< Bit mask of CH6LIMITH field.                     */
-  #define SAADC_INTEN_CH6LIMITH_Min (0x0UL)          /*!< Min enumerator value of CH6LIMITH field.                             */
-  #define SAADC_INTEN_CH6LIMITH_Max (0x1UL)          /*!< Max enumerator value of CH6LIMITH field.                             */
-  #define SAADC_INTEN_CH6LIMITH_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH6LIMITH_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH6LIMITL @Bit 19 : Enable or disable interrupt for event CH6LIMITL */
-  #define SAADC_INTEN_CH6LIMITL_Pos (19UL)           /*!< Position of CH6LIMITL field.                                         */
-  #define SAADC_INTEN_CH6LIMITL_Msk (0x1UL << SAADC_INTEN_CH6LIMITL_Pos) /*!< Bit mask of CH6LIMITL field.                     */
-  #define SAADC_INTEN_CH6LIMITL_Min (0x0UL)          /*!< Min enumerator value of CH6LIMITL field.                             */
-  #define SAADC_INTEN_CH6LIMITL_Max (0x1UL)          /*!< Max enumerator value of CH6LIMITL field.                             */
-  #define SAADC_INTEN_CH6LIMITL_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH6LIMITL_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH7LIMITH @Bit 20 : Enable or disable interrupt for event CH7LIMITH */
-  #define SAADC_INTEN_CH7LIMITH_Pos (20UL)           /*!< Position of CH7LIMITH field.                                         */
-  #define SAADC_INTEN_CH7LIMITH_Msk (0x1UL << SAADC_INTEN_CH7LIMITH_Pos) /*!< Bit mask of CH7LIMITH field.                     */
-  #define SAADC_INTEN_CH7LIMITH_Min (0x0UL)          /*!< Min enumerator value of CH7LIMITH field.                             */
-  #define SAADC_INTEN_CH7LIMITH_Max (0x1UL)          /*!< Max enumerator value of CH7LIMITH field.                             */
-  #define SAADC_INTEN_CH7LIMITH_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH7LIMITH_Enabled (0x1UL)      /*!< Enable                                                               */
-
-/* CH7LIMITL @Bit 21 : Enable or disable interrupt for event CH7LIMITL */
-  #define SAADC_INTEN_CH7LIMITL_Pos (21UL)           /*!< Position of CH7LIMITL field.                                         */
-  #define SAADC_INTEN_CH7LIMITL_Msk (0x1UL << SAADC_INTEN_CH7LIMITL_Pos) /*!< Bit mask of CH7LIMITL field.                     */
-  #define SAADC_INTEN_CH7LIMITL_Min (0x0UL)          /*!< Min enumerator value of CH7LIMITL field.                             */
-  #define SAADC_INTEN_CH7LIMITL_Max (0x1UL)          /*!< Max enumerator value of CH7LIMITL field.                             */
-  #define SAADC_INTEN_CH7LIMITL_Disabled (0x0UL)     /*!< Disable                                                              */
-  #define SAADC_INTEN_CH7LIMITL_Enabled (0x1UL)      /*!< Enable                                                               */
-
 
 /* SAADC_INTENSET: Enable interrupt */
   #define SAADC_INTENSET_ResetValue (0x00000000UL)   /*!< Reset value of INTENSET register.                                    */
@@ -20010,78 +20368,6 @@ typedef struct {
   #define SAADC_INTENSET_CH3LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
   #define SAADC_INTENSET_CH3LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
 
-/* CH4LIMITH @Bit 14 : Write '1' to enable interrupt for event CH4LIMITH */
-  #define SAADC_INTENSET_CH4LIMITH_Pos (14UL)        /*!< Position of CH4LIMITH field.                                         */
-  #define SAADC_INTENSET_CH4LIMITH_Msk (0x1UL << SAADC_INTENSET_CH4LIMITH_Pos) /*!< Bit mask of CH4LIMITH field.               */
-  #define SAADC_INTENSET_CH4LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH4LIMITH field.                             */
-  #define SAADC_INTENSET_CH4LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH4LIMITH field.                             */
-  #define SAADC_INTENSET_CH4LIMITH_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH4LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH4LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH4LIMITL @Bit 15 : Write '1' to enable interrupt for event CH4LIMITL */
-  #define SAADC_INTENSET_CH4LIMITL_Pos (15UL)        /*!< Position of CH4LIMITL field.                                         */
-  #define SAADC_INTENSET_CH4LIMITL_Msk (0x1UL << SAADC_INTENSET_CH4LIMITL_Pos) /*!< Bit mask of CH4LIMITL field.               */
-  #define SAADC_INTENSET_CH4LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH4LIMITL field.                             */
-  #define SAADC_INTENSET_CH4LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH4LIMITL field.                             */
-  #define SAADC_INTENSET_CH4LIMITL_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH4LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH4LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH5LIMITH @Bit 16 : Write '1' to enable interrupt for event CH5LIMITH */
-  #define SAADC_INTENSET_CH5LIMITH_Pos (16UL)        /*!< Position of CH5LIMITH field.                                         */
-  #define SAADC_INTENSET_CH5LIMITH_Msk (0x1UL << SAADC_INTENSET_CH5LIMITH_Pos) /*!< Bit mask of CH5LIMITH field.               */
-  #define SAADC_INTENSET_CH5LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH5LIMITH field.                             */
-  #define SAADC_INTENSET_CH5LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH5LIMITH field.                             */
-  #define SAADC_INTENSET_CH5LIMITH_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH5LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH5LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH5LIMITL @Bit 17 : Write '1' to enable interrupt for event CH5LIMITL */
-  #define SAADC_INTENSET_CH5LIMITL_Pos (17UL)        /*!< Position of CH5LIMITL field.                                         */
-  #define SAADC_INTENSET_CH5LIMITL_Msk (0x1UL << SAADC_INTENSET_CH5LIMITL_Pos) /*!< Bit mask of CH5LIMITL field.               */
-  #define SAADC_INTENSET_CH5LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH5LIMITL field.                             */
-  #define SAADC_INTENSET_CH5LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH5LIMITL field.                             */
-  #define SAADC_INTENSET_CH5LIMITL_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH5LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH5LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH6LIMITH @Bit 18 : Write '1' to enable interrupt for event CH6LIMITH */
-  #define SAADC_INTENSET_CH6LIMITH_Pos (18UL)        /*!< Position of CH6LIMITH field.                                         */
-  #define SAADC_INTENSET_CH6LIMITH_Msk (0x1UL << SAADC_INTENSET_CH6LIMITH_Pos) /*!< Bit mask of CH6LIMITH field.               */
-  #define SAADC_INTENSET_CH6LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH6LIMITH field.                             */
-  #define SAADC_INTENSET_CH6LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH6LIMITH field.                             */
-  #define SAADC_INTENSET_CH6LIMITH_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH6LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH6LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH6LIMITL @Bit 19 : Write '1' to enable interrupt for event CH6LIMITL */
-  #define SAADC_INTENSET_CH6LIMITL_Pos (19UL)        /*!< Position of CH6LIMITL field.                                         */
-  #define SAADC_INTENSET_CH6LIMITL_Msk (0x1UL << SAADC_INTENSET_CH6LIMITL_Pos) /*!< Bit mask of CH6LIMITL field.               */
-  #define SAADC_INTENSET_CH6LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH6LIMITL field.                             */
-  #define SAADC_INTENSET_CH6LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH6LIMITL field.                             */
-  #define SAADC_INTENSET_CH6LIMITL_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH6LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH6LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH7LIMITH @Bit 20 : Write '1' to enable interrupt for event CH7LIMITH */
-  #define SAADC_INTENSET_CH7LIMITH_Pos (20UL)        /*!< Position of CH7LIMITH field.                                         */
-  #define SAADC_INTENSET_CH7LIMITH_Msk (0x1UL << SAADC_INTENSET_CH7LIMITH_Pos) /*!< Bit mask of CH7LIMITH field.               */
-  #define SAADC_INTENSET_CH7LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH7LIMITH field.                             */
-  #define SAADC_INTENSET_CH7LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH7LIMITH field.                             */
-  #define SAADC_INTENSET_CH7LIMITH_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH7LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH7LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH7LIMITL @Bit 21 : Write '1' to enable interrupt for event CH7LIMITL */
-  #define SAADC_INTENSET_CH7LIMITL_Pos (21UL)        /*!< Position of CH7LIMITL field.                                         */
-  #define SAADC_INTENSET_CH7LIMITL_Msk (0x1UL << SAADC_INTENSET_CH7LIMITL_Pos) /*!< Bit mask of CH7LIMITL field.               */
-  #define SAADC_INTENSET_CH7LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH7LIMITL field.                             */
-  #define SAADC_INTENSET_CH7LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH7LIMITL field.                             */
-  #define SAADC_INTENSET_CH7LIMITL_Set (0x1UL)       /*!< Enable                                                               */
-  #define SAADC_INTENSET_CH7LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENSET_CH7LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
 
 /* SAADC_INTENCLR: Disable interrupt */
   #define SAADC_INTENCLR_ResetValue (0x00000000UL)   /*!< Reset value of INTENCLR register.                                    */
@@ -20211,78 +20497,6 @@ typedef struct {
   #define SAADC_INTENCLR_CH3LIMITL_Clear (0x1UL)     /*!< Disable                                                              */
   #define SAADC_INTENCLR_CH3LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
   #define SAADC_INTENCLR_CH3LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH4LIMITH @Bit 14 : Write '1' to disable interrupt for event CH4LIMITH */
-  #define SAADC_INTENCLR_CH4LIMITH_Pos (14UL)        /*!< Position of CH4LIMITH field.                                         */
-  #define SAADC_INTENCLR_CH4LIMITH_Msk (0x1UL << SAADC_INTENCLR_CH4LIMITH_Pos) /*!< Bit mask of CH4LIMITH field.               */
-  #define SAADC_INTENCLR_CH4LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH4LIMITH field.                             */
-  #define SAADC_INTENCLR_CH4LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH4LIMITH field.                             */
-  #define SAADC_INTENCLR_CH4LIMITH_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH4LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH4LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH4LIMITL @Bit 15 : Write '1' to disable interrupt for event CH4LIMITL */
-  #define SAADC_INTENCLR_CH4LIMITL_Pos (15UL)        /*!< Position of CH4LIMITL field.                                         */
-  #define SAADC_INTENCLR_CH4LIMITL_Msk (0x1UL << SAADC_INTENCLR_CH4LIMITL_Pos) /*!< Bit mask of CH4LIMITL field.               */
-  #define SAADC_INTENCLR_CH4LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH4LIMITL field.                             */
-  #define SAADC_INTENCLR_CH4LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH4LIMITL field.                             */
-  #define SAADC_INTENCLR_CH4LIMITL_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH4LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH4LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH5LIMITH @Bit 16 : Write '1' to disable interrupt for event CH5LIMITH */
-  #define SAADC_INTENCLR_CH5LIMITH_Pos (16UL)        /*!< Position of CH5LIMITH field.                                         */
-  #define SAADC_INTENCLR_CH5LIMITH_Msk (0x1UL << SAADC_INTENCLR_CH5LIMITH_Pos) /*!< Bit mask of CH5LIMITH field.               */
-  #define SAADC_INTENCLR_CH5LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH5LIMITH field.                             */
-  #define SAADC_INTENCLR_CH5LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH5LIMITH field.                             */
-  #define SAADC_INTENCLR_CH5LIMITH_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH5LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH5LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH5LIMITL @Bit 17 : Write '1' to disable interrupt for event CH5LIMITL */
-  #define SAADC_INTENCLR_CH5LIMITL_Pos (17UL)        /*!< Position of CH5LIMITL field.                                         */
-  #define SAADC_INTENCLR_CH5LIMITL_Msk (0x1UL << SAADC_INTENCLR_CH5LIMITL_Pos) /*!< Bit mask of CH5LIMITL field.               */
-  #define SAADC_INTENCLR_CH5LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH5LIMITL field.                             */
-  #define SAADC_INTENCLR_CH5LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH5LIMITL field.                             */
-  #define SAADC_INTENCLR_CH5LIMITL_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH5LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH5LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH6LIMITH @Bit 18 : Write '1' to disable interrupt for event CH6LIMITH */
-  #define SAADC_INTENCLR_CH6LIMITH_Pos (18UL)        /*!< Position of CH6LIMITH field.                                         */
-  #define SAADC_INTENCLR_CH6LIMITH_Msk (0x1UL << SAADC_INTENCLR_CH6LIMITH_Pos) /*!< Bit mask of CH6LIMITH field.               */
-  #define SAADC_INTENCLR_CH6LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH6LIMITH field.                             */
-  #define SAADC_INTENCLR_CH6LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH6LIMITH field.                             */
-  #define SAADC_INTENCLR_CH6LIMITH_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH6LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH6LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH6LIMITL @Bit 19 : Write '1' to disable interrupt for event CH6LIMITL */
-  #define SAADC_INTENCLR_CH6LIMITL_Pos (19UL)        /*!< Position of CH6LIMITL field.                                         */
-  #define SAADC_INTENCLR_CH6LIMITL_Msk (0x1UL << SAADC_INTENCLR_CH6LIMITL_Pos) /*!< Bit mask of CH6LIMITL field.               */
-  #define SAADC_INTENCLR_CH6LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH6LIMITL field.                             */
-  #define SAADC_INTENCLR_CH6LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH6LIMITL field.                             */
-  #define SAADC_INTENCLR_CH6LIMITL_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH6LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH6LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH7LIMITH @Bit 20 : Write '1' to disable interrupt for event CH7LIMITH */
-  #define SAADC_INTENCLR_CH7LIMITH_Pos (20UL)        /*!< Position of CH7LIMITH field.                                         */
-  #define SAADC_INTENCLR_CH7LIMITH_Msk (0x1UL << SAADC_INTENCLR_CH7LIMITH_Pos) /*!< Bit mask of CH7LIMITH field.               */
-  #define SAADC_INTENCLR_CH7LIMITH_Min (0x0UL)       /*!< Min enumerator value of CH7LIMITH field.                             */
-  #define SAADC_INTENCLR_CH7LIMITH_Max (0x1UL)       /*!< Max enumerator value of CH7LIMITH field.                             */
-  #define SAADC_INTENCLR_CH7LIMITH_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH7LIMITH_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH7LIMITH_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
-
-/* CH7LIMITL @Bit 21 : Write '1' to disable interrupt for event CH7LIMITL */
-  #define SAADC_INTENCLR_CH7LIMITL_Pos (21UL)        /*!< Position of CH7LIMITL field.                                         */
-  #define SAADC_INTENCLR_CH7LIMITL_Msk (0x1UL << SAADC_INTENCLR_CH7LIMITL_Pos) /*!< Bit mask of CH7LIMITL field.               */
-  #define SAADC_INTENCLR_CH7LIMITL_Min (0x0UL)       /*!< Min enumerator value of CH7LIMITL field.                             */
-  #define SAADC_INTENCLR_CH7LIMITL_Max (0x1UL)       /*!< Max enumerator value of CH7LIMITL field.                             */
-  #define SAADC_INTENCLR_CH7LIMITL_Clear (0x1UL)     /*!< Disable                                                              */
-  #define SAADC_INTENCLR_CH7LIMITL_Disabled (0x0UL)  /*!< Read: Disabled                                                       */
-  #define SAADC_INTENCLR_CH7LIMITL_Enabled (0x1UL)   /*!< Read: Enabled                                                        */
 
 
 /* SAADC_STATUS: Status */
@@ -23668,6 +23882,67 @@ typedef struct {
   #define TAMPC_PROTECT_AP_MinIndex (0UL)            /*!< Min index of AP[1] array.                                            */
 
 
+/* ============================================== Struct TAMPC_PROTECT_GPIOSWD =============================================== */
+/**
+  * @brief GPIOSWD [TAMPC_PROTECT_GPIOSWD] Enable GPIO functionality on SWD pins.
+  */
+typedef struct {
+  __IOM uint32_t  CTRL;                              /*!< (@ 0x00000000) Control register for activating GPIO functionality.   */
+  __IOM uint32_t  STATUS;                            /*!< (@ 0x00000004) Status register for active shield detector enable
+                                                                         signal.*/
+} NRF_TAMPC_PROTECT_GPIOSWD_Type;                    /*!< Size = 8 (0x008)                                                     */
+
+/* TAMPC_PROTECT_GPIOSWD_CTRL: Control register for activating GPIO functionality. */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_ResetValue (0x00000010UL) /*!< Reset value of CTRL register.                              */
+
+/* VALUE @Bit 0 : Activate GPIO functionality. */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Pos (0UL) /*!< Position of VALUE field.                                             */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Msk (0x1UL << TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Pos) /*!< Bit mask of VALUE field.   */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Min (0x0UL) /*!< Min enumerator value of VALUE field.                               */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Max (0x1UL) /*!< Max enumerator value of VALUE field.                               */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Low (0x0UL) /*!< SWD pins have SWD functionality.                                   */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_High (0x1UL) /*!< SWD pins are re-purposed as GPIO pins.                            */
+
+/* LOCK @Bit 1 : Lock this register to prevent changes to the VALUE field until next reset. */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Pos (1UL)  /*!< Position of LOCK field.                                              */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Msk (0x1UL << TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Pos) /*!< Bit mask of LOCK field.      */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Min (0x0UL) /*!< Min enumerator value of LOCK field.                                 */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Max (0x1UL) /*!< Max enumerator value of LOCK field.                                 */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Disabled (0x0UL) /*!< Lock disabled.                                                 */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Enabled (0x1UL) /*!< Lock enabled.                                                   */
+
+/* WRITEPROTECTION @Bits 4..7 : The write protection must be cleared to allow updates to the VALUE field. */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Pos (4UL) /*!< Position of WRITEPROTECTION field.                         */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Msk (0xFUL << TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Pos) /*!< Bit mask
+                                                                            of WRITEPROTECTION field.*/
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Min (0x0UL) /*!< Min enumerator value of WRITEPROTECTION field.           */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Max (0xFUL) /*!< Max enumerator value of WRITEPROTECTION field.           */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Disabled (0x0UL) /*!< Read: Write protection is disabled.                 */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Enabled (0x1UL) /*!< Read: Write protection is enabled.                   */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Clear (0xFUL) /*!< Write: Value to clear write protection.                */
+
+/* KEY @Bits 16..31 : Required write key for upper 16 bits. Must be included in all register write operations. */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Pos (16UL)  /*!< Position of KEY field.                                               */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Msk (0xFFFFUL << TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Pos) /*!< Bit mask of KEY field.      */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Min (0x50FAUL) /*!< Min enumerator value of KEY field.                                */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Max (0x50FAUL) /*!< Max enumerator value of KEY field.                                */
+  #define TAMPC_PROTECT_GPIOSWD_CTRL_KEY_KEY (0x50FAUL) /*!< Write key value.                                                  */
+
+
+/* TAMPC_PROTECT_GPIOSWD_STATUS: Status register for active shield detector enable signal. */
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ResetValue (0x00000000UL) /*!< Reset value of STATUS register.                          */
+
+/* ERROR @Bit 0 : Error detection status. */
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_Pos (0UL) /*!< Position of ERROR field.                                           */
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_Msk (0x1UL << TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_Pos) /*!< Bit mask of ERROR
+                                                                            field.*/
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_Min (0x0UL) /*!< Min enumerator value of ERROR field.                             */
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_Max (0x1UL) /*!< Max enumerator value of ERROR field.                             */
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_NoError (0x0UL) /*!< No error detected.                                           */
+  #define TAMPC_PROTECT_GPIOSWD_STATUS_ERROR_Error (0x1UL) /*!< Error detected.                                                */
+
+
+
 /* ========================================== Struct TAMPC_PROTECT_GLITCHSLOWDOMAIN ========================================== */
 /**
   * @brief GLITCHSLOWDOMAIN [TAMPC_PROTECT_GLITCHSLOWDOMAIN] Enable slow domain glitch detectors.
@@ -23934,10 +24209,12 @@ typedef struct {
   __IOM NRF_TAMPC_PROTECT_DOMAIN_Type DOMAIN[1];     /*!< (@ 0x00000000) (unspecified)                                         */
   __IM  uint32_t  RESERVED[120];
   __IOM NRF_TAMPC_PROTECT_AP_Type AP[1];             /*!< (@ 0x00000200) (unspecified)                                         */
-  __IM  uint32_t  RESERVED1[140];
+  __IM  uint32_t  RESERVED1[90];
+  __IOM NRF_TAMPC_PROTECT_GPIOSWD_Type GPIOSWD;      /*!< (@ 0x00000378) Enable GPIO functionality on SWD pins.                */
+  __IM  uint32_t  RESERVED2[48];
   __IOM NRF_TAMPC_PROTECT_GLITCHSLOWDOMAIN_Type GLITCHSLOWDOMAIN; /*!< (@ 0x00000440) Enable slow domain glitch detectors.     */
   __IOM NRF_TAMPC_PROTECT_GLITCHFASTDOMAIN_Type GLITCHFASTDOMAIN; /*!< (@ 0x00000448) Enable fast domain glitch detectors.     */
-  __IM  uint32_t  RESERVED2[10];
+  __IM  uint32_t  RESERVED3[10];
   __IOM NRF_TAMPC_PROTECT_INTRESETEN_Type INTRESETEN; /*!< (@ 0x00000478) Trigger a reset when tamper is detected by the glitch
                                                                           detectors, signal protector or CRACEN tamper
                                                                           detector.*/
@@ -24084,14 +24361,6 @@ typedef struct {
   #define TAMPC_STATUS_PROTECT_Max (0x1UL)           /*!< Max enumerator value of PROTECT field.                               */
   #define TAMPC_STATUS_PROTECT_NotDetected (0x0UL)   /*!< Not detected.                                                        */
   #define TAMPC_STATUS_PROTECT_Detected (0x1UL)      /*!< Detected.                                                            */
-
-/* CRACENTAMP @Bit 5 : CRACEN detected an error. */
-  #define TAMPC_STATUS_CRACENTAMP_Pos (5UL)          /*!< Position of CRACENTAMP field.                                        */
-  #define TAMPC_STATUS_CRACENTAMP_Msk (0x1UL << TAMPC_STATUS_CRACENTAMP_Pos) /*!< Bit mask of CRACENTAMP field.                */
-  #define TAMPC_STATUS_CRACENTAMP_Min (0x0UL)        /*!< Min enumerator value of CRACENTAMP field.                            */
-  #define TAMPC_STATUS_CRACENTAMP_Max (0x1UL)        /*!< Max enumerator value of CRACENTAMP field.                            */
-  #define TAMPC_STATUS_CRACENTAMP_NotDetected (0x0UL) /*!< Not detected.                                                       */
-  #define TAMPC_STATUS_CRACENTAMP_Detected (0x1UL)   /*!< Detected.                                                            */
 
 /* GLITCHSLOWDOMAIN0 @Bit 8 : Slow domain glitch detector 0 detected an error. */
   #define TAMPC_STATUS_GLITCHSLOWDOMAIN0_Pos (8UL)   /*!< Position of GLITCHSLOWDOMAIN0 field.                                 */
@@ -26911,8 +27180,8 @@ typedef struct {
 /* FREQUENCY @Bits 0..31 : TWI master clock frequency */
   #define TWIM_FREQUENCY_FREQUENCY_Pos (0UL)         /*!< Position of FREQUENCY field.                                         */
   #define TWIM_FREQUENCY_FREQUENCY_Msk (0xFFFFFFFFUL << TWIM_FREQUENCY_FREQUENCY_Pos) /*!< Bit mask of FREQUENCY field.        */
-  #define TWIM_FREQUENCY_FREQUENCY_Min (0x1980000UL) /*!< Min enumerator value of FREQUENCY field.                             */
-  #define TWIM_FREQUENCY_FREQUENCY_Max (0xFF00000UL) /*!< Max enumerator value of FREQUENCY field.                             */
+  #define TWIM_FREQUENCY_FREQUENCY_Min (0x01980000UL) /*!< Min enumerator value of FREQUENCY field.                            */
+  #define TWIM_FREQUENCY_FREQUENCY_Max (0x0FF00000UL) /*!< Max enumerator value of FREQUENCY field.                            */
   #define TWIM_FREQUENCY_FREQUENCY_K100 (0x01980000UL) /*!< 100 kbps                                                           */
   #define TWIM_FREQUENCY_FREQUENCY_K250 (0x04000000UL) /*!< 250 kbps                                                           */
   #define TWIM_FREQUENCY_FREQUENCY_K400 (0x06400000UL) /*!< 400 kbps                                                           */
@@ -28861,7 +29130,7 @@ typedef struct {
   * @brief RX [UARTE_EVENTS_DMA_RX] Peripheral events.
   */
 typedef struct {
-  __IOM uint32_t  END;                               /*!< (@ 0x00000000) Generated after all MAXCNT bytes have been transferred*/
+  __IOM uint32_t  END;                               /*!< (@ 0x00000000) Generated after EasyDMA has completed its operation.  */
   __IOM uint32_t  READY;                             /*!< (@ 0x00000004) Generated when EasyDMA has buffered the .PTR and
                                                                          .MAXCNT registers for the channel, allowing them to be
                                                                          written to prepare for the next sequence.*/
@@ -28869,10 +29138,10 @@ typedef struct {
   __IOM uint32_t  MATCH[4];                          /*!< (@ 0x0000000C) Pattern match is detected on the DMA data bus.        */
 } NRF_UARTE_EVENTS_DMA_RX_Type;                      /*!< Size = 28 (0x01C)                                                    */
 
-/* UARTE_EVENTS_DMA_RX_END: Generated after all MAXCNT bytes have been transferred */
+/* UARTE_EVENTS_DMA_RX_END: Generated after EasyDMA has completed its operation. */
   #define UARTE_EVENTS_DMA_RX_END_ResetValue (0x00000000UL) /*!< Reset value of END register.                                  */
 
-/* END @Bit 0 : Generated after all MAXCNT bytes have been transferred */
+/* END @Bit 0 : Generated after EasyDMA has completed its operation. */
   #define UARTE_EVENTS_DMA_RX_END_END_Pos (0UL)      /*!< Position of END field.                                               */
   #define UARTE_EVENTS_DMA_RX_END_END_Msk (0x1UL << UARTE_EVENTS_DMA_RX_END_END_Pos) /*!< Bit mask of END field.               */
   #define UARTE_EVENTS_DMA_RX_END_END_Min (0x0UL)    /*!< Min enumerator value of END field.                                   */
@@ -28931,17 +29200,17 @@ typedef struct {
   * @brief TX [UARTE_EVENTS_DMA_TX] Peripheral events.
   */
 typedef struct {
-  __IOM uint32_t  END;                               /*!< (@ 0x00000000) Generated after all MAXCNT bytes have been transferred*/
+  __IOM uint32_t  END;                               /*!< (@ 0x00000000) Generated after EasyDMA has completed its operation.  */
   __IOM uint32_t  READY;                             /*!< (@ 0x00000004) Generated when EasyDMA has buffered the .PTR and
                                                                          .MAXCNT registers for the channel, allowing them to be
                                                                          written to prepare for the next sequence.*/
   __IOM uint32_t  BUSERROR;                          /*!< (@ 0x00000008) An error occured during the bus transfer.             */
 } NRF_UARTE_EVENTS_DMA_TX_Type;                      /*!< Size = 12 (0x00C)                                                    */
 
-/* UARTE_EVENTS_DMA_TX_END: Generated after all MAXCNT bytes have been transferred */
+/* UARTE_EVENTS_DMA_TX_END: Generated after EasyDMA has completed its operation. */
   #define UARTE_EVENTS_DMA_TX_END_ResetValue (0x00000000UL) /*!< Reset value of END register.                                  */
 
-/* END @Bit 0 : Generated after all MAXCNT bytes have been transferred */
+/* END @Bit 0 : Generated after EasyDMA has completed its operation. */
   #define UARTE_EVENTS_DMA_TX_END_END_Pos (0UL)      /*!< Position of END field.                                               */
   #define UARTE_EVENTS_DMA_TX_END_END_Msk (0x1UL << UARTE_EVENTS_DMA_TX_END_END_Pos) /*!< Bit mask of END field.               */
   #define UARTE_EVENTS_DMA_TX_END_END_Min (0x0UL)    /*!< Min enumerator value of END field.                                   */
@@ -30535,7 +30804,7 @@ typedef struct {
 /* BAUDRATE @Bits 0..31 : Baud rate */
   #define UARTE_BAUDRATE_BAUDRATE_Pos (0UL)          /*!< Position of BAUDRATE field.                                          */
   #define UARTE_BAUDRATE_BAUDRATE_Msk (0xFFFFFFFFUL << UARTE_BAUDRATE_BAUDRATE_Pos) /*!< Bit mask of BAUDRATE field.           */
-  #define UARTE_BAUDRATE_BAUDRATE_Min (0x4F000UL)    /*!< Min enumerator value of BAUDRATE field.                              */
+  #define UARTE_BAUDRATE_BAUDRATE_Min (0x0004F000UL) /*!< Min enumerator value of BAUDRATE field.                              */
   #define UARTE_BAUDRATE_BAUDRATE_Max (0x10000000UL) /*!< Max enumerator value of BAUDRATE field.                              */
   #define UARTE_BAUDRATE_BAUDRATE_Baud1200 (0x0004F000UL) /*!< 1200 baud (actual rate: 1205) when UARTE has 16 MHz peripheral
                                                                clock frequency*/
@@ -30706,9 +30975,9 @@ typedef struct {
   */
 typedef struct {
   __IOM uint32_t  PROTECT0;                          /*!< (@ 0x00000000) Erase protection                                      */
-  __IM  uint32_t  RESERVED[6];
-  __IOM uint32_t  PROTECT1;                          /*!< (@ 0x0000001C) Erase protection                                      */
-} NRF_UICR_ERASEPROTECT_Type;                        /*!< Size = 32 (0x020)                                                    */
+  __IM  uint32_t  RESERVED[2];
+  __IOM uint32_t  PROTECT1;                          /*!< (@ 0x0000000C) Erase protection                                      */
+} NRF_UICR_ERASEPROTECT_Type;                        /*!< Size = 16 (0x010)                                                    */
   #define UICR_ERASEPROTECT_MaxCount (1UL)           /*!< Size of ERASEPROTECT[1] array.                                       */
   #define UICR_ERASEPROTECT_MaxIndex (0UL)           /*!< Max index of ERASEPROTECT[1] array.                                  */
   #define UICR_ERASEPROTECT_MinIndex (0UL)           /*!< Min index of ERASEPROTECT[1] array.                                  */
@@ -30852,10 +31121,11 @@ typedef struct {
     __IOM NRF_UICR_APPROTECT_Type APPROTECT[1];      /*!< (@ 0x00000000) Access Port Protection Registers                      */
     __IM uint32_t RESERVED[20];
     __IOM NRF_UICR_ERASEPROTECT_Type ERASEPROTECT[1]; /*!< (@ 0x00000060) Erase Protection Registers                           */
+    __IM uint32_t RESERVED1[4];
     __IOM uint32_t BOOTCONF;                         /*!< (@ 0x00000080) Immutable boot region configuration.                  */
-    __IM uint32_t RESERVED1[95];
+    __IM uint32_t RESERVED2[95];
     __IOM NRF_UICR_USER_Type USER;                   /*!< (@ 0x00000200) (unspecified)                                         */
-    __IM uint32_t RESERVED2[104];
+    __IM uint32_t RESERVED3[104];
     __IOM uint32_t OTP[320];                         /*!< (@ 0x00000500) One time programmable memory                          */
   } NRF_UICR_Type;                                   /*!< Size = 2560 (0xA00)                                                  */
 
@@ -30885,14 +31155,6 @@ typedef struct {
   #define UICR_BOOTCONF_EXECUTE_Max (0x1UL)          /*!< Max enumerator value of EXECUTE field.                               */
   #define UICR_BOOTCONF_EXECUTE_NotAllowed (0x0UL)   /*!< Executing code from the region is not allowed                        */
   #define UICR_BOOTCONF_EXECUTE_Allowed (0x1UL)      /*!< Executing code from the region is allowed                            */
-
-/* SECURE @Bit 3 : Secure access */
-  #define UICR_BOOTCONF_SECURE_Pos (3UL)             /*!< Position of SECURE field.                                            */
-  #define UICR_BOOTCONF_SECURE_Msk (0x1UL << UICR_BOOTCONF_SECURE_Pos) /*!< Bit mask of SECURE field.                          */
-  #define UICR_BOOTCONF_SECURE_Min (0x0UL)           /*!< Min enumerator value of SECURE field.                                */
-  #define UICR_BOOTCONF_SECURE_Max (0x1UL)           /*!< Max enumerator value of SECURE field.                                */
-  #define UICR_BOOTCONF_SECURE_NonSecure (0x0UL)     /*!< Both secure and non-secure access to region is allowed               */
-  #define UICR_BOOTCONF_SECURE_Secure (0x1UL)        /*!< Only secure access to region is allowed                              */
 
 /* WRITEONCE @Bit 12 : Write-once */
   #define UICR_BOOTCONF_WRITEONCE_Pos (12UL)         /*!< Position of WRITEONCE field.                                         */
@@ -30963,8 +31225,8 @@ typedef struct {
 /* ATTRIBUTE @Bits 24..29 : Job attribute. */
   #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Pos (24UL) /*!< Position of ATTRIBUTE field.                                         */
   #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Msk (0x3FUL << VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Pos) /*!< Bit mask of ATTRIBUTE field.*/
-  #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Min (0xBUL) /*!< Min enumerator value of ATTRIBUTE field.                            */
-  #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Max (0xEUL) /*!< Max enumerator value of ATTRIBUTE field.                            */
+  #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Min (0x0BUL) /*!< Min enumerator value of ATTRIBUTE field.                           */
+  #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_Max (0x0EUL) /*!< Max enumerator value of ATTRIBUTE field.                           */
   #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_AarHash (0x0BUL) /*!< Hash attribute                                                 */
   #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_AarPrand (0x0CUL) /*!< Prand attribute                                               */
   #define VDMADESCRIPTOR_CONFIG_ATTRIBUTE_AarIrk (0x0DUL) /*!< Irk attribute                                                   */

@@ -65,6 +65,8 @@ POSSIBILITY OF SUCH DAMAGE.
         #endif
     #endif
 
+    #define NRF_PROCESSOR_CELLCORE 4
+
     #define P0_PIN_NUM  P0_PIN_NUM_SIZE
     #define P1_PIN_NUM  P1_PIN_NUM_SIZE
     #define P2_PIN_NUM  P2_PIN_NUM_SIZE

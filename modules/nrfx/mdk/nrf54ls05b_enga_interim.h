@@ -37,8 +37,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #if defined(NRF54LS05B_ENGA_XXAA)
 
-    #define NRF_CRACEN    NRF_TRNG
-
     #define NRF_DOMAIN_COUNT NRF_DOMAIN_NONE + 1
 
     #define ADDRESS_BUS_Pos (18UL)
@@ -112,6 +110,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     #define ADDRESS_SLAVE_Pos         (12UL)
     #define ADDRESS_SLAVE_Msk         (0x3FUL << ADDRESS_SLAVE_Pos)
+
+    #if !defined(TAMPC_GPIOSWD)
+        #define TAMPC_GPIOSWD
+    #endif
 
 #endif
 

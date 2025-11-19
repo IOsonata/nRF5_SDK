@@ -73,7 +73,7 @@ typedef enum {
   CM33SS_IRQn                            = 84,       /*!< 84 CM33SS                                                            */
   TIMER00_IRQn                           = 85,       /*!< 85 TIMER00                                                           */
   EGU00_IRQn                             = 88,       /*!< 88 EGU00                                                             */
-  TRNG_IRQn                              = 89,       /*!< 89 TRNG                                                              */
+  CRACEN_IRQn                            = 89,       /*!< 89 CRACEN                                                            */
   TIMER10_IRQn                           = 133,      /*!< 133 TIMER10                                                          */
   EGU10_IRQn                             = 135,      /*!< 135 EGU10                                                            */
   RADIO_0_IRQn                           = 138,      /*!< 138 RADIO_0                                                          */
@@ -149,7 +149,7 @@ typedef enum {
 #define __DSP_PRESENT                  0             /*!< DSP present or not                                                   */
 #define __NVIC_PRIO_BITS               3             /*!< Number of Bits used for Priority Levels                              */
 #define __VTOR_PRESENT                 1             /*!< CPU supports alternate Vector Table address                          */
-#define __MPU_PRESENT                  0             /*!< MPU present                                                          */
+#define __MPU_PRESENT                  1             /*!< MPU present                                                          */
 #define __FPU_PRESENT                  0             /*!< FPU present                                                          */
 #define __FPU_DP                       0             /*!< Double Precision FPU                                                 */
 #define __INTERRUPTS_MAX             270             /*!< Size of interrupt vector table                                       */

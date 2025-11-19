@@ -341,7 +341,7 @@ void SystemInit(void)
     /* Configure GPIO pads as pPin Reset pin if Pin Reset capabilities desired. If CONFIG_GPIO_AS_PINRESET is not
       defined, pin reset will not be available. One GPIO (see Product Specification to see which one) will then be
       reserved for PinReset and not available as normal GPIO. */
-    #if defined (CONFIG_GPIO_AS_PINRESET)
+    #if (defined(CONFIG_GPIO_AS_PINRESET) || defined(NRF_CONFIG_GPIO_AS_PINRESET))
         if (((NRF_UICR->PSELRESET[0] & UICR_PSELRESET_CONNECT_Msk) != (UICR_PSELRESET_CONNECT_Connected << UICR_PSELRESET_CONNECT_Pos)) ||
             ((NRF_UICR->PSELRESET[1] & UICR_PSELRESET_CONNECT_Msk) != (UICR_PSELRESET_CONNECT_Connected << UICR_PSELRESET_CONNECT_Pos))){
             nvmc_config(NVMC_CONFIG_WEN_Wen);

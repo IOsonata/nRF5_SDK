@@ -222,7 +222,7 @@ _vectors:
   ISR_HANDLER   SPU00_IRQHandler
   ISR_HANDLER   MPC00_IRQHandler
   ISR_RESERVED_DUMMY                           /* Reserved */
-  ISR_RESERVED_DUMMY                           /* Reserved */
+  ISR_HANDLER   MPC03_IRQHandler
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */
@@ -459,7 +459,7 @@ _vectors:
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */
-  ISR_HANDLER   AUDIOPLL_AUDIOPLLM_IRQHandler
+  ISR_HANDLER   AUXPLL_AUXPM_IRQHandler
 _vectors_end:
 
 #ifdef VECTORS_IN_RAM

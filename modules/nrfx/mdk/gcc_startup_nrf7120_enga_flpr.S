@@ -306,8 +306,8 @@ __isr_vector:
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
-    .long   0                           /*Reserved */
     .long   VPRTIM_IRQHandler
+    .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
@@ -342,7 +342,7 @@ __isr_vector:
     .long   SPU00_IRQHandler
     .long   MPC00_IRQHandler
     .long   0                           /*Reserved */
-    .long   0                           /*Reserved */
+    .long   MPC03_IRQHandler
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
@@ -579,7 +579,7 @@ __isr_vector:
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
-    .long   AUDIOPLL_AUDIOPLLM_IRQHandler
+    .long   AUXPLL_AUXPM_IRQHandler
 
     .size __isr_vector, . - __isr_vector
 
@@ -680,6 +680,7 @@ Default_Handler:
     IRQ  VPRTIM_IRQHandler
     IRQ  SPU00_IRQHandler
     IRQ  MPC00_IRQHandler
+    IRQ  MPC03_IRQHandler
     IRQ  AAR00_CCM00_IRQHandler
     IRQ  ECB00_IRQHandler
     IRQ  VPR00_IRQHandler
@@ -747,6 +748,6 @@ Default_Handler:
     IRQ  LFXO_IRQHandler
     IRQ  LFRC_IRQHandler
     IRQ  HFXO64M_IRQHandler
-    IRQ  AUDIOPLL_AUDIOPLLM_IRQHandler
+    IRQ  AUXPLL_AUXPM_IRQHandler
 
   .end

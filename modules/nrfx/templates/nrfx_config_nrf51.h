@@ -605,15 +605,6 @@
 #endif
 
 /**
- * @brief NRFX_SPIS1_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS1_ENABLED
-#define NRFX_SPIS1_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_SYSTICK_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -704,33 +695,6 @@
  */
 #ifndef NRFX_TIMER_CONFIG_LOG_LEVEL
 #define NRFX_TIMER_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TIMER0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER0_ENABLED
-#define NRFX_TIMER0_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER1_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER1_ENABLED
-#define NRFX_TIMER1_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER2_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER2_ENABLED
-#define NRFX_TIMER2_ENABLED 0
 #endif
 
 /**

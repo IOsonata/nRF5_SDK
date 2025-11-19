@@ -118,8 +118,8 @@ __vector_table
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
-        DCD     0                         ; Reserved
         DCD     VPRTIM_IRQHandler
+        DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
@@ -154,7 +154,7 @@ __vector_table
         DCD     SPU00_IRQHandler
         DCD     MPC00_IRQHandler
         DCD     0                         ; Reserved
-        DCD     0                         ; Reserved
+        DCD     MPC03_IRQHandler
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
@@ -391,7 +391,7 @@ __vector_table
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
-        DCD     AUDIOPLL_AUDIOPLLM_IRQHandler
+        DCD     AUXPLL_AUXPM_IRQHandler
 
 __Vectors_End
 __Vectors                           EQU   __vector_table
@@ -510,6 +510,11 @@ SPU00_IRQHandler
         PUBWEAK  MPC00_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
 MPC00_IRQHandler
+        j .
+
+        PUBWEAK  MPC03_IRQHandler
+        SECTION .text:CODE:REORDER:NOROOT(1)
+MPC03_IRQHandler
         j .
 
         PUBWEAK  AAR00_CCM00_IRQHandler
@@ -847,9 +852,9 @@ LFRC_IRQHandler
 HFXO64M_IRQHandler
         j .
 
-        PUBWEAK  AUDIOPLL_AUDIOPLLM_IRQHandler
+        PUBWEAK  AUXPLL_AUXPM_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-AUDIOPLL_AUDIOPLLM_IRQHandler
+AUXPLL_AUXPM_IRQHandler
         j .
 
         END

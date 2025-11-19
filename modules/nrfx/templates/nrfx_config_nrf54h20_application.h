@@ -178,174 +178,6 @@
 #endif
 
 /**
- * @brief NRFX_DPPI120_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI120_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI120_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI130_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI130_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI130_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI131_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI131_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI131_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI132_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI132_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI132_CONFIG_OWNED_CHANNELS_MASK 0
-#endif
-
-/**
- * @brief NRFX_DPPI133_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI133_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI133_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI134_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI134_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI134_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI135_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI135_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI135_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI136_CONFIG_OWNED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI136_CONFIG_OWNED_CHANNELS_MASK
-#define NRFX_DPPI136_CONFIG_OWNED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI120_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI120_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI120_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000f0
-#endif
-
-/**
- * @brief NRFX_DPPI130_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI130_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI130_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI131_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI131_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI131_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0
-#endif
-
-/**
- * @brief NRFX_DPPI132_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI132_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI132_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0
-#endif
-
-/**
- * @brief NRFX_DPPI133_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI133_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI133_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0x0000001e
-#endif
-
-/**
- * @brief NRFX_DPPI134_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI134_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI134_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0x00000020
-#endif
-
-/**
- * @brief NRFX_DPPI135_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI135_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI135_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0x00000040
-#endif
-
-/**
- * @brief NRFX_DPPI136_PUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI136_PUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI136_PUB_CONFIG_ALLOWED_CHANNELS_MASK 0x00000081
-#endif
-
-/**
- * @brief NRFX_DPPI120_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI120_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI120_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x0000000f
-#endif
-
-/**
- * @brief NRFX_DPPI130_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI130_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI130_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI131_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI131_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI131_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000ff
-#endif
-
-/**
- * @brief NRFX_DPPI132_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI132_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI132_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0
-#endif
-
-/**
- * @brief NRFX_DPPI133_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI133_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI133_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000e1
-#endif
-
-/**
- * @brief NRFX_DPPI134_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI134_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI134_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000df
-#endif
-
-/**
- * @brief NRFX_DPPI135_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI135_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI135_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x000000bf
-#endif
-
-/**
- * @brief NRFX_DPPI136_SUB_CONFIG_ALLOWED_CHANNELS_MASK
- */
-#ifndef NRFX_DPPI136_SUB_CONFIG_ALLOWED_CHANNELS_MASK
-#define NRFX_DPPI136_SUB_CONFIG_ALLOWED_CHANNELS_MASK 0x0000007e
-#endif
-
-/**
  * @brief NRFX_DPPI120_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -436,15 +268,6 @@
 #endif
 
 /**
- * @brief NRFX_EGU130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_EGU130_ENABLED
-#define NRFX_EGU130_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_GPIOTE_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -496,12 +319,12 @@
 #endif
 
 /**
- * @brief NRFX_GPIOTE130_ENABLED
+ * @brief NRFX_GPPI_CONFIG_DPPI_PPIB_EXT_FUNC
  *
  * Boolean. Accepted values: 0 and 1.
  */
-#ifndef NRFX_GPIOTE130_ENABLED
-#define NRFX_GPIOTE130_ENABLED 0
+#ifndef NRFX_GPPI_CONFIG_DPPI_PPIB_EXT_FUNC
+#define NRFX_GPPI_CONFIG_DPPI_PPIB_EXT_FUNC 1
 #endif
 
 /**
@@ -980,51 +803,6 @@
 #endif
 
 /**
- * @brief NRFX_PWM120_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM120_ENABLED
-#define NRFX_PWM120_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_PWM130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM130_ENABLED
-#define NRFX_PWM130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_PWM131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM131_ENABLED
-#define NRFX_PWM131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_PWM132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM132_ENABLED
-#define NRFX_PWM132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_PWM133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM133_ENABLED
-#define NRFX_PWM133_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_QDEC_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -1064,24 +842,6 @@
  */
 #ifndef NRFX_QDEC_CONFIG_LOG_LEVEL
 #define NRFX_QDEC_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_QDEC130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_QDEC130_ENABLED
-#define NRFX_QDEC130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_QDEC131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_QDEC131_ENABLED
-#define NRFX_QDEC131_ENABLED 0
 #endif
 
 /**
@@ -1229,96 +989,6 @@
 #endif
 
 /**
- * @brief NRFX_SPIM120_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM120_ENABLED
-#define NRFX_SPIM120_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM121_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM121_ENABLED
-#define NRFX_SPIM121_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM130_ENABLED
-#define NRFX_SPIM130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM131_ENABLED
-#define NRFX_SPIM131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM132_ENABLED
-#define NRFX_SPIM132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM133_ENABLED
-#define NRFX_SPIM133_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM134_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM134_ENABLED
-#define NRFX_SPIM134_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM135_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM135_ENABLED
-#define NRFX_SPIM135_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM136_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM136_ENABLED
-#define NRFX_SPIM136_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM137_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM137_ENABLED
-#define NRFX_SPIM137_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_SPIS_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -1358,87 +1028,6 @@
  */
 #ifndef NRFX_SPIS_CONFIG_LOG_LEVEL
 #define NRFX_SPIS_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_SPIS120_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS120_ENABLED
-#define NRFX_SPIS120_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS130_ENABLED
-#define NRFX_SPIS130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS131_ENABLED
-#define NRFX_SPIS131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS132_ENABLED
-#define NRFX_SPIS132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS133_ENABLED
-#define NRFX_SPIS133_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS134_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS134_ENABLED
-#define NRFX_SPIS134_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS135_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS135_ENABLED
-#define NRFX_SPIS135_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS136_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS136_ENABLED
-#define NRFX_SPIS136_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS137_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS137_ENABLED
-#define NRFX_SPIS137_ENABLED 0
 #endif
 
 /**
@@ -1535,96 +1124,6 @@
 #endif
 
 /**
- * @brief NRFX_TIMER120_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER120_ENABLED
-#define NRFX_TIMER120_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER121_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER121_ENABLED
-#define NRFX_TIMER121_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER130_ENABLED
-#define NRFX_TIMER130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER131_ENABLED
-#define NRFX_TIMER131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER132_ENABLED
-#define NRFX_TIMER132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER133_ENABLED
-#define NRFX_TIMER133_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER134_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER134_ENABLED
-#define NRFX_TIMER134_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER135_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER135_ENABLED
-#define NRFX_TIMER135_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER136_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER136_ENABLED
-#define NRFX_TIMER136_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER137_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER137_ENABLED
-#define NRFX_TIMER137_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_TWIM_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -1664,78 +1163,6 @@
  */
 #ifndef NRFX_TWIM_CONFIG_LOG_LEVEL
 #define NRFX_TWIM_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TWIM130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM130_ENABLED
-#define NRFX_TWIM130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM131_ENABLED
-#define NRFX_TWIM131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM132_ENABLED
-#define NRFX_TWIM132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM133_ENABLED
-#define NRFX_TWIM133_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM134_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM134_ENABLED
-#define NRFX_TWIM134_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM135_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM135_ENABLED
-#define NRFX_TWIM135_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM136_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM136_ENABLED
-#define NRFX_TWIM136_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM137_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM137_ENABLED
-#define NRFX_TWIM137_ENABLED 0
 #endif
 
 /**
@@ -1796,78 +1223,6 @@
  */
 #ifndef NRFX_TWIS_CONFIG_LOG_LEVEL
 #define NRFX_TWIS_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TWIS130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS130_ENABLED
-#define NRFX_TWIS130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS131_ENABLED
-#define NRFX_TWIS131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS132_ENABLED
-#define NRFX_TWIS132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS133_ENABLED
-#define NRFX_TWIS133_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS134_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS134_ENABLED
-#define NRFX_TWIS134_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS135_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS135_ENABLED
-#define NRFX_TWIS135_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS136_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS136_ENABLED
-#define NRFX_TWIS136_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS137_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS137_ENABLED
-#define NRFX_TWIS137_ENABLED 0
 #endif
 
 /**
@@ -1949,87 +1304,6 @@
 #endif
 
 /**
- * @brief NRFX_UARTE120_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE120_ENABLED
-#define NRFX_UARTE120_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE130_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE130_ENABLED
-#define NRFX_UARTE130_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE131_ENABLED
-#define NRFX_UARTE131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE132_ENABLED
-#define NRFX_UARTE132_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE133_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE133_ENABLED
-#define NRFX_UARTE133_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE134_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE134_ENABLED
-#define NRFX_UARTE134_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE135_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE135_ENABLED
-#define NRFX_UARTE135_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE136_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE136_ENABLED
-#define NRFX_UARTE136_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE137_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE137_ENABLED
-#define NRFX_UARTE137_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_WDT_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -2078,42 +1352,6 @@
  */
 #ifndef NRFX_WDT_CONFIG_LOG_LEVEL
 #define NRFX_WDT_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_WDT010_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_WDT010_ENABLED
-#define NRFX_WDT010_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_WDT011_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_WDT011_ENABLED
-#define NRFX_WDT011_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_WDT131_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_WDT131_ENABLED
-#define NRFX_WDT131_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_WDT132_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_WDT132_ENABLED
-#define NRFX_WDT132_ENABLED 0
 #endif
 
 #endif // NRFX_CONFIG_NRF54H20_APPLICATION_H__

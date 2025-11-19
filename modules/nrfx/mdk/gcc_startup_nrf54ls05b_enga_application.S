@@ -179,7 +179,7 @@ __isr_vector:
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   EGU00_IRQHandler
-    .long   TRNG_IRQHandler
+    .long   CRACEN_IRQHandler
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
     .long   0                           /*Reserved */
@@ -583,7 +583,7 @@ Default_Handler:
     IRQ  CM33SS_IRQHandler
     IRQ  TIMER00_IRQHandler
     IRQ  EGU00_IRQHandler
-    IRQ  TRNG_IRQHandler
+    IRQ  CRACEN_IRQHandler
     IRQ  TIMER10_IRQHandler
     IRQ  EGU10_IRQHandler
     IRQ  RADIO_0_IRQHandler

@@ -174,7 +174,7 @@ __vector_table
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     EGU00_IRQHandler
-        DCD     TRNG_IRQHandler
+        DCD     CRACEN_IRQHandler
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
         DCD     0                         ; Reserved
@@ -480,9 +480,9 @@ TIMER00_IRQHandler
 EGU00_IRQHandler
         B .
 
-        PUBWEAK  TRNG_IRQHandler
+        PUBWEAK  CRACEN_IRQHandler
         SECTION .text:CODE:REORDER:NOROOT(1)
-TRNG_IRQHandler
+CRACEN_IRQHandler
         B .
 
         PUBWEAK  TIMER10_IRQHandler

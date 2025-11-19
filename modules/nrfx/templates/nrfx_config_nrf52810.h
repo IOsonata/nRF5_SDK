@@ -193,24 +193,6 @@
 #endif
 
 /**
- * @brief NRFX_EGU0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_EGU0_ENABLED
-#define NRFX_EGU0_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_EGU1_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_EGU1_ENABLED
-#define NRFX_EGU1_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_GPIOTE_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -463,15 +445,6 @@
  */
 #ifndef NRFX_PWM_CONFIG_LOG_LEVEL
 #define NRFX_PWM_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_PWM0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM0_ENABLED
-#define NRFX_PWM0_ENABLED 0
 #endif
 
 /**
@@ -754,15 +727,6 @@
 #endif
 
 /**
- * @brief NRFX_SPIM0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM0_ENABLED
-#define NRFX_SPIM0_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_SPIS_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -802,15 +766,6 @@
  */
 #ifndef NRFX_SPIS_CONFIG_LOG_LEVEL
 #define NRFX_SPIS_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_SPIS0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS0_ENABLED
-#define NRFX_SPIS0_ENABLED 0
 #endif
 
 /**
@@ -907,33 +862,6 @@
 #endif
 
 /**
- * @brief NRFX_TIMER0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER0_ENABLED
-#define NRFX_TIMER0_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER1_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER1_ENABLED
-#define NRFX_TIMER1_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER2_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER2_ENABLED
-#define NRFX_TIMER2_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_TWI_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -1012,15 +940,6 @@
 #endif
 
 /**
- * @brief NRFX_TWIM_NRF52_ANOMALY_219_WORKAROUND_ENABLED - Enables nRF52 Anomaly 219 workaround for TWIM.
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM_NRF52_ANOMALY_219_WORKAROUND_ENABLED
-#define NRFX_TWIM_NRF52_ANOMALY_219_WORKAROUND_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_TWIM_CONFIG_LOG_LEVEL
  *
  * Integer value.
@@ -1033,15 +952,6 @@
  */
 #ifndef NRFX_TWIM_CONFIG_LOG_LEVEL
 #define NRFX_TWIM_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TWIM0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM0_ENABLED
-#define NRFX_TWIM0_ENABLED 0
 #endif
 
 /**
@@ -1102,15 +1012,6 @@
  */
 #ifndef NRFX_TWIS_CONFIG_LOG_LEVEL
 #define NRFX_TWIS_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TWIS0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS0_ENABLED
-#define NRFX_TWIS0_ENABLED 0
 #endif
 
 /**
@@ -1231,15 +1132,6 @@
  */
 #ifndef NRFX_UARTE_CONFIG_LOG_LEVEL
 #define NRFX_UARTE_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_UARTE0_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE0_ENABLED
-#define NRFX_UARTE0_ENABLED 0
 #endif
 
 /**

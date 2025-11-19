@@ -12,7 +12,6 @@ SoCs, as well as startup and initialization files for them.
 
 ## Supported SoCs and SiPs
 
-* nRF51 Series
 * nRF52805
 * nRF52810
 * nRF52811
@@ -32,16 +31,20 @@ SoCs, as well as startup and initialization files for them.
 
 ```
  .
- ├── doc             # Project documentation files
- ├── drivers         # nrfx driver files
- │   ├── include     # nrfx driver headers
- │   └── src         # nrfx driver sources
- ├── hal             # Hardware Access Layer files
- ├── haly            # Extended Hardware Access Layer files
- ├── helpers         # nrfx driver helper files
- ├── mdk             # nRF MDK files
- ├── soc             # SoC specific files
- └── templates       # Templates of nrfx integration files
+ ├── bsp                   # Board Support Package
+ │   └── stable            # BSP for stable platforms
+ │       ├── mdk           # nRF MDK files
+ │       ├── soc           # SoC specific files
+ │       └── templates     # SoC specific templates of nrfx integration files
+ ├── doc                   # Project documentation files
+ ├── drivers               # nrfx driver files
+ │   ├── include           # nrfx driver headers
+ │   └── src               # nrfx driver sources
+ ├── hal                   # Hardware Access Layer files
+ ├── haly                  # Extended Hardware Access Layer files (deprecated)
+ ├── helpers               # nrfx driver helper files
+ ├── lib                   # nrfx internal libraries
+ └── templates             # SoC-agnostic templates of nrfx integration files
 ```
 
 ## Generating documentation

@@ -244,7 +244,7 @@ _vectors:
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_HANDLER   EGU00_IRQHandler
-  ISR_HANDLER   TRNG_IRQHandler
+  ISR_HANDLER   CRACEN_IRQHandler
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */
   ISR_RESERVED_DUMMY                           /* Reserved */

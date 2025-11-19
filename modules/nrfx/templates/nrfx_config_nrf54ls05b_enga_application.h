@@ -217,33 +217,6 @@
 #endif
 
 /**
- * @brief NRFX_EGU00_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_EGU00_ENABLED
-#define NRFX_EGU00_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_EGU10_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_EGU10_ENABLED
-#define NRFX_EGU10_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_EGU20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_EGU20_ENABLED
-#define NRFX_EGU20_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_GPIOTE_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -292,24 +265,6 @@
  */
 #ifndef NRFX_GPIOTE_CONFIG_LOG_LEVEL
 #define NRFX_GPIOTE_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_GPIOTE20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_GPIOTE20_ENABLED
-#define NRFX_GPIOTE20_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_GPIOTE30_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_GPIOTE30_ENABLED
-#define NRFX_GPIOTE30_ENABLED 0
 #endif
 
 /**
@@ -632,15 +587,6 @@
 #endif
 
 /**
- * @brief NRFX_PWM20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_PWM20_ENABLED
-#define NRFX_PWM20_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_QDEC_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -680,15 +626,6 @@
  */
 #ifndef NRFX_QDEC_CONFIG_LOG_LEVEL
 #define NRFX_QDEC_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_QDEC20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_QDEC20_ENABLED
-#define NRFX_QDEC20_ENABLED 0
 #endif
 
 /**
@@ -818,33 +755,6 @@
 #endif
 
 /**
- * @brief NRFX_SPIM20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM20_ENABLED
-#define NRFX_SPIM20_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM21_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM21_ENABLED
-#define NRFX_SPIM21_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIM22_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIM22_ENABLED
-#define NRFX_SPIM22_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_SPIS_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -884,33 +794,6 @@
  */
 #ifndef NRFX_SPIS_CONFIG_LOG_LEVEL
 #define NRFX_SPIS_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_SPIS20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS20_ENABLED
-#define NRFX_SPIS20_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS21_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS21_ENABLED
-#define NRFX_SPIS21_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_SPIS22_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_SPIS22_ENABLED
-#define NRFX_SPIS22_ENABLED 0
 #endif
 
 /**
@@ -1007,33 +890,6 @@
 #endif
 
 /**
- * @brief NRFX_TIMER00_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER00_ENABLED
-#define NRFX_TIMER00_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER10_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER10_ENABLED
-#define NRFX_TIMER10_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TIMER20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TIMER20_ENABLED
-#define NRFX_TIMER20_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_TWIM_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -1073,33 +929,6 @@
  */
 #ifndef NRFX_TWIM_CONFIG_LOG_LEVEL
 #define NRFX_TWIM_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TWIM20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM20_ENABLED
-#define NRFX_TWIM20_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM21_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM21_ENABLED
-#define NRFX_TWIM21_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIM22_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIM22_ENABLED
-#define NRFX_TWIM22_ENABLED 0
 #endif
 
 /**
@@ -1160,33 +989,6 @@
  */
 #ifndef NRFX_TWIS_CONFIG_LOG_LEVEL
 #define NRFX_TWIS_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_TWIS20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS20_ENABLED
-#define NRFX_TWIS20_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS21_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS21_ENABLED
-#define NRFX_TWIS21_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_TWIS22_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_TWIS22_ENABLED
-#define NRFX_TWIS22_ENABLED 0
 #endif
 
 /**
@@ -1259,33 +1061,6 @@
 #endif
 
 /**
- * @brief NRFX_UARTE20_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE20_ENABLED
-#define NRFX_UARTE20_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE21_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE21_ENABLED
-#define NRFX_UARTE21_ENABLED 0
-#endif
-
-/**
- * @brief NRFX_UARTE22_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_UARTE22_ENABLED
-#define NRFX_UARTE22_ENABLED 0
-#endif
-
-/**
  * @brief NRFX_WDT_ENABLED
  *
  * Boolean. Accepted values: 0 and 1.
@@ -1334,15 +1109,6 @@
  */
 #ifndef NRFX_WDT_CONFIG_LOG_LEVEL
 #define NRFX_WDT_CONFIG_LOG_LEVEL 3
-#endif
-
-/**
- * @brief NRFX_WDT30_ENABLED
- *
- * Boolean. Accepted values: 0 and 1.
- */
-#ifndef NRFX_WDT30_ENABLED
-#define NRFX_WDT30_ENABLED 0
 #endif
 
 #endif // NRFX_CONFIG_NRF54LS05B_ENGA_APPLICATION_H__

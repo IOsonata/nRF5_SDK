@@ -151,7 +151,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     SPU00_IRQHandler
                 DCD     MPC00_IRQHandler
                 DCD     0                         ; Reserved
-                DCD     0                         ; Reserved
+                DCD     MPC03_IRQHandler
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
@@ -388,7 +388,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
-                DCD     AUDIOPLL_AUDIOPLLM_IRQHandler
+                DCD     AUXPLL_AUXPM_IRQHandler
 
 __Vectors_End
 
@@ -468,6 +468,7 @@ Default_Handler PROC
                 EXPORT   SWI03_IRQHandler [WEAK]
                 EXPORT   SPU00_IRQHandler [WEAK]
                 EXPORT   MPC00_IRQHandler [WEAK]
+                EXPORT   MPC03_IRQHandler [WEAK]
                 EXPORT   AAR00_CCM00_IRQHandler [WEAK]
                 EXPORT   ECB00_IRQHandler [WEAK]
                 EXPORT   VPR00_IRQHandler [WEAK]
@@ -537,13 +538,14 @@ Default_Handler PROC
                 EXPORT   LFXO_IRQHandler [WEAK]
                 EXPORT   LFRC_IRQHandler [WEAK]
                 EXPORT   HFXO64M_IRQHandler [WEAK]
-                EXPORT   AUDIOPLL_AUDIOPLLM_IRQHandler [WEAK]
+                EXPORT   AUXPLL_AUXPM_IRQHandler [WEAK]
 SWI00_IRQHandler
 SWI01_IRQHandler
 SWI02_IRQHandler
 SWI03_IRQHandler
 SPU00_IRQHandler
 MPC00_IRQHandler
+MPC03_IRQHandler
 AAR00_CCM00_IRQHandler
 ECB00_IRQHandler
 VPR00_IRQHandler
@@ -613,7 +615,7 @@ VREGUSB_IRQHandler
 LFXO_IRQHandler
 LFRC_IRQHandler
 HFXO64M_IRQHandler
-AUDIOPLL_AUDIOPLLM_IRQHandler
+AUXPLL_AUXPM_IRQHandler
                 B .
                 ENDP
                 ALIGN

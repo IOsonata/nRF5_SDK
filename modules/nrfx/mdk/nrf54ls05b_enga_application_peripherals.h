@@ -80,8 +80,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define DPPIC00_HASCHANNELGROUPS 1                   /*!< (unspecified)                                                        */
 #define DPPIC00_CH_NUM_MIN 0                         /*!< (unspecified)                                                        */
-#define DPPIC00_CH_NUM_MAX 7                         /*!< (unspecified)                                                        */
-#define DPPIC00_CH_NUM_SIZE 8                        /*!< (unspecified)                                                        */
+#define DPPIC00_CH_NUM_MAX 15                        /*!< (unspecified)                                                        */
+#define DPPIC00_CH_NUM_SIZE 16                       /*!< (unspecified)                                                        */
 #define DPPIC00_GROUP_NUM_MIN 0                      /*!< (unspecified)                                                        */
 #define DPPIC00_GROUP_NUM_MAX 1                      /*!< (unspecified)                                                        */
 #define DPPIC00_GROUP_NUM_SIZE 2                     /*!< (unspecified)                                                        */
@@ -161,8 +161,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define CCM_COUNT 1
 
 #define CCM00_AMOUNTREG 0                            /*!< (unspecified)                                                        */
-#define CCM00_ONTHEFLYDECRYPTION 0                   /*!< (unspecified)                                                        */
+#define CCM00_ONTHEFLYDECRYPTION 0                   /*!< Does not support on-the-fly decryption.                              */
 #define CCM00_DMAERROR 1                             /*!< (unspecified)                                                        */
+#define CCM00_BYPASSMODE 0                           /*!< No bypass mode available in the MODE register.                       */
 
 /*AES ECB Mode Encryption*/
 #define ECB_PRESENT 1
@@ -176,6 +177,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RRAMC_PRESENT 1
 #define RRAMC_COUNT 1
 
+#define RRAMC_NAPMODE 1                              /*!< (unspecified)                                                        */
 #define RRAMC_NRRAMWORDSIZE 64                       /*!< RRAM word size : 64 bits per wordline                                */
 #define RRAMC_NWRITEBUFSIZE 32                       /*!< Maximum write buffer size : 32                                       */
 #define RRAMC_LOWPOWERCONFIGOPTION2 0                /*!< (unspecified)                                                        */
@@ -188,10 +190,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RRAMC_REGION0WRITE_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION0EXECUTE 0                       /*!< (unspecified)                                                        */
 #define RRAMC_REGION0EXECUTE_WRITABLE 0              /*!< (unspecified)                                                        */
-#define RRAMC_REGION0SECURE 0                        /*!< (unspecified)                                                        */
-#define RRAMC_REGION0SECURE_WRITABLE 0               /*!< (unspecified)                                                        */
-#define RRAMC_REGION0OWNER 0                         /*!< (unspecified)                                                        */
-#define RRAMC_REGION0OWNER_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION0WRITEONCE 1                     /*!< (unspecified)                                                        */
 #define RRAMC_REGION0WRITEONCE_WRITABLE 0            /*!< (unspecified)                                                        */
 #define RRAMC_REGION0LOCK 0                          /*!< (unspecified)                                                        */
@@ -205,10 +203,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RRAMC_REGION1WRITE_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION1EXECUTE 0                       /*!< (unspecified)                                                        */
 #define RRAMC_REGION1EXECUTE_WRITABLE 0              /*!< (unspecified)                                                        */
-#define RRAMC_REGION1SECURE 1                        /*!< (unspecified)                                                        */
-#define RRAMC_REGION1SECURE_WRITABLE 1               /*!< (unspecified)                                                        */
-#define RRAMC_REGION1OWNER 0                         /*!< (unspecified)                                                        */
-#define RRAMC_REGION1OWNER_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION1WRITEONCE 1                     /*!< (unspecified)                                                        */
 #define RRAMC_REGION1WRITEONCE_WRITABLE 0            /*!< (unspecified)                                                        */
 #define RRAMC_REGION1LOCK 0                          /*!< (unspecified)                                                        */
@@ -222,10 +216,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RRAMC_REGION2WRITE_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION2EXECUTE 1                       /*!< (unspecified)                                                        */
 #define RRAMC_REGION2EXECUTE_WRITABLE 1              /*!< (unspecified)                                                        */
-#define RRAMC_REGION2SECURE 0                        /*!< (unspecified)                                                        */
-#define RRAMC_REGION2SECURE_WRITABLE 0               /*!< (unspecified)                                                        */
-#define RRAMC_REGION2OWNER 0                         /*!< (unspecified)                                                        */
-#define RRAMC_REGION2OWNER_WRITABLE 0                /*!< (unspecified)                                                        */
 #define RRAMC_REGION2WRITEONCE 0                     /*!< (unspecified)                                                        */
 #define RRAMC_REGION2WRITEONCE_WRITABLE 1            /*!< (unspecified)                                                        */
 #define RRAMC_REGION2LOCK 0                          /*!< (unspecified)                                                        */
@@ -239,10 +229,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RRAMC_REGION3WRITE_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION3EXECUTE 1                       /*!< (unspecified)                                                        */
 #define RRAMC_REGION3EXECUTE_WRITABLE 1              /*!< (unspecified)                                                        */
-#define RRAMC_REGION3SECURE 1                        /*!< (unspecified)                                                        */
-#define RRAMC_REGION3SECURE_WRITABLE 1               /*!< (unspecified)                                                        */
-#define RRAMC_REGION3OWNER 0                         /*!< (unspecified)                                                        */
-#define RRAMC_REGION3OWNER_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION3WRITEONCE 0                     /*!< (unspecified)                                                        */
 #define RRAMC_REGION3WRITEONCE_WRITABLE 1            /*!< (unspecified)                                                        */
 #define RRAMC_REGION3LOCK 0                          /*!< (unspecified)                                                        */
@@ -256,10 +242,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RRAMC_REGION4WRITE_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION4EXECUTE 1                       /*!< (unspecified)                                                        */
 #define RRAMC_REGION4EXECUTE_WRITABLE 1              /*!< (unspecified)                                                        */
-#define RRAMC_REGION4SECURE 1                        /*!< (unspecified)                                                        */
-#define RRAMC_REGION4SECURE_WRITABLE 1               /*!< (unspecified)                                                        */
-#define RRAMC_REGION4OWNER 0                         /*!< (unspecified)                                                        */
-#define RRAMC_REGION4OWNER_WRITABLE 1                /*!< (unspecified)                                                        */
 #define RRAMC_REGION4WRITEONCE 0                     /*!< (unspecified)                                                        */
 #define RRAMC_REGION4WRITEONCE_WRITABLE 1            /*!< (unspecified)                                                        */
 #define RRAMC_REGION4LOCK 0                          /*!< (unspecified)                                                        */
@@ -290,7 +272,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TIMER00_MAX_SIZE_MAX 31                      /*!< (unspecified)                                                        */
 #define TIMER00_MAX_SIZE_SIZE 32                     /*!< (unspecified)                                                        */
 #define TIMER00_PCLK_MHZ 128                         /*!< Peripheral clock frequency (PCLK) is 128 MHz                         */
-#define TIMER00_PCLK_VARIABLE 1                      /*!< (unspecified)                                                        */
+#define TIMER00_PCLK_VARIABLE 1                      /*!< The system is able to configure the TIMER peripheral input clock
+                                                          frequency (PCLK) before it reaches TIMER, and calculations of
+                                                          PRESCALER value must take the actual PCLK frequency into account*/
 #define TIMER00_SHUTDOWN_TASK 0                      /*!< (unspecified)                                                        */
 
 #define TIMER10_CC_NUM_MIN 0                         /*!< (unspecified)                                                        */
@@ -332,13 +316,26 @@ POSSIBILITY OF SUCH DAMAGE.
 #define EGU20_CH_NUM_MAX 5                           /*!< (unspecified)                                                        */
 #define EGU20_CH_NUM_SIZE 6                          /*!< (unspecified)                                                        */
 
-/*CRACENCORE TRNG registers*/
-#define CRACENCORE_PRESENT 1
-#define CRACENCORE_COUNT 1
-
 /*CRACEN TRNG*/
 #define CRACEN_PRESENT 1
 #define CRACEN_COUNT 1
+
+/*CRACENCORE*/
+#define CRACENCORE_PRESENT 1
+#define CRACENCORE_COUNT 1
+
+#define CRACENCORE_CRYPTMSTRDMAREGS 0                /*!< (unspecified)                                                        */
+#define CRACENCORE_CRYPTMSTRHWREGS 0                 /*!< (unspecified)                                                        */
+#define CRACENCORE_RNGCONTROLREGS 1                  /*!< RNGCONTROL registers included                                        */
+#define CRACENCORE_PKREGS 0                          /*!< (unspecified)                                                        */
+#define CRACENCORE_IKGREGS 0                         /*!< (unspecified)                                                        */
+#define CRACENCORE_RNGDATAREGS 0                     /*!< (unspecified)                                                        */
+#define CRACENCORE_EXTPRIVKEYSREGS 0                 /*!< (unspecified)                                                        */
+#define CRACENCORE_LITESMALLRESETVALUES 0            /*!< (unspecified)                                                        */
+#define CRACENCORE_LITEMEDIUMRESETVALUES 0           /*!< (unspecified)                                                        */
+#define CRACENCORE_FULLRESETVALUES 0                 /*!< (unspecified)                                                        */
+#define CRACENCORE_CRACENRESETVALUES 0               /*!< (unspecified)                                                        */
+#define CRACENCORE_SHA3RESETVALUES 0                 /*!< (unspecified)                                                        */
 
 /*2.4 GHz radio*/
 #define RADIO_PRESENT 1
@@ -346,7 +343,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define RADIO_IRQ_COUNT 2
 #define RADIO_WHITENINGPOLY 1                        /*!< (unspecified)                                                        */
-#define RADIO_ADPLLCOMPANION_INCLUDE_DMA 0           /*!< (unspecified)                                                        */
+#define RADIO_ADPLLCOMPANION_INCLUDE_DMA 0           /*!< No internal instantiation of DmaChannelPeripheral                    */
 
 /*Serial Peripheral Interface Master with EasyDMA*/
 #define SPIM_PRESENT 1
@@ -357,8 +354,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM20_EASYDMA_MAXCNT_MIN 0                  /*!< (unspecified)                                                        */
 #define SPIM20_EASYDMA_MAXCNT_MAX 15                 /*!< (unspecified)                                                        */
 #define SPIM20_EASYDMA_MAXCNT_SIZE 16                /*!< (unspecified)                                                        */
-#define SPIM20_FEATURE_HARDWARE_CSN_PRESENT 1        /*!< (unspecified)                                                        */
-#define SPIM20_FEATURE_HARDWARE_DCX_PRESENT 1        /*!< (unspecified)                                                        */
+#define SPIM20_FEATURE_HARDWARE_CSN_PRESENT 1        /*!< CSN functionality is supported.                                      */
+#define SPIM20_FEATURE_HARDWARE_DCX_PRESENT 1        /*!< DCX functionality is supported.                                      */
 #define SPIM20_FEATURE_RXDELAY_PRESENT 1             /*!< (unspecified)                                                        */
 #define SPIM20_STALL_STATUS_PRESENT 0                /*!< (unspecified)                                                        */
 #define SPIM20_STALL_STATUS_TX_PRESENT 0             /*!< (unspecified)                                                        */
@@ -367,9 +364,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM20_NUM_CHIPSELECT_SIZE 1                 /*!< (unspecified)                                                        */
 #define SPIM20_CORE_FREQUENCY 16                     /*!< Peripheral core frequency is 16 MHz.                                 */
 #define SPIM20_PRESCALER_PRESENT 1                   /*!< (unspecified)                                                        */
-#define SPIM20_PRESCALER_DIVISOR_RANGE_MIN 2         /*!< (unspecified)                                                        */
-#define SPIM20_PRESCALER_DIVISOR_RANGE_MAX 126       /*!< (unspecified)                                                        */
-#define SPIM20_PRESCALER_DIVISOR_RANGE_SIZE 127      /*!< (unspecified)                                                        */
+#define SPIM20_PRESCALER_DIVISOR_RANGE_MIN 2         /*!< Prescaler divisor range is 2..126                                    */
+#define SPIM20_PRESCALER_DIVISOR_RANGE_MAX 126       /*!< Prescaler divisor range is 2..126                                    */
+#define SPIM20_PRESCALER_DIVISOR_RANGE_SIZE 127      /*!< Prescaler divisor range is 2..126                                    */
 #define SPIM20_RXDELAY_VALUE_RANGE_MIN 0             /*!< (unspecified)                                                        */
 #define SPIM20_RXDELAY_VALUE_RANGE_MAX 7             /*!< (unspecified)                                                        */
 #define SPIM20_RXDELAY_VALUE_RANGE_SIZE 8            /*!< (unspecified)                                                        */
@@ -383,8 +380,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM21_EASYDMA_MAXCNT_MIN 0                  /*!< (unspecified)                                                        */
 #define SPIM21_EASYDMA_MAXCNT_MAX 15                 /*!< (unspecified)                                                        */
 #define SPIM21_EASYDMA_MAXCNT_SIZE 16                /*!< (unspecified)                                                        */
-#define SPIM21_FEATURE_HARDWARE_CSN_PRESENT 1        /*!< (unspecified)                                                        */
-#define SPIM21_FEATURE_HARDWARE_DCX_PRESENT 1        /*!< (unspecified)                                                        */
+#define SPIM21_FEATURE_HARDWARE_CSN_PRESENT 1        /*!< CSN functionality is supported.                                      */
+#define SPIM21_FEATURE_HARDWARE_DCX_PRESENT 1        /*!< DCX functionality is supported.                                      */
 #define SPIM21_FEATURE_RXDELAY_PRESENT 1             /*!< (unspecified)                                                        */
 #define SPIM21_STALL_STATUS_PRESENT 0                /*!< (unspecified)                                                        */
 #define SPIM21_STALL_STATUS_TX_PRESENT 0             /*!< (unspecified)                                                        */
@@ -393,9 +390,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM21_NUM_CHIPSELECT_SIZE 1                 /*!< (unspecified)                                                        */
 #define SPIM21_CORE_FREQUENCY 16                     /*!< Peripheral core frequency is 16 MHz.                                 */
 #define SPIM21_PRESCALER_PRESENT 1                   /*!< (unspecified)                                                        */
-#define SPIM21_PRESCALER_DIVISOR_RANGE_MIN 2         /*!< (unspecified)                                                        */
-#define SPIM21_PRESCALER_DIVISOR_RANGE_MAX 126       /*!< (unspecified)                                                        */
-#define SPIM21_PRESCALER_DIVISOR_RANGE_SIZE 127      /*!< (unspecified)                                                        */
+#define SPIM21_PRESCALER_DIVISOR_RANGE_MIN 2         /*!< Prescaler divisor range is 2..126                                    */
+#define SPIM21_PRESCALER_DIVISOR_RANGE_MAX 126       /*!< Prescaler divisor range is 2..126                                    */
+#define SPIM21_PRESCALER_DIVISOR_RANGE_SIZE 127      /*!< Prescaler divisor range is 2..126                                    */
 #define SPIM21_RXDELAY_VALUE_RANGE_MIN 0             /*!< (unspecified)                                                        */
 #define SPIM21_RXDELAY_VALUE_RANGE_MAX 7             /*!< (unspecified)                                                        */
 #define SPIM21_RXDELAY_VALUE_RANGE_SIZE 8            /*!< (unspecified)                                                        */
@@ -409,8 +406,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM22_EASYDMA_MAXCNT_MIN 0                  /*!< (unspecified)                                                        */
 #define SPIM22_EASYDMA_MAXCNT_MAX 15                 /*!< (unspecified)                                                        */
 #define SPIM22_EASYDMA_MAXCNT_SIZE 16                /*!< (unspecified)                                                        */
-#define SPIM22_FEATURE_HARDWARE_CSN_PRESENT 1        /*!< (unspecified)                                                        */
-#define SPIM22_FEATURE_HARDWARE_DCX_PRESENT 1        /*!< (unspecified)                                                        */
+#define SPIM22_FEATURE_HARDWARE_CSN_PRESENT 1        /*!< CSN functionality is supported.                                      */
+#define SPIM22_FEATURE_HARDWARE_DCX_PRESENT 1        /*!< DCX functionality is supported.                                      */
 #define SPIM22_FEATURE_RXDELAY_PRESENT 1             /*!< (unspecified)                                                        */
 #define SPIM22_STALL_STATUS_PRESENT 0                /*!< (unspecified)                                                        */
 #define SPIM22_STALL_STATUS_TX_PRESENT 0             /*!< (unspecified)                                                        */
@@ -419,9 +416,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SPIM22_NUM_CHIPSELECT_SIZE 1                 /*!< (unspecified)                                                        */
 #define SPIM22_CORE_FREQUENCY 16                     /*!< Peripheral core frequency is 16 MHz.                                 */
 #define SPIM22_PRESCALER_PRESENT 1                   /*!< (unspecified)                                                        */
-#define SPIM22_PRESCALER_DIVISOR_RANGE_MIN 2         /*!< (unspecified)                                                        */
-#define SPIM22_PRESCALER_DIVISOR_RANGE_MAX 126       /*!< (unspecified)                                                        */
-#define SPIM22_PRESCALER_DIVISOR_RANGE_SIZE 127      /*!< (unspecified)                                                        */
+#define SPIM22_PRESCALER_DIVISOR_RANGE_MIN 2         /*!< Prescaler divisor range is 2..126                                    */
+#define SPIM22_PRESCALER_DIVISOR_RANGE_MAX 126       /*!< Prescaler divisor range is 2..126                                    */
+#define SPIM22_PRESCALER_DIVISOR_RANGE_SIZE 127      /*!< Prescaler divisor range is 2..126                                    */
 #define SPIM22_RXDELAY_VALUE_RANGE_MIN 0             /*!< (unspecified)                                                        */
 #define SPIM22_RXDELAY_VALUE_RANGE_MAX 7             /*!< (unspecified)                                                        */
 #define SPIM22_RXDELAY_VALUE_RANGE_SIZE 8            /*!< (unspecified)                                                        */
@@ -494,8 +491,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define UARTE20_EASYDMA_MAXCNT_MIN 0                 /*!< (unspecified)                                                        */
 #define UARTE20_EASYDMA_MAXCNT_MAX 15                /*!< (unspecified)                                                        */
 #define UARTE20_EASYDMA_MAXCNT_SIZE 16               /*!< (unspecified)                                                        */
-#define UARTE20_TIMEOUT_INTERRUPT 1                  /*!< (unspecified)                                                        */
-#define UARTE20_CONFIGURABLE_DATA_FRAME_SIZE 1       /*!< (unspecified)                                                        */
+#define UARTE20_TIMEOUT_INTERRUPT 1                  /*!< Timeout interrupt is included.                                       */
+#define UARTE20_CONFIGURABLE_DATA_FRAME_SIZE 1       /*!< Supports data frame sizes 4, 5, 6, 7, 8, and 9 bits.                 */
 #define UARTE20_CORE_FREQUENCY 16                    /*!< Peripheral clock frequency is 16 MHz.                                */
 #define UARTE20_CORE_CLOCK_16 1                      /*!< (unspecified)                                                        */
 #define UARTE20_SHORTS_ENDTX_STOPTX 1                /*!< (unspecified)                                                        */
@@ -504,8 +501,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define UARTE21_EASYDMA_MAXCNT_MIN 0                 /*!< (unspecified)                                                        */
 #define UARTE21_EASYDMA_MAXCNT_MAX 15                /*!< (unspecified)                                                        */
 #define UARTE21_EASYDMA_MAXCNT_SIZE 16               /*!< (unspecified)                                                        */
-#define UARTE21_TIMEOUT_INTERRUPT 1                  /*!< (unspecified)                                                        */
-#define UARTE21_CONFIGURABLE_DATA_FRAME_SIZE 1       /*!< (unspecified)                                                        */
+#define UARTE21_TIMEOUT_INTERRUPT 1                  /*!< Timeout interrupt is included.                                       */
+#define UARTE21_CONFIGURABLE_DATA_FRAME_SIZE 1       /*!< Supports data frame sizes 4, 5, 6, 7, 8, and 9 bits.                 */
 #define UARTE21_CORE_FREQUENCY 16                    /*!< Peripheral clock frequency is 16 MHz.                                */
 #define UARTE21_CORE_CLOCK_16 1                      /*!< (unspecified)                                                        */
 #define UARTE21_SHORTS_ENDTX_STOPTX 1                /*!< (unspecified)                                                        */
@@ -514,8 +511,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define UARTE22_EASYDMA_MAXCNT_MIN 0                 /*!< (unspecified)                                                        */
 #define UARTE22_EASYDMA_MAXCNT_MAX 15                /*!< (unspecified)                                                        */
 #define UARTE22_EASYDMA_MAXCNT_SIZE 16               /*!< (unspecified)                                                        */
-#define UARTE22_TIMEOUT_INTERRUPT 1                  /*!< (unspecified)                                                        */
-#define UARTE22_CONFIGURABLE_DATA_FRAME_SIZE 1       /*!< (unspecified)                                                        */
+#define UARTE22_TIMEOUT_INTERRUPT 1                  /*!< Timeout interrupt is included.                                       */
+#define UARTE22_CONFIGURABLE_DATA_FRAME_SIZE 1       /*!< Supports data frame sizes 4, 5, 6, 7, 8, and 9 bits.                 */
 #define UARTE22_CORE_FREQUENCY 16                    /*!< Peripheral clock frequency is 16 MHz.                                */
 #define UARTE22_CORE_CLOCK_16 1                      /*!< (unspecified)                                                        */
 #define UARTE22_SHORTS_ENDTX_STOPTX 1                /*!< (unspecified)                                                        */
@@ -533,11 +530,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #define PWM_PRESENT 1
 #define PWM_COUNT 1
 
-#define PWM20_IDLE_OUT 1                             /*!< (unspecified)                                                        */
-#define PWM20_COMPARE_MATCH 1                        /*!< (unspecified)                                                        */
+#define PWM20_IDLE_OUT 1                             /*!< IDLEOUT register is available.                                       */
+#define PWM20_COMPARE_MATCH 1                        /*!< EVENTS_COMPAREMATCH events are available.                            */
 #define PWM20_FEATURES_V2 0                          /*!< (unspecified)                                                        */
 #define PWM20_NO_FEATURES_V2 1                       /*!< (unspecified)                                                        */
-#define PWM20_EASYDMA_CURRENT_AMOUNT_REGISTER_INCLUDED 1 /*!< (unspecified)                                                    */
+#define PWM20_EASYDMA_CURRENT_AMOUNT_REGISTER_INCLUDED 1 /*!< CURRENTAMOUNT register included.                                 */
 
 /*Analog to Digital Converter*/
 #define SAADC_PRESENT 1
@@ -554,7 +551,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define SAADC_TCONV_VALUE_RANGE_MIN 1                /*!< (unspecified)                                                        */
 #define SAADC_TCONV_VALUE_RANGE_MAX 7                /*!< (unspecified)                                                        */
 #define SAADC_TCONV_VALUE_RANGE_SIZE 8               /*!< (unspecified)                                                        */
-#define SAADC_EASYDMA_CURRENT_AMOUNT_REGISTER_INCLUDED 0 /*!< (unspecified)                                                    */
+#define SAADC_CHOPPING 1                             /*!< (unspecified)                                                        */
+#define SAADC_EASYDMA_CURRENT_AMOUNT_REGISTER_INCLUDED 0 /*!< CURRENTAMOUNT register not included.                             */
 
 /*Temperature Sensor*/
 #define TEMP_PRESENT 1
@@ -574,8 +572,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define P1_PIN_NUM_SIZE 32                           /*!< (unspecified)                                                        */
 #define P1_FEATURE_PINS_PRESENT 4294967295           /*!< (unspecified)                                                        */
 #define P1_FEATURE_I5_LIBRARY 0                      /*!< (unspecified)                                                        */
-#define P1_PIN_SENSE_MECHANISM 1                     /*!< (unspecified)                                                        */
+#define P1_PIN_SENSE_MECHANISM 1                     /*!< I/O pins on this port have pin sense mechanism                       */
 #define P1_DRIVECTRL 0                               /*!< (unspecified)                                                        */
+#define P1_WEAKPU 1                                  /*!< This port has weak pull-ups on selected GPIO pins.                   */
 #define P1_RETAIN 0                                  /*!< (unspecified)                                                        */
 #define P1_PWRCTRL 0                                 /*!< (unspecified)                                                        */
 #define P1_SLEWMODE 0                                /*!< (unspecified)                                                        */
@@ -594,8 +593,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define P0_PIN_NUM_SIZE 5                            /*!< (unspecified)                                                        */
 #define P0_FEATURE_PINS_PRESENT 31                   /*!< (unspecified)                                                        */
 #define P0_FEATURE_I5_LIBRARY 0                      /*!< (unspecified)                                                        */
-#define P0_PIN_SENSE_MECHANISM 1                     /*!< (unspecified)                                                        */
+#define P0_PIN_SENSE_MECHANISM 1                     /*!< I/O pins on this port have pin sense mechanism                       */
 #define P0_DRIVECTRL 0                               /*!< (unspecified)                                                        */
+#define P0_WEAKPU 0                                  /*!< (unspecified)                                                        */
 #define P0_RETAIN 0                                  /*!< (unspecified)                                                        */
 #define P0_PWRCTRL 0                                 /*!< (unspecified)                                                        */
 #define P0_SLEWMODE 0                                /*!< (unspecified)                                                        */
@@ -656,14 +656,16 @@ POSSIBILITY OF SUCH DAMAGE.
 #define GRTC_GRTC_NINTERRUPTS_MIN 0                  /*!< Number of GRTC interrupts : 0..3                                     */
 #define GRTC_GRTC_NINTERRUPTS_MAX 3                  /*!< Number of GRTC interrupts : 0..3                                     */
 #define GRTC_GRTC_NINTERRUPTS_SIZE 4                 /*!< Number of GRTC interrupts : 0..3                                     */
-#define GRTC_PWMREGS 1                               /*!< (unspecified)                                                        */
-#define GRTC_CLKOUTREG 1                             /*!< (unspecified)                                                        */
-#define GRTC_CLKSELREG 1                             /*!< (unspecified)                                                        */
-#define GRTC_CLKSELLFLPRC 1                          /*!< (unspecified)                                                        */
-#define GRTC_CCADD_WRITE_ONLY 1                      /*!< (unspecified)                                                        */
-#define GRTC_READY_STATUS_AND_EVENTS 1               /*!< (unspecified)                                                        */
-#define GRTC_SYSCOUNTER_LOADED_STATUS 1              /*!< (unspecified)                                                        */
-#define GRTC_CC_PAST_STATUS 1                        /*!< (unspecified)                                                        */
+#define GRTC_PWMREGS 1                               /*!< The PWM registers are available.                                     */
+#define GRTC_CLKOUTREG 1                             /*!< The CLKOUT register is available.                                    */
+#define GRTC_CLKSELREG 1                             /*!< The CLKCFG.CLKSEL register is available.                             */
+#define GRTC_CLKSELLFLPRC 1                          /*!< The CLKCFG.CLKSEL register supports LFLPRC.                          */
+#define GRTC_CCADD_WRITE_ONLY 1                      /*!< The CC[n].CCADD register has write access only.                      */
+#define GRTC_READY_STATUS_AND_EVENTS 1               /*!< The ready status and events are available.                           */
+#define GRTC_MULTIINTERVAL 0                         /*!< (unspecified)                                                        */
+#define GRTC_STATUSDEBUGREG 0                        /*!< (unspecified)                                                        */
+#define GRTC_SYSCOUNTER_LOADED_STATUS 1              /*!< SYSCOUNTER[n].SYSCOUNTERH.LOADED status is available                 */
+#define GRTC_CC_PAST_STATUS 1                        /*!< CC[n].CCEN.PASTCC status is available                                */
 #define GRTC_SYSCOUNTER_WRITEABLE 1                  /*!< (unspecified)                                                        */
 
 /*Tamper controller*/
@@ -692,6 +694,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #define CLOCK_XOTUNE 1                               /*!< (unspecified)                                                        */
 #define CLOCK_PLL24M 0                               /*!< (unspecified)                                                        */
+#define CLOCK_VAR1_NXT 0                             /*!< (unspecified)                                                        */
 
 /*Power control*/
 #define POWER_PRESENT 1

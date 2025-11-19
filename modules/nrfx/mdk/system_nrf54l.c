@@ -37,17 +37,43 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
 #define __SYSTEM_CLOCK_DEFAULT      (64000000ul)
 
 /* Trace configuration */
-#define TRACE_TRACECLK_PIN          (6ul)
-#define TRACE_TRACEDATA0_PIN        (7ul)
-#define TRACE_TRACEDATA1_PIN        (8ul)
-#define TRACE_TRACEDATA2_PIN        (9ul)
-#define TRACE_TRACEDATA3_PIN        (10ul)
+#if (defined(NRF54L05_XXAA) || defined(NRF54L10_XXAA) || defined(NRF54L15_XXAA) || defined(NRF54LM20A_ENGA_XXAA))
+    #define TRACE_PORT                  NRF_P2_S
+    #define TRACE_TRACECLK_PIN          (6ul)
+    #define TRACE_TRACEDATA0_PIN        (7ul)
+    #define TRACE_TRACEDATA1_PIN        (8ul)
+    #define TRACE_TRACEDATA2_PIN        (9ul)
+    #define TRACE_TRACEDATA3_PIN        (10ul)
+    #define TRACE_PIN_CONFIG            ((GPIO_PIN_CNF_DRIVE0_E0 << GPIO_PIN_CNF_DRIVE0_Pos) \
+                                        | (GPIO_PIN_CNF_DRIVE1_E1 << GPIO_PIN_CNF_DRIVE1_Pos) \
+                                        | (GPIO_PIN_CNF_DIR_Output << GPIO_PIN_CNF_DIR_Pos))
+#elif defined(NRF54LV10A_ENGA_XXAA)
+    #define TRACE_PORT                  NRF_P1_S
+    #define TRACE_TRACECLK_PIN          (10ul)
+    #define TRACE_TRACEDATA0_PIN        (11ul)
+    #define TRACE_TRACEDATA1_PIN        (12ul)
+    #define TRACE_TRACEDATA2_PIN        (13ul)
+    #define TRACE_TRACEDATA3_PIN        (14ul)
+    #define TRACE_PIN_CONFIG            ((GPIO_PIN_CNF_DRIVE0_H0 << GPIO_PIN_CNF_DRIVE0_Pos) \
+                                        | (GPIO_PIN_CNF_DRIVE1_H1 << GPIO_PIN_CNF_DRIVE1_Pos) \
+                                        | (GPIO_PIN_CNF_DIR_Output << GPIO_PIN_CNF_DIR_Pos))
+#else
+    /* No trace supported */
+#endif
 
-#define TRACE_PIN_CLEAR             (~(GPIO_PIN_CNF_CTRLSEL_Msk | GPIO_PIN_CNF_DRIVE0_Msk | GPIO_PIN_CNF_DRIVE1_Msk))
+#define TRACE_PIN_CLEAR             (~(GPIO_PIN_CNF_CTRLSEL_Msk | GPIO_PIN_CNF_DRIVE0_Msk | GPIO_PIN_CNF_DRIVE1_Msk | GPIO_PIN_CNF_DIR_Msk))
+/* End Trace configuration */
 
-#define TRACE_PIN_CONFIG            ((GPIO_PIN_CNF_DRIVE0_E0 << GPIO_PIN_CNF_DRIVE0_Pos) \
-                                    | (GPIO_PIN_CNF_DRIVE1_E1 << GPIO_PIN_CNF_DRIVE1_Pos))
-
+/* If the device has GPIOSWD functionality */
+#ifdef TAMPC_GPIOSWD
+    #define TAMPC_GPIOSWD_CLEAR_WRITEPROTECTION                                                                 \
+        ((TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Clear << TAMPC_PROTECT_GPIOSWD_CTRL_WRITEPROTECTION_Pos) | \
+         (TAMPC_PROTECT_GPIOSWD_CTRL_KEY_KEY << TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Pos))
+    #define TAMPC_GPIOSWD_ENABLE                                                             \
+        ((TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_High << TAMPC_PROTECT_GPIOSWD_CTRL_VALUE_Pos) |   \
+         (TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Disabled << TAMPC_PROTECT_GPIOSWD_CTRL_LOCK_Pos) | \
+         (TAMPC_PROTECT_GPIOSWD_CTRL_KEY_KEY << TAMPC_PROTECT_GPIOSWD_CTRL_KEY_Pos))
+#endif
 
 #if defined ( __CC_ARM ) || defined ( __GNUC__ )
     uint32_t SystemCoreClock __attribute__((used)) = __SYSTEM_CLOCK_DEFAULT;
@@ -176,16 +202,11 @@ void SystemInit(void)
                 }
             #endif
 
-            #if NRF54L_ERRATA_48_ENABLE_WORKAROUND
-                /* Workaround for Errata 48 */
-                if (nrf54l_errata_48())
-                {
-                    if (NRF_RESET->RESETREAS & RESET_RESETREAS_RESETPIN_Msk)
-                    {
-                        NRF_RESET->RESETREAS =  ~RESET_RESETREAS_RESETPIN_Msk;
-                    }
-                }
-            #endif
+            /* When RESETREAS shows a pin reset (RESETPIN), ignore other reset reason bits. */
+            if (NRF_RESET->RESETREAS & RESET_RESETREAS_RESETPIN_Msk)
+            {
+                NRF_RESET->RESETREAS =  ~RESET_RESETREAS_RESETPIN_Msk;
+            }
 
             #ifndef NRF_DISABLE_RRAM_POWER_OFF
                 /* Allow RRAMC to go into poweroff mode during System on idle for lower power consumption at a penalty of 9us extra RRAM ready time */
@@ -220,6 +241,12 @@ void SystemInit(void)
             __ISB();
         #endif
 
+        /* Allow using SWD pins as GPIOs */
+        #if defined(TAMPC_GPIOSWD) && defined(NRF_CONFIG_SWD_PINS_AS_GPIOS)
+            NRF_TAMPC->PROTECT.GPIOSWD.CTRL = TAMPC_GPIOSWD_CLEAR_WRITEPROTECTION;
+            NRF_TAMPC->PROTECT.GPIOSWD.CTRL = TAMPC_GPIOSWD_ENABLE;
+        #endif
+
         #if !defined(NRF_TRUSTZONE_NONSECURE) && defined(__ARM_FEATURE_CMSE)
             #if !defined (NRF54LV10A_ENGA_XXAA)
                 #if defined(NRF_CONFIG_NFCT_PINS_AS_GPIOS)
@@ -234,11 +261,16 @@ void SystemInit(void)
                 NRF_TAD_S->ENABLE = TAD_ENABLE_ENABLE_Msk;
 
                 // Configure trace port pads
-                NRF_P2_S->PIN_CNF[TRACE_TRACECLK_PIN] &= TRACE_PIN_CLEAR;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA0_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACECLK_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA0_PIN] &= TRACE_PIN_CLEAR;
 
-                NRF_P2_S->PIN_CNF[TRACE_TRACECLK_PIN] |= TRACE_PIN_CONFIG;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA0_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACECLK_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA0_PIN] |= TRACE_PIN_CONFIG;
+
+                #if defined(NRF_GPIOHSPADCTRL_S)
+                    // Use the highest bias setting for the E0/E1 drive mode.
+                    NRF_GPIOHSPADCTRL_S->BIAS |= 3;
+                #endif
 
                 // Configure trace port speed
                 NRF_TAD_S->TRACEPORTSPEED = TAD_TRACEPORTSPEED_TRACEPORTSPEED_DIV2;
@@ -251,17 +283,22 @@ void SystemInit(void)
                 NRF_TAD_S->ENABLE = TAD_ENABLE_ENABLE_Msk;
 
                 // Configure trace port pads
-                NRF_P2_S->PIN_CNF[TRACE_TRACECLK_PIN] &= TRACE_PIN_CLEAR;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA0_PIN] &= TRACE_PIN_CLEAR;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA1_PIN] &= TRACE_PIN_CLEAR;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA2_PIN] &= TRACE_PIN_CLEAR;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA3_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACECLK_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA0_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA1_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA2_PIN] &= TRACE_PIN_CLEAR;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA3_PIN] &= TRACE_PIN_CLEAR;
 
-                NRF_P2_S->PIN_CNF[TRACE_TRACECLK_PIN] |= TRACE_PIN_CONFIG;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA0_PIN] |= TRACE_PIN_CONFIG;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA1_PIN] |= TRACE_PIN_CONFIG;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA2_PIN] |= TRACE_PIN_CONFIG;
-                NRF_P2_S->PIN_CNF[TRACE_TRACEDATA3_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACECLK_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA0_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA1_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA2_PIN] |= TRACE_PIN_CONFIG;
+                TRACE_PORT->PIN_CNF[TRACE_TRACEDATA3_PIN] |= TRACE_PIN_CONFIG;
+
+                #if defined(NRF_GPIOHSPADCTRL_S)
+                    // Use the highest bias setting for the E0/E1 drive mode.
+                    NRF_GPIOHSPADCTRL_S->BIAS |= 3;
+                #endif
 
                 // Configure trace port speed
                 NRF_TAD_S->TRACEPORTSPEED = TAD_TRACEPORTSPEED_TRACEPORTSPEED_DIV2;

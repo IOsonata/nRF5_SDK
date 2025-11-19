@@ -46,6 +46,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "nrf54h20_flpr.h"
 #include "nrf54h20_ppr.h"
 #include "nrf54h20_radiocore.h"
+#include "nrf54h20_secure.h"
+#include "nrf54h20_sysctrl.h"
 
 #ifdef __cplusplus
 }

@@ -173,7 +173,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     EGU00_IRQHandler
-                DCD     TRNG_IRQHandler
+                DCD     CRACEN_IRQHandler
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
@@ -434,7 +434,7 @@ Default_Handler PROC
                 EXPORT   CM33SS_IRQHandler [WEAK]
                 EXPORT   TIMER00_IRQHandler [WEAK]
                 EXPORT   EGU00_IRQHandler [WEAK]
-                EXPORT   TRNG_IRQHandler [WEAK]
+                EXPORT   CRACEN_IRQHandler [WEAK]
                 EXPORT   TIMER10_IRQHandler [WEAK]
                 EXPORT   EGU10_IRQHandler [WEAK]
                 EXPORT   RADIO_0_IRQHandler [WEAK]
@@ -468,7 +468,7 @@ CTRLAP_IRQHandler
 CM33SS_IRQHandler
 TIMER00_IRQHandler
 EGU00_IRQHandler
-TRNG_IRQHandler
+CRACEN_IRQHandler
 TIMER10_IRQHandler
 EGU10_IRQHandler
 RADIO_0_IRQHandler

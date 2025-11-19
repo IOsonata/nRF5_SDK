@@ -48,42 +48,7 @@ NOTICE: This file has been modified by Nordic Semiconductor ASA.
 
 void SystemCoreClockUpdate(void)
 {
-    #if defined(NRF_PPR)
-        /* PPR clock is always 16MHz */
-        SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
-    #elif defined(NRF_FLPR)
-        /* FLPR does not have access to its HSFLL, assume default speed. */
-        SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
-    #else
-        #if !defined(NRF_SKIP_CORECLOCKDETECT) && !defined(NRF_TRUSTZONE_NONSECURE)
-
-            /* CPU should have access to its local HSFLL, measure CPU frequency. */
-            /* If HSFLL is in closed loop mode it's always measuring, and we can just pick the result.*/
-            /* Otherwise, start a frequncy measurement.*/
-            if ((NRF_HSFLL->CLOCKSTATUS & HSFLL_CLOCKSTATUS_MODE_Msk) != HSFLL_CLOCKSTATUS_MODE_ClosedLoop)
-            {
-                /* Start HSFLL frequency measurement */
-                NRF_HSFLL->EVENTS_FREQMDONE = 0ul;
-                NRF_HSFLL->TASKS_FREQMEAS = 1ul;
-                for (volatile uint32_t i = 0ul; i < 200ul && NRF_HSFLL->EVENTS_FREQMDONE != 1ul; i++)
-                {
-                    /* Wait until frequency measurement is done */
-                }
-
-                if (NRF_HSFLL->EVENTS_FREQMDONE != 1ul)
-                {
-                    /* Clock measurement never completed, return default CPU clock speed */
-                    SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
-                    return;
-                }
-            }
-
-            /* Frequency measurement result is a multiple of 16MHz */
-            SystemCoreClock = NRF_HSFLL->FREQM.MEAS * 16ul * __SYSTEM_CLOCK_MHZ;
-        #else
-            SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
-        #endif
-    #endif
+    SystemCoreClock = __SYSTEM_CLOCK_DEFAULT;
 }
 
 void SystemInit(void)
@@ -91,12 +56,23 @@ void SystemInit(void)
     #ifdef __CORTEX_M
         #if !defined(NRF_TRUSTZONE_NONSECURE) && defined(__ARM_FEATURE_CMSE)
             #if defined(__FPU_PRESENT) && __FPU_PRESENT
-                        /* Allow Non-Secure code to run FPU instructions.
-                        * If only the secure code should control FPU power state these registers should be configured accordingly in the secure application code. */
-                        SCB->NSACR |= (3UL << 10ul);
+                /* Allow Non-Secure code to run FPU instructions.
+                * If only the secure code should control FPU power state these registers should be configured accordingly in the secure application code. */
+                SCB->NSACR |= (3UL << 10ul);
             #endif
             #ifndef NRF_SKIP_SAU_CONFIGURATION
                 configure_default_sau();
+            #endif
+
+            #if NRF54H_ERRATA_62_ENABLE_WORKAROUND
+                /* Workaround for Errata 62 */
+                if (nrf54h_errata_62())
+                {
+                    if((NRF_LPCOMP->ENABLE & LPCOMP_ENABLE_ENABLE_Msk) == LPCOMP_ENABLE_ENABLE_Enabled){
+                        NRF_LPCOMP->TASKS_STOP=1;
+                        NRF_LPCOMP->ENABLE = LPCOMP_ENABLE_ENABLE_Disabled;
+                    }
+                }
             #endif
         #endif
 

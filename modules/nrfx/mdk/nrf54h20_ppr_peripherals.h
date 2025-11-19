@@ -296,9 +296,9 @@ POSSIBILITY OF SUCH DAMAGE.
 #define MVDMA120_COMPLETED_EVENT 1                   /*!< (unspecified)                                                        */
 #define MVDMA120_DPPI_DISCONNECTED 1                 /*!< (unspecified)                                                        */
 #define MVDMA120_INSTANCE_IN_WRAPPER 1               /*!< (unspecified)                                                        */
-#define MVDMA120_MVDMA_JOBLISTCNT_MIN 0              /*!< Number of MVDMA job lists : 0..7                                     */
-#define MVDMA120_MVDMA_JOBLISTCNT_MAX 7              /*!< Number of MVDMA job lists : 0..7                                     */
-#define MVDMA120_MVDMA_JOBLISTCNT_SIZE 8             /*!< Number of MVDMA job lists : 0..7                                     */
+#define MVDMA120_MVDMA_JOBLISTCNT_MIN 0              /*!< Number of MVDMA job lists : 0..3                                     */
+#define MVDMA120_MVDMA_JOBLISTCNT_MAX 3              /*!< Number of MVDMA job lists : 0..3                                     */
+#define MVDMA120_MVDMA_JOBLISTCNT_SIZE 4             /*!< Number of MVDMA job lists : 0..3                                     */
 
 /*RAM Controller*/
 #define RAMC_PRESENT 1

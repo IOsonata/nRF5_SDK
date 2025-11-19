@@ -47,6 +47,10 @@ POSSIBILITY OF SUCH DAMAGE.
   #include "nrf54h20_ppr_peripherals.h"
 #elif defined(NRF_RADIOCORE)
   #include "nrf54h20_radiocore_peripherals.h"
+#elif defined(NRF_SECURE)
+  #include "nrf54h20_secure_peripherals.h"
+#elif defined(NRF_SYSCTRL)
+  #include "nrf54h20_sysctrl_peripherals.h"
 #else
   #error "No processor selected"
 #endif

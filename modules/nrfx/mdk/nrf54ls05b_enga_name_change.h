@@ -40,6 +40,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 
+/* =========================================== Instance CRACEN AltName Definitions =========================================== */
+#define NRF_TRNG                                    NRF_CRACEN
 
 
 #ifdef __cplusplus

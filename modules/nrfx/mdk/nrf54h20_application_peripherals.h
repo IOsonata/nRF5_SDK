@@ -40,10 +40,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #include <stdbool.h>
-/*Extended UICR.*/
-#define UICREXTENDED_PRESENT 1
-#define UICREXTENDED_COUNT 1
-
 /*CACHEDATA*/
 #define ICACHEDATA_PRESENT 1
 #define ICACHEDATA_COUNT 1
@@ -241,16 +237,16 @@ POSSIBILITY OF SUCH DAMAGE.
 #define MVDMA_COMPLETED_EVENT 1                      /*!< (unspecified)                                                        */
 #define MVDMA_DPPI_DISCONNECTED 0                    /*!< (unspecified)                                                        */
 #define MVDMA_INSTANCE_IN_WRAPPER 0                  /*!< (unspecified)                                                        */
-#define MVDMA_MVDMA_JOBLISTCNT_MIN 0                 /*!< Number of MVDMA job lists : 0..7                                     */
-#define MVDMA_MVDMA_JOBLISTCNT_MAX 7                 /*!< Number of MVDMA job lists : 0..7                                     */
-#define MVDMA_MVDMA_JOBLISTCNT_SIZE 8                /*!< Number of MVDMA job lists : 0..7                                     */
+#define MVDMA_MVDMA_JOBLISTCNT_MIN 0                 /*!< Number of MVDMA job lists : 0..0                                     */
+#define MVDMA_MVDMA_JOBLISTCNT_MAX 0                 /*!< Number of MVDMA job lists : 0..0                                     */
+#define MVDMA_MVDMA_JOBLISTCNT_SIZE 1                /*!< Number of MVDMA job lists : 0..0                                     */
 
 #define MVDMA120_COMPLETED_EVENT 1                   /*!< (unspecified)                                                        */
 #define MVDMA120_DPPI_DISCONNECTED 1                 /*!< (unspecified)                                                        */
 #define MVDMA120_INSTANCE_IN_WRAPPER 1               /*!< (unspecified)                                                        */
-#define MVDMA120_MVDMA_JOBLISTCNT_MIN 0              /*!< Number of MVDMA job lists : 0..7                                     */
-#define MVDMA120_MVDMA_JOBLISTCNT_MAX 7              /*!< Number of MVDMA job lists : 0..7                                     */
-#define MVDMA120_MVDMA_JOBLISTCNT_SIZE 8             /*!< Number of MVDMA job lists : 0..7                                     */
+#define MVDMA120_MVDMA_JOBLISTCNT_MIN 0              /*!< Number of MVDMA job lists : 0..3                                     */
+#define MVDMA120_MVDMA_JOBLISTCNT_MAX 3              /*!< Number of MVDMA job lists : 0..3                                     */
+#define MVDMA120_MVDMA_JOBLISTCNT_SIZE 4             /*!< Number of MVDMA job lists : 0..3                                     */
 
 /*RAM Controller*/
 #define RAMC_PRESENT 1
@@ -267,7 +263,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define HSFLL_COUNT 1
 
 #define HSFLL_DITHER_32B 1                           /*!< (unspecified)                                                        */
-#define HSFLL_CLOCKCTRL_MULT_RESET 4                 /*!< Reset value of register CLOCKCTRL.MULT: clockctrl_mult_reset         */
 #define HSFLL_CLOCKCTRL_INTEGER_DIVISION 0           /*!< (unspecified)                                                        */
 
 /*LRCCONF*/
@@ -319,10 +314,20 @@ POSSIBILITY OF SUCH DAMAGE.
 #define LRCCONF010_NDOMAINS_MAX 15                   /*!< (unspecified)                                                        */
 #define LRCCONF010_NDOMAINS_SIZE 16                  /*!< (unspecified)                                                        */
 #define LRCCONF010_AX2XWAITSTATES 0                  /*!< (unspecified)                                                        */
-#define LRCCONF010_POWERON_MAIN_RESET 0              /*!< Reset value of register POWERON.MAIN: 0                              */
-#define LRCCONF010_POWERON_ACT_RESET 0               /*!< Reset value of register POWERON.ACT: 0                               */
-#define LRCCONF010_RETAIN_MAIN_RESET 1               /*!< Reset value of register RETAIN.MAIN: 1                               */
-#define LRCCONF010_RETAIN_ACT_RESET 1                /*!< Reset value of register RETAIN.ACT: 1                                */
+#define LRCCONF010_POWERON_MAIN_RESET 0              /*!< (unspecified)                                                        */
+#define LRCCONF010_POWERON_ACT_RESET 0               /*!< (unspecified)                                                        */
+#define LRCCONF010_RETAIN_MAIN_RESET 1               /*!< (unspecified)                                                        */
+#define LRCCONF010_RETAIN_ACT_RESET 1                /*!< (unspecified)                                                        */
+
+/*CPU Configuration*/
+#define CPUCONF_PRESENT 1
+#define CPUCONF_COUNT 1
+
+#define CPUCONF_HASTASKERASECACHE 1                  /*!< (unspecified)                                                        */
+#define CPUCONF_HASINITSVTOR 1                       /*!< (unspecified)                                                        */
+#define CPUCONF_HASINITNSVTOR 1                      /*!< (unspecified)                                                        */
+#define CPUCONF_HASCPUSTART 1                        /*!< (unspecified)                                                        */
+#define CPUCONF_HASCPUWAIT 1                         /*!< (unspecified)                                                        */
 
 /*Memory configuration*/
 #define MEMCONF_PRESENT 1
@@ -331,12 +336,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #define MEMCONF_RETTRIM 1                            /*!< (unspecified)                                                        */
 #define MEMCONF_REPAIR 0                             /*!< (unspecified)                                                        */
 #define MEMCONF_POWER 1                              /*!< (unspecified)                                                        */
-#define MEMCONF_NUMADDRBITS_MIN 0                    /*!< Number of bits in repair address at MEMCONF.REPAIR.BITLINE.ADDR :
-                                                          [0..6]*/
-#define MEMCONF_NUMADDRBITS_MAX 6                    /*!< Number of bits in repair address at MEMCONF.REPAIR.BITLINE.ADDR :
-                                                          [0..6]*/
-#define MEMCONF_NUMADDRBITS_SIZE 7                   /*!< Number of bits in repair address at MEMCONF.REPAIR.BITLINE.ADDR :
-                                                          [0..6]*/
 
 /*Watchdog Timer*/
 #define WDT_PRESENT 1

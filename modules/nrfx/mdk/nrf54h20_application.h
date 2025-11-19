@@ -295,7 +295,6 @@ typedef enum {
 /* ================                                  Peripheral Address Map                                  ================ */
 /* =========================================================================================================================== */
 
-#define NRF_APPLICATION_UICREXTENDED_NS_BASE 0x00000000UL
 #define NRF_APPLICATION_ICACHEDATA_S_BASE 0x02F00000UL
 #define NRF_APPLICATION_ICACHEINFO_S_BASE 0x02F10000UL
 #define NRF_APPLICATION_UICR_NS_BASE      0x0FFF8000UL
@@ -313,16 +312,23 @@ typedef enum {
 #define NRF_APPLICATION_MVDMA_S_BASE      0x52003000UL
 #define NRF_APPLICATION_RAMC_NS_BASE      0x42004000UL
 #define NRF_APPLICATION_RAMC_S_BASE       0x52004000UL
+#define NRF_APPLICATION_HSFLL_NS_BASE     0x4200D000UL
 #define NRF_APPLICATION_HSFLL_S_BASE      0x5200D000UL
+#define NRF_APPLICATION_LRCCONF000_NS_BASE 0x4200E000UL
 #define NRF_APPLICATION_LRCCONF000_S_BASE 0x5200E000UL
 #define NRF_APPLICATION_SPU010_S_BASE     0x52010000UL
+#define NRF_APPLICATION_CPUCONF_NS_BASE   0x42011000UL
+#define NRF_APPLICATION_CPUCONF_S_BASE    0x52011000UL
 #define NRF_APPLICATION_MEMCONF_NS_BASE   0x42012000UL
 #define NRF_APPLICATION_MEMCONF_S_BASE    0x52012000UL
 #define NRF_APPLICATION_WDT010_NS_BASE    0x42014000UL
 #define NRF_APPLICATION_WDT010_S_BASE     0x52014000UL
 #define NRF_APPLICATION_WDT011_NS_BASE    0x42015000UL
 #define NRF_APPLICATION_WDT011_S_BASE     0x52015000UL
+#define NRF_APPLICATION_ABB_NS_BASE       0x4201C000UL
 #define NRF_APPLICATION_ABB_S_BASE        0x5201C000UL
+#define NRF_APPLICATION_LRCCONF010_NS_BASE 0x4201E000UL
+#define NRF_APPLICATION_RESETINFO_NS_BASE 0x4201E000UL
 #define NRF_APPLICATION_LRCCONF010_S_BASE 0x5201E000UL
 #define NRF_APPLICATION_RESETINFO_S_BASE  0x5201E000UL
 #define NRF_APPLICATION_IPCT_NS_BASE      0x42013000UL
@@ -342,7 +348,6 @@ typedef enum {
 /* ================                                  Peripheral Declaration                                  ================ */
 /* =========================================================================================================================== */
 
-#define NRF_APPLICATION_UICREXTENDED_NS   ((NRF_UICREXTENDED_Type*)             NRF_APPLICATION_UICREXTENDED_NS_BASE)
 #define NRF_APPLICATION_ICACHEDATA_S      ((NRF_ICACHEDATA_Type*)               NRF_APPLICATION_ICACHEDATA_S_BASE)
 #define NRF_APPLICATION_ICACHEINFO_S      ((NRF_ICACHEINFO_Type*)               NRF_APPLICATION_ICACHEINFO_S_BASE)
 #define NRF_APPLICATION_UICR_NS           ((NRF_UICR_Type*)                     NRF_APPLICATION_UICR_NS_BASE)
@@ -360,16 +365,23 @@ typedef enum {
 #define NRF_APPLICATION_MVDMA_S           ((NRF_MVDMA_Type*)                    NRF_APPLICATION_MVDMA_S_BASE)
 #define NRF_APPLICATION_RAMC_NS           ((NRF_RAMC_Type*)                     NRF_APPLICATION_RAMC_NS_BASE)
 #define NRF_APPLICATION_RAMC_S            ((NRF_RAMC_Type*)                     NRF_APPLICATION_RAMC_S_BASE)
+#define NRF_APPLICATION_HSFLL_NS          ((NRF_HSFLL_Type*)                    NRF_APPLICATION_HSFLL_NS_BASE)
 #define NRF_APPLICATION_HSFLL_S           ((NRF_HSFLL_Type*)                    NRF_APPLICATION_HSFLL_S_BASE)
+#define NRF_APPLICATION_LRCCONF000_NS     ((NRF_LRCCONF_Type*)                  NRF_APPLICATION_LRCCONF000_NS_BASE)
 #define NRF_APPLICATION_LRCCONF000_S      ((NRF_LRCCONF_Type*)                  NRF_APPLICATION_LRCCONF000_S_BASE)
 #define NRF_APPLICATION_SPU010_S          ((NRF_SPU_Type*)                      NRF_APPLICATION_SPU010_S_BASE)
+#define NRF_APPLICATION_CPUCONF_NS        ((NRF_CPUCONF_Type*)                  NRF_APPLICATION_CPUCONF_NS_BASE)
+#define NRF_APPLICATION_CPUCONF_S         ((NRF_CPUCONF_Type*)                  NRF_APPLICATION_CPUCONF_S_BASE)
 #define NRF_APPLICATION_MEMCONF_NS        ((NRF_MEMCONF_Type*)                  NRF_APPLICATION_MEMCONF_NS_BASE)
 #define NRF_APPLICATION_MEMCONF_S         ((NRF_MEMCONF_Type*)                  NRF_APPLICATION_MEMCONF_S_BASE)
 #define NRF_APPLICATION_WDT010_NS         ((NRF_WDT_Type*)                      NRF_APPLICATION_WDT010_NS_BASE)
 #define NRF_APPLICATION_WDT010_S          ((NRF_WDT_Type*)                      NRF_APPLICATION_WDT010_S_BASE)
 #define NRF_APPLICATION_WDT011_NS         ((NRF_WDT_Type*)                      NRF_APPLICATION_WDT011_NS_BASE)
 #define NRF_APPLICATION_WDT011_S          ((NRF_WDT_Type*)                      NRF_APPLICATION_WDT011_S_BASE)
+#define NRF_APPLICATION_ABB_NS            ((NRF_ABB_Type*)                      NRF_APPLICATION_ABB_NS_BASE)
 #define NRF_APPLICATION_ABB_S             ((NRF_ABB_Type*)                      NRF_APPLICATION_ABB_S_BASE)
+#define NRF_APPLICATION_LRCCONF010_NS     ((NRF_LRCCONF_Type*)                  NRF_APPLICATION_LRCCONF010_NS_BASE)
+#define NRF_APPLICATION_RESETINFO_NS      ((NRF_RESETINFO_Type*)                NRF_APPLICATION_RESETINFO_NS_BASE)
 #define NRF_APPLICATION_LRCCONF010_S      ((NRF_LRCCONF_Type*)                  NRF_APPLICATION_LRCCONF010_S_BASE)
 #define NRF_APPLICATION_RESETINFO_S       ((NRF_RESETINFO_Type*)                NRF_APPLICATION_RESETINFO_S_BASE)
 #define NRF_APPLICATION_IPCT_NS           ((NRF_IPCT_Type*)                     NRF_APPLICATION_IPCT_NS_BASE)
@@ -390,15 +402,20 @@ typedef enum {
 /* =========================================================================================================================== */
 
 #ifdef NRF_TRUSTZONE_NONSECURE                       /*!< Remap NRF_X_NS instances to NRF_X symbol for ease of use.            */
-  #define NRF_APPLICATION_UICREXTENDED            NRF_APPLICATION_UICREXTENDED_NS
   #define NRF_APPLICATION_UICR                    NRF_APPLICATION_UICR_NS
   #define NRF_APPLICATION_BICR                    NRF_APPLICATION_BICR_NS
   #define NRF_APPLICATION_ETM                     NRF_APPLICATION_ETM_NS
   #define NRF_APPLICATION_MVDMA                   NRF_APPLICATION_MVDMA_NS
   #define NRF_APPLICATION_RAMC                    NRF_APPLICATION_RAMC_NS
+  #define NRF_APPLICATION_HSFLL                   NRF_APPLICATION_HSFLL_NS
+  #define NRF_APPLICATION_LRCCONF000              NRF_APPLICATION_LRCCONF000_NS
+  #define NRF_APPLICATION_CPUCONF                 NRF_APPLICATION_CPUCONF_NS
   #define NRF_APPLICATION_MEMCONF                 NRF_APPLICATION_MEMCONF_NS
   #define NRF_APPLICATION_WDT010                  NRF_APPLICATION_WDT010_NS
   #define NRF_APPLICATION_WDT011                  NRF_APPLICATION_WDT011_NS
+  #define NRF_APPLICATION_ABB                     NRF_APPLICATION_ABB_NS
+  #define NRF_APPLICATION_LRCCONF010              NRF_APPLICATION_LRCCONF010_NS
+  #define NRF_APPLICATION_RESETINFO               NRF_APPLICATION_RESETINFO_NS
   #define NRF_APPLICATION_IPCT                    NRF_APPLICATION_IPCT_NS
   #define NRF_APPLICATION_SWI0                    NRF_APPLICATION_SWI0_NS
   #define NRF_APPLICATION_SWI1                    NRF_APPLICATION_SWI1_NS
@@ -410,7 +427,6 @@ typedef enum {
   #define NRF_APPLICATION_SWI7                    NRF_APPLICATION_SWI7_NS
   #define NRF_APPLICATION_BELLBOARD               NRF_APPLICATION_BELLBOARD_NS
 #else                                                /*!< Remap NRF_X_S instances to NRF_X symbol for ease of use.             */
-  #define NRF_APPLICATION_UICREXTENDED            NRF_APPLICATION_UICREXTENDED_NS
   #define NRF_APPLICATION_ICACHEDATA              NRF_APPLICATION_ICACHEDATA_S
   #define NRF_APPLICATION_ICACHEINFO              NRF_APPLICATION_ICACHEINFO_S
   #define NRF_APPLICATION_UICR                    NRF_APPLICATION_UICR_NS
@@ -429,6 +445,7 @@ typedef enum {
   #define NRF_APPLICATION_HSFLL                   NRF_APPLICATION_HSFLL_S
   #define NRF_APPLICATION_LRCCONF000              NRF_APPLICATION_LRCCONF000_S
   #define NRF_APPLICATION_SPU010                  NRF_APPLICATION_SPU010_S
+  #define NRF_APPLICATION_CPUCONF                 NRF_APPLICATION_CPUCONF_S
   #define NRF_APPLICATION_MEMCONF                 NRF_APPLICATION_MEMCONF_S
   #define NRF_APPLICATION_WDT010                  NRF_APPLICATION_WDT010_S
   #define NRF_APPLICATION_WDT011                  NRF_APPLICATION_WDT011_S
@@ -453,15 +470,20 @@ typedef enum {
 
 #ifdef NRF_APPLICATION                               /*!< Remap NRF_DOMAIN_X instances to NRF_X symbol for ease of use.        */
   #ifdef NRF_TRUSTZONE_NONSECURE                     /*!< Remap only nonsecure instances.                                      */
-    #define NRF_UICREXTENDED                      NRF_APPLICATION_UICREXTENDED
     #define NRF_UICR                              NRF_APPLICATION_UICR
     #define NRF_BICR                              NRF_APPLICATION_BICR
     #define NRF_ETM                               NRF_APPLICATION_ETM
     #define NRF_MVDMA                             NRF_APPLICATION_MVDMA
     #define NRF_RAMC                              NRF_APPLICATION_RAMC
+    #define NRF_HSFLL                             NRF_APPLICATION_HSFLL
+    #define NRF_LRCCONF000                        NRF_APPLICATION_LRCCONF000
+    #define NRF_CPUCONF                           NRF_APPLICATION_CPUCONF
     #define NRF_MEMCONF                           NRF_APPLICATION_MEMCONF
     #define NRF_WDT010                            NRF_APPLICATION_WDT010
     #define NRF_WDT011                            NRF_APPLICATION_WDT011
+    #define NRF_ABB                               NRF_APPLICATION_ABB
+    #define NRF_LRCCONF010                        NRF_APPLICATION_LRCCONF010
+    #define NRF_RESETINFO                         NRF_APPLICATION_RESETINFO
     #define NRF_IPCT                              NRF_APPLICATION_IPCT
     #define NRF_SWI0                              NRF_APPLICATION_SWI0
     #define NRF_SWI1                              NRF_APPLICATION_SWI1
@@ -473,7 +495,6 @@ typedef enum {
     #define NRF_SWI7                              NRF_APPLICATION_SWI7
     #define NRF_BELLBOARD                         NRF_APPLICATION_BELLBOARD
   #else                                              /*!< Remap all instances.                                                 */
-    #define NRF_UICREXTENDED                      NRF_APPLICATION_UICREXTENDED
     #define NRF_ICACHEDATA                        NRF_APPLICATION_ICACHEDATA
     #define NRF_ICACHEINFO                        NRF_APPLICATION_ICACHEINFO
     #define NRF_UICR                              NRF_APPLICATION_UICR
@@ -492,6 +513,7 @@ typedef enum {
     #define NRF_HSFLL                             NRF_APPLICATION_HSFLL
     #define NRF_LRCCONF000                        NRF_APPLICATION_LRCCONF000
     #define NRF_SPU010                            NRF_APPLICATION_SPU010
+    #define NRF_CPUCONF                           NRF_APPLICATION_CPUCONF
     #define NRF_MEMCONF                           NRF_APPLICATION_MEMCONF
     #define NRF_WDT010                            NRF_APPLICATION_WDT010
     #define NRF_WDT011                            NRF_APPLICATION_WDT011

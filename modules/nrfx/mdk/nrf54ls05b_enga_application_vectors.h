@@ -95,7 +95,7 @@ __WEAK void SysTick_Handler(void)
  __HANDLER("Default_Handler") void CM33SS_IRQHandler                                           (void);
  __HANDLER("Default_Handler") void TIMER00_IRQHandler                                          (void);
  __HANDLER("Default_Handler") void EGU00_IRQHandler                                            (void);
- __HANDLER("Default_Handler") void TRNG_IRQHandler                                             (void);
+ __HANDLER("Default_Handler") void CRACEN_IRQHandler                                           (void);
  __HANDLER("Default_Handler") void TIMER10_IRQHandler                                          (void);
  __HANDLER("Default_Handler") void EGU10_IRQHandler                                            (void);
  __HANDLER("Default_Handler") void RADIO_0_IRQHandler                                          (void);
@@ -236,7 +236,7 @@ __VECTOR_TABLE_ATTRIBUTE const VECTOR_TABLE_Type __VECTOR_TABLE[] = {
     0,
     0,
     EGU00_IRQHandler,
-    TRNG_IRQHandler,
+    CRACEN_IRQHandler,
     0,
     0,
     0,
