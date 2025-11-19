@@ -90,7 +90,8 @@ static void timer_init(void)
 
     if (!m_timer_initialized)
     {
-        if (!nrf_clock_lf_is_running(NRF_CLOCK))
+    	nrf_clock_lfclk_t clksrc;
+    	if (nrf_clock_is_running(NRF_CLOCK, NRF_CLOCK_DOMAIN_LFCLK, &clksrc))
         {
             nrf_clock_task_trigger(NRF_CLOCK, NRF_CLOCK_TASK_LFCLKSTART);
         }

@@ -196,12 +196,12 @@ static inline bool NRFX_IRQ_IS_PENDING(IRQn_Type irq_number)
  *
  * @param us_time Number of microseconds to wait.
  */
-#include <soc/nrfx_coredep.h>
+#include <lib/nrfx_coredep.h>
 
 #define NRFX_DELAY_US(us_time)	nrfx_coredep_delay_us(us_time)
 
 //------------------------------------------------------------------------------
-#include <soc/nrfx_atomic.h>
+#include <lib/nrfx_atomic.h>
 
 /** @brief Atomic 32-bit unsigned type. */
 #define nrfx_atomic_t	nrfx_atomic_u32_t
