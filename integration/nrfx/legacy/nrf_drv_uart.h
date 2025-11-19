@@ -467,7 +467,7 @@ void nrf_drv_uart_uninit(nrf_drv_uart_t const * p_instance)
 {
     if (NRF_DRV_UART_USE_UARTE)
     {
-        nrfx_uarte_uninit(&p_instance->uarte);
+        nrfx_uarte_uninit((nrfx_uarte_t*)&p_instance->uarte);
     }
     else if (NRF_DRV_UART_USE_UART)
     {
@@ -517,7 +517,7 @@ ret_code_t nrf_drv_uart_tx(nrf_drv_uart_t const * p_instance,
     uint32_t result = 0;
     if (NRF_DRV_UART_USE_UARTE)
     {
-        result = nrfx_uarte_tx(&p_instance->uarte,
+        result = nrfx_uarte_tx((nrfx_uarte_t*)&p_instance->uarte,
                                p_data,
                                length, NRFX_UARTE_TX_BLOCKING);
     }
@@ -536,7 +536,7 @@ bool nrf_drv_uart_tx_in_progress(nrf_drv_uart_t const * p_instance)
     bool result = 0;
     if (NRF_DRV_UART_USE_UARTE)
     {
-        result = nrfx_uarte_tx_in_progress(&p_instance->uarte);
+        result = nrfx_uarte_tx_in_progress((nrfx_uarte_t*)&p_instance->uarte);
     }
     else if (NRF_DRV_UART_USE_UART)
     {
@@ -550,13 +550,18 @@ void nrf_drv_uart_tx_abort(nrf_drv_uart_t const * p_instance)
 {
     if (NRF_DRV_UART_USE_UARTE)
     {
-        nrfx_uarte_tx_abort(&p_instance->uarte, true);
+        nrfx_uarte_tx_abort((nrfx_uarte_t*)&p_instance->uarte, true);
     }
     else if (NRF_DRV_UART_USE_UART)
     {
         nrfx_uart_tx_abort(&p_instance->uart);
     }
 }
+
+// Patch nrfx 4.0.  This function no longer exists
+nrfx_err_t nrfx_uarte_rx(nrfx_uarte_t const * p_instance,
+                         uint8_t *            p_data,
+                         size_t               length);
 
 __STATIC_INLINE
 ret_code_t nrf_drv_uart_rx(nrf_drv_uart_t const * p_instance,
@@ -566,7 +571,7 @@ ret_code_t nrf_drv_uart_rx(nrf_drv_uart_t const * p_instance,
     uint32_t result = 0;
     if (NRF_DRV_UART_USE_UARTE)
     {
-        result = nrfx_uarte_rx(&p_instance->uarte,
+        result = nrfx_uarte_rx((nrfx_uarte_t*)&p_instance->uarte,
                                p_data,
                                length);
     }
@@ -586,7 +591,7 @@ bool nrf_drv_uart_rx_ready(nrf_drv_uart_t const * p_instance)
     if (NRF_DRV_UART_USE_UARTE)
     {
     	size_t l;
-        result = nrfx_uarte_rx_ready(&p_instance->uarte, &l);
+        result = nrfx_uarte_rx_ready((nrfx_uarte_t*)&p_instance->uarte, &l);
     }
     else if (NRF_DRV_UART_USE_UART)
     {
@@ -626,7 +631,7 @@ void nrf_drv_uart_rx_abort(nrf_drv_uart_t const * p_instance)
 {
     if (NRF_DRV_UART_USE_UARTE)
     {
-        nrfx_uarte_rx_abort(&p_instance->uarte, true, true);
+        nrfx_uarte_rx_abort((nrfx_uarte_t*)&p_instance->uarte, true, true);
     }
     else if (NRF_DRV_UART_USE_UART)
     {
@@ -640,7 +645,7 @@ uint32_t nrf_drv_uart_errorsrc_get(nrf_drv_uart_t const * p_instance)
     uint32_t result = 0;
     if (NRF_DRV_UART_USE_UARTE)
     {
-        result = nrfx_uarte_errorsrc_get(&p_instance->uarte);
+        result = nrfx_uarte_errorsrc_get((nrfx_uarte_t*)&p_instance->uarte);
     }
     else if (NRF_DRV_UART_USE_UART)
     {
