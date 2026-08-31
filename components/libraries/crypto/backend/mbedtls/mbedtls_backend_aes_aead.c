@@ -37,6 +37,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+#include <stdbool.h>
+#include <stdint.h>
 
 #include "sdk_common.h"
 #include <drivers/nrfx_common.h>
